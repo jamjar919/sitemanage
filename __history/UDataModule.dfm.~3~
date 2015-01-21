@@ -1,0 +1,11 @@
+object datamoduleMain: TdatamoduleMain
+  OldCreateOrder = False
+  Height = 374
+  Width = 400
+  object ADOCmain: TADOConnection
+    Connected = True
+    ConnectionString = 'Provider=MSDASQL.1;Persist Security Info=False;Data Source=nndb'
+    Left = 88
+    Top = 48
+  end
+end

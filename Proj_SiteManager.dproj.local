@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <Transactions>
+    <Transaction>2015/01/21 19:42:19.282,=J:\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2015/01/21 19:42:46.226,J:\Git\sitemanager\sitemanage\USiteManagerMain.dfm=J:\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2015/01/21 19:42:46.226,J:\Git\sitemanager\sitemanage\USiteManagerMain.pas=J:\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2015/01/21 19:43:01.139,J:\Git\sitemanager\sitemanage\Proj_SiteManager.dproj=J:\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+  </Transactions>
+</BorlandProject>
