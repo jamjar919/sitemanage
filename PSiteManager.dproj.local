@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2014/11/11 09:53:20.000.726,=U:\My Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2014/11/11 09:54:06.000.676,U:\My Documents\Embarcadero\Studio\Projects\SiteManager\UMainSM.dfm=U:\My Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2014/11/11 09:54:06.000.676,U:\My Documents\Embarcadero\Studio\Projects\SiteManager\UMainSM.pas=U:\My Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2014/11/11 09:54:14.000.767,U:\My Documents\Embarcadero\Studio\Projects\SiteManager\PSiteManager.dproj=U:\My Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2015/01/08 15:49:38.000.867,=U:\My Documents\Embarcadero\Studio\Projects\SiteManager\Unit1.pas</Transaction>
+    <Transaction>2015/01/08 15:49:55.000.799,U:\My Documents\Embarcadero\Studio\Projects\SiteManager\Unit1.pas=U:\My Documents\Embarcadero\Studio\Projects\SiteManager\UFormElementCreators.pas</Transaction>
+  </Transactions>
+</BorlandProject>
