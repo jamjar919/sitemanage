@@ -46,6 +46,7 @@ object formMain: TformMain
         Top = 0
         Caption = 'Open Project'
         ImageIndex = 1
+        OnClick = toolbutOpenProjectClick
       end
     end
   end
@@ -54,13 +55,13 @@ object formMain: TformMain
     Top = 24
     Width = 981
     Height = 681
-    ActivePage = TabSheet1
+    ActivePage = tabsh
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 1
     object tabshInitial: TTabSheet
       Caption = 'Welcome'
     end
-    object TabSheet1: TTabSheet
+    object tabsh: TTabSheet
       Caption = 'Project Name'
       ImageIndex = 1
     end

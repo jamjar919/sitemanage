@@ -5,6 +5,7 @@ object datamoduleMain: TdatamoduleMain
   object ADOCmain: TADOConnection
     Connected = True
     ConnectionString = 'Provider=MSDASQL.1;Persist Security Info=False;Data Source=nndb'
+    LoginPrompt = False
     Left = 24
     Top = 16
   end
@@ -14,7 +15,7 @@ object datamoduleMain: TdatamoduleMain
     CursorType = ctStatic
     CommandText = 'select * from project'
     Parameters = <>
-    Left = 120
+    Left = 112
     Top = 16
   end
   object datasourceProject: TDataSource

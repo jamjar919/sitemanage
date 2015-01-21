@@ -1,5 +1,0 @@
-object datamoduleMain: TdatamoduleMain
-  OldCreateOrder = False
-  Height = 374
-  Width = 400
-end
