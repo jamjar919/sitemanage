@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ToolWin, Vcl.ComCtrls, Vcl.ActnMan,
-  Vcl.ActnCtrls, Vcl.ActnMenus, Vcl.Menus, Vcl.ImgList;
+  Vcl.ActnCtrls, Vcl.ActnMenus, Vcl.Menus, Vcl.ImgList, Generics.Collections;
 
 type
   TformMain = class(TForm)
@@ -26,13 +26,21 @@ type
   end;
 
   TProject = class
-    ProjectID: integer;
-
-
+  private
+    PID: integer;
+    CID: integer;
+    PName: string;
+  public
+    Children: TList;
+    constructor Create(ProjectID:integer; ClientID:integer; Name:string);
+    property ID :integer read PID;
+    property ClientID:integer read CID;
+    property Name:string read PName;
   end;
 
 var
   formMain: TformMain;
+  currentProject: TProject;
 
 implementation
 
@@ -40,10 +48,16 @@ implementation
 
 uses UDataModule, ULoadProject;
 
-
+constructor TProject.Create(ProjectID: Integer; ClientID: Integer; Name: string);
+begin
+  PID := ProjectID;
+  CID := ClientID;
+  PName := Name;
+end;
 
 procedure TformMain.toolbutOpenProjectClick(Sender: TObject);
 begin
+  currentProject := TProject.Create(1,1,'test');
   formLoadProject.Show;
 end;
 
