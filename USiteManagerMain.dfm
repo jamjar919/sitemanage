@@ -11,13 +11,16 @@ object formMain: TformMain
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  DesignSize = (
+    981
+    704)
   PixelsPerInch = 96
   TextHeight = 13
   object coolbarMain: TCoolBar
     Left = 0
     Top = 0
     Width = 981
-    Height = 33
+    Height = 30
     Bands = <
       item
         Control = toolbarMain
@@ -25,8 +28,8 @@ object formMain: TformMain
         Width = 975
       end>
     object toolbarMain: TToolBar
-      Left = 8
-      Top = 1
+      Left = 11
+      Top = 0
       Width = 966
       Height = 25
       Caption = 'Main Toolbar'
@@ -46,9 +49,25 @@ object formMain: TformMain
       end
     end
   end
+  object pagecontrolMain: TPageControl
+    Left = 0
+    Top = 24
+    Width = 981
+    Height = 681
+    ActivePage = TabSheet1
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    TabOrder = 1
+    object tabshInitial: TTabSheet
+      Caption = 'Welcome'
+    end
+    object TabSheet1: TTabSheet
+      Caption = 'Project Name'
+      ImageIndex = 1
+    end
+  end
   object toolbarMainImages: TImageList
-    Left = 24
-    Top = 48
+    Left = 864
+    Top = 576
     Bitmap = {
       494C010107001800200010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020

@@ -14,6 +14,9 @@ type
     toolbutNewProject: TToolButton;
     toolbutOpenProject: TToolButton;
     toolbarMainImages: TImageList;
+    pagecontrolMain: TPageControl;
+    tabshInitial: TTabSheet;
+    TabSheet1: TTabSheet;
   private
     { Private declarations }
   public
