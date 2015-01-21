@@ -4,12 +4,16 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ToolWin, Vcl.ComCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ToolWin, Vcl.ComCtrls, Vcl.ActnMan,
+  Vcl.ActnCtrls, Vcl.ActnMenus, Vcl.Menus, Vcl.ImgList;
 
 type
   TformMain = class(TForm)
     coolbarMain: TCoolBar;
-    ToolBar1: TToolBar;
+    toolbarMain: TToolBar;
+    toolbutNewProject: TToolButton;
+    toolbutOpenProject: TToolButton;
+    toolbarMainImages: TImageList;
   private
     { Private declarations }
   public
