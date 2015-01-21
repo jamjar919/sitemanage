@@ -1,2 +1,0 @@
-# sitemanage
-Site Manager
