@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
-  <Transactions>
-    <Transaction>2015/01/21 19:42:19.282,=J:\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>2015/01/21 19:42:46.226,J:\Git\sitemanager\sitemanage\USiteManagerMain.dfm=J:\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
-    <Transaction>2015/01/21 19:42:46.226,J:\Git\sitemanager\sitemanage\USiteManagerMain.pas=J:\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>2015/01/21 19:43:01.139,J:\Git\sitemanager\sitemanage\Proj_SiteManager.dproj=J:\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
-    <Transaction>2015/01/21 19:45:28.306,=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
-    <Transaction>2015/01/21 19:45:46.251,J:\Git\sitemanager\sitemanage\UDataModule.pas=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
-    <Transaction>2015/01/21 19:45:46.251,J:\Git\sitemanager\sitemanage\UDataModule.dfm=J:\Git\sitemanager\sitemanage\Unit1.dfm</Transaction>
-    <Transaction>2015/01/21 20:33:30.723,=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
-    <Transaction>2015/01/21 20:33:56.699,J:\Git\sitemanager\sitemanage\ULoadProject.dfm=J:\Git\sitemanager\sitemanage\Unit1.dfm</Transaction>
-    <Transaction>2015/01/21 20:33:56.699,J:\Git\sitemanager\sitemanage\ULoadProject.pas=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
+	<Transactions>
+    <Transaction>2015/01/21 19:42:19.000.282,=J:\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2015/01/21 19:42:46.000.226,J:\Documents\Embarcadero\Studio\Projects\Unit1.dfm=J:\Git\sitemanager\sitemanage\USiteManagerMain.dfm</Transaction>
+    <Transaction>2015/01/21 19:42:46.000.226,J:\Documents\Embarcadero\Studio\Projects\Unit1.pas=J:\Git\sitemanager\sitemanage\USiteManagerMain.pas</Transaction>
+    <Transaction>2015/01/21 19:43:01.000.139,J:\Documents\Embarcadero\Studio\Projects\Project1.dproj=J:\Git\sitemanager\sitemanage\Proj_SiteManager.dproj</Transaction>
+    <Transaction>2015/01/21 19:45:28.000.306,=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
+    <Transaction>2015/01/21 19:45:46.000.251,J:\Git\sitemanager\sitemanage\Unit1.pas=J:\Git\sitemanager\sitemanage\UDataModule.pas</Transaction>
+    <Transaction>2015/01/21 19:45:46.000.251,J:\Git\sitemanager\sitemanage\Unit1.dfm=J:\Git\sitemanager\sitemanage\UDataModule.dfm</Transaction>
+    <Transaction>2015/01/21 20:33:30.000.723,=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
+    <Transaction>2015/01/21 20:33:56.000.699,J:\Git\sitemanager\sitemanage\Unit1.pas=J:\Git\sitemanager\sitemanage\ULoadProject.pas</Transaction>
+    <Transaction>2015/01/21 20:33:56.000.699,J:\Git\sitemanager\sitemanage\Unit1.dfm=J:\Git\sitemanager\sitemanage\ULoadProject.dfm</Transaction>
   </Transactions>
 </BorlandProject>

@@ -4,7 +4,9 @@ object datamoduleMain: TdatamoduleMain
   Width = 400
   object ADOCmain: TADOConnection
     Connected = True
-    ConnectionString = 'Provider=MSDASQL.1;Persist Security Info=False;Data Source=nndb'
+    ConnectionString = 
+      'Provider=MSDASQL.1;Persist Security Info=False;Data Source=nextn' +
+      'orth'
     LoginPrompt = False
     Left = 24
     Top = 16

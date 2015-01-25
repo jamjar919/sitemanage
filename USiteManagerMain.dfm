@@ -60,17 +60,25 @@ object formMain: TformMain
     TabOrder = 1
     object tabshInitial: TTabSheet
       Caption = 'Welcome'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tabsh: TTabSheet
       Caption = 'Project Name'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
   end
   object toolbarMainImages: TImageList
     Left = 864
     Top = 576
     Bitmap = {
-      494C010107001800200010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010107001800240010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

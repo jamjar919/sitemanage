@@ -57,7 +57,7 @@ end;
 
 procedure TformMain.toolbutOpenProjectClick(Sender: TObject);
 begin
-  currentProject := TProject.Create(1,1,'test');
+  CurrentProject.Free;
   formLoadProject.Show;
 end;
 
