@@ -101,17 +101,17 @@ begin
       + inttostr(project.ID) + ';';
     Open;
     First;
-    strgrDomainList.RowCount := RecNo+1;
-    currentRec := 1;
+    strgrDomainList.RowCount := RecNo;
+    currentRec := 0;
     while (not Eof) do
     begin
       strgrDomainList.Cells[0, currentRec] := FieldValues['DomainName']+'.'+FieldValues['DomainExtension'];
       Next;
       ShowMessage(FieldValues['DomainName']+'.'+FieldValues['DomainExtension']);
       inc(currentRec);
-    end; // END WHILE NOT EOF
-  end; // END WITH DOMAIN DM
-end; //ENDPROC
+    end; //WHILE NOT EOF
+  end; // WITH DOMAIN DM
+end;
 
 procedure TformMain.toolbutOpenProjectClick(Sender: TObject);
 begin

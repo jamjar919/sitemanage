@@ -58,8 +58,6 @@ begin
     cID := FieldValues['ClientID'];
     CurrentProject := TProject.Create(pID,cID,projectName);
   end;
-  formLoadProject.Hide;
-  formMain.openProject(currentProject);
 end;
 
 end.

@@ -94,7 +94,7 @@ object formMain: TformMain
         ParentFont = False
       end
       object lblHostingHeader: TLabel
-        Left = 443
+        Left = 251
         Top = 34
         Width = 42
         Height = 16
@@ -170,9 +170,10 @@ object formMain: TformMain
           874AD4705DD87E8DE0A2CAF0D3F2FBF4FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
           FFFF}
         Stretch = True
+        OnClick = imgbutAddDomainClick
       end
-      object imgbutAddHosting: TImage
-        Left = 491
+      object Image1: TImage
+        Left = 299
         Top = 34
         Width = 16
         Height = 16
@@ -235,26 +236,7 @@ object formMain: TformMain
           874AD4705DD87E8DE0A2CAF0D3F2FBF4FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
           FFFF}
         Stretch = True
-      end
-      object strgrDomainList: TStringGrid
-        Left = 3
-        Top = 56
-        Width = 400
-        Height = 594
-        ColCount = 2
-        DefaultColWidth = 200
-        FixedCols = 0
-        TabOrder = 0
-      end
-      object strgrHostingList: TStringGrid
-        Left = 443
-        Top = 56
-        Width = 400
-        Height = 594
-        ColCount = 2
-        DefaultColWidth = 200
-        FixedCols = 0
-        TabOrder = 1
+        OnClick = imgbutAddDomainClick
       end
     end
   end

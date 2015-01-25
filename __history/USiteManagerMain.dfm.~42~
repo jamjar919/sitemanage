@@ -239,22 +239,12 @@ object formMain: TformMain
       object strgrDomainList: TStringGrid
         Left = 3
         Top = 56
-        Width = 400
+        Width = 393
         Height = 594
         ColCount = 2
-        DefaultColWidth = 200
+        DefaultColWidth = 128
         FixedCols = 0
         TabOrder = 0
-      end
-      object strgrHostingList: TStringGrid
-        Left = 443
-        Top = 56
-        Width = 400
-        Height = 594
-        ColCount = 2
-        DefaultColWidth = 200
-        FixedCols = 0
-        TabOrder = 1
       end
     end
   end

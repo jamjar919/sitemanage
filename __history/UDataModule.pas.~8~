@@ -10,10 +10,6 @@ type
     ADOCmain: TADOConnection;
     datasetProject: TADODataSet;
     datasourceProject: TDataSource;
-    datasetDomain: TADODataSet;
-    datasourceDomain: TDataSource;
-    datasetHosting: TADODataSet;
-    datasourceHosting: TDataSource;
   private
     { Private declarations }
   public

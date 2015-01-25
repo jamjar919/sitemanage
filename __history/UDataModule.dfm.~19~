@@ -26,7 +26,6 @@ object datamoduleMain: TdatamoduleMain
     Top = 16
   end
   object datasetDomain: TADODataSet
-    Active = True
     Connection = ADOCmain
     CursorType = ctStatic
     CommandText = 'select *  from domain;'
@@ -38,18 +37,5 @@ object datamoduleMain: TdatamoduleMain
     DataSet = datasetDomain
     Left = 208
     Top = 72
-  end
-  object datasetHosting: TADODataSet
-    Connection = ADOCmain
-    CursorType = ctStatic
-    CommandText = 'select * from hosting;'
-    Parameters = <>
-    Left = 112
-    Top = 128
-  end
-  object datasourceHosting: TDataSource
-    DataSet = datasetDomain
-    Left = 208
-    Top = 128
   end
 end

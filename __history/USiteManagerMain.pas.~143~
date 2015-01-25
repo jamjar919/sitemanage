@@ -101,17 +101,16 @@ begin
       + inttostr(project.ID) + ';';
     Open;
     First;
-    strgrDomainList.RowCount := RecNo+1;
-    currentRec := 1;
-    while (not Eof) do
+    strgrDomainList.RowCount := RecNo;
+    currentRec := 0;
+  end;
+    while (not datamoduleMain.datasetDomain.Eof) do
     begin
-      strgrDomainList.Cells[0, currentRec] := FieldValues['DomainName']+'.'+FieldValues['DomainExtension'];
+      strgrDomainList.Cells[0, currentRec] := datamoduleMain.datasetDomain.FieldValues['DomainName']+'.'+datamoduleMain.datasetDomain.FieldValues['DomainExtension'];
       Next;
-      ShowMessage(FieldValues['DomainName']+'.'+FieldValues['DomainExtension']);
       inc(currentRec);
-    end; // END WHILE NOT EOF
-  end; // END WITH DOMAIN DM
-end; //ENDPROC
+    end;
+end;
 
 procedure TformMain.toolbutOpenProjectClick(Sender: TObject);
 begin

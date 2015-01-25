@@ -101,11 +101,11 @@ begin
       + inttostr(project.ID) + ';';
     Open;
     First;
-    strgrDomainList.RowCount := RecNo+1;
-    currentRec := 1;
+    strgrDomainList.RowCount := RecNo;
+    currentRec := 0;
     while (not Eof) do
     begin
-      strgrDomainList.Cells[0, currentRec] := FieldValues['DomainName']+'.'+FieldValues['DomainExtension'];
+      strgrDomainList.Cells[1, currentRec] := FieldValues['DomainName']+'.'+FieldValues['DomainExtension'];
       Next;
       ShowMessage(FieldValues['DomainName']+'.'+FieldValues['DomainExtension']);
       inc(currentRec);
