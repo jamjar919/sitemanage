@@ -163,6 +163,7 @@ var
   titleLabel: TLabel;
   domainDotLabel: TLabel;
   domainEdit: TDBEdit;
+  DataSource: TDataSource;
 begin
   // select only the needed domain
   with datamoduleMain.datasetSingleDomain do
@@ -188,7 +189,7 @@ end;
 procedure TformMain.strgrDomainListClick(Sender: TObject);
 var
   domain, dName, dExtension: string;
-  i: integer;
+  i, n: integer;
   foundDot: boolean;
 begin
   // decide if a button cell was clicked
