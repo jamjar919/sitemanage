@@ -14,6 +14,7 @@ type
     lookupboxProjectSelect: TDBLookupComboBox;
     procedure loadButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -35,6 +36,13 @@ var
 procedure TformLoadProject.FormCreate(Sender: TObject);
 begin
   ProjectDataSet := datamodulemain.dataSetProject;
+  {ProjectDataSet.Close;
+  ProjectDataSet.CommandText := 'SELECT * FROM project';
+  ProjectDataSet.Open; }
+end;
+
+procedure TformLoadProject.FormShow(Sender: TObject);
+begin
   ProjectDataSet.Close;
   ProjectDataSet.CommandText := 'SELECT * FROM project';
   ProjectDataSet.Open;

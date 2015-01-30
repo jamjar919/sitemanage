@@ -14,6 +14,8 @@ type
     datasourceDomain: TDataSource;
     datasetHosting: TADODataSet;
     datasourceHosting: TDataSource;
+    datasetSingleDomain: TADODataSet;
+    dataSourceSingleDomain: TDataSource;
   private
     { Private declarations }
   public

@@ -22,7 +22,7 @@ object datamoduleMain: TdatamoduleMain
   end
   object datasourceProject: TDataSource
     DataSet = datasetProject
-    Left = 208
+    Left = 232
     Top = 16
   end
   object datasetDomain: TADODataSet
@@ -36,7 +36,7 @@ object datamoduleMain: TdatamoduleMain
   end
   object datasourceDomain: TDataSource
     DataSet = datasetDomain
-    Left = 208
+    Left = 232
     Top = 72
   end
   object datasetHosting: TADODataSet
@@ -45,11 +45,36 @@ object datamoduleMain: TdatamoduleMain
     CommandText = 'select * from hosting;'
     Parameters = <>
     Left = 112
-    Top = 128
+    Top = 184
   end
   object datasourceHosting: TDataSource
     DataSet = datasetDomain
-    Left = 208
+    Left = 232
+    Top = 184
+  end
+  object datasetSingleDomain: TADODataSet
+    Connection = ADOCmain
+    CursorType = ctStatic
+    CommandText = 
+      'SELECT *  FROM domain WHERE DomainName = :dname AND DomainExtens' +
+      'ion = :dexten ;'
+    Parameters = <
+      item
+        Name = 'dname'
+        Size = -1
+        Value = Null
+      end
+      item
+        Name = 'dexten'
+        Size = -1
+        Value = Null
+      end>
+    Left = 112
+    Top = 128
+  end
+  object dataSourceSingleDomain: TDataSource
+    DataSet = datasetSingleDomain
+    Left = 232
     Top = 128
   end
 end

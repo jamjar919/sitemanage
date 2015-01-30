@@ -52,21 +52,28 @@ object formMain: TformMain
     end
   end
   object pagecontrolMain: TPageControl
-    Left = 0
+    Left = -4
     Top = 24
-    Width = 981
+    Width = 801
     Height = 681
     ActivePage = tabshProject
     Anchors = [akLeft, akTop, akRight, akBottom]
+    MultiLine = True
+    TabHeight = 30
     TabOrder = 1
     object tabshInitial: TTabSheet
       Caption = 'Welcome'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tabshProject: TTabSheet
       Caption = 'Project Name'
       ImageIndex = 1
-      ExplicitLeft = -68
-      ExplicitTop = 12
+      DesignSize = (
+        793
+        641)
       object lblProjectName: TLabel
         Left = 3
         Top = 3
@@ -94,8 +101,8 @@ object formMain: TformMain
         ParentFont = False
       end
       object lblHostingHeader: TLabel
-        Left = 443
-        Top = 34
+        Left = 3
+        Top = 223
         Width = 42
         Height = 16
         Caption = 'Hosting'
@@ -172,8 +179,8 @@ object formMain: TformMain
         Stretch = True
       end
       object imgbutAddHosting: TImage
-        Left = 491
-        Top = 34
+        Left = 58
+        Top = 223
         Width = 16
         Height = 16
         Picture.Data = {
@@ -239,30 +246,71 @@ object formMain: TformMain
       object strgrDomainList: TStringGrid
         Left = 3
         Top = 56
-        Width = 400
-        Height = 594
-        ColCount = 2
-        DefaultColWidth = 200
+        Width = 774
+        Height = 161
+        Anchors = [akLeft, akTop, akRight, akBottom]
+        Color = clBtnFace
+        ColCount = 3
+        Constraints.MinWidth = 470
+        DefaultColWidth = 133
         FixedCols = 0
+        RowCount = 2
+        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goDrawFocusSelected]
+        ParentShowHint = False
+        ScrollBars = ssVertical
+        ShowHint = False
         TabOrder = 0
+        OnClick = strgrDomainListClick
+        ColWidths = (
+          452
+          216
+          98)
       end
       object strgrHostingList: TStringGrid
-        Left = 443
-        Top = 56
-        Width = 400
-        Height = 594
-        ColCount = 2
-        DefaultColWidth = 200
+        Left = 0
+        Top = 245
+        Width = 777
+        Height = 218
+        Anchors = [akLeft, akTop, akRight, akBottom]
+        ColCount = 4
+        Constraints.MinWidth = 470
+        DefaultColWidth = 133
         FixedCols = 0
+        RowCount = 2
         TabOrder = 1
+        ColWidths = (
+          50
+          406
+          212
+          100)
       end
     end
+    object TabSheet1: TTabSheet
+      Caption = 'TabSheet1'
+      ImageIndex = 2
+      object DBEdit1: TDBEdit
+        Left = 8
+        Top = 72
+        Width = 121
+        Height = 21
+        DataSource = datamoduleMain.datasourceDomain
+        TabOrder = 0
+      end
+    end
+  end
+  object panelSide: TPanel
+    Left = 803
+    Top = 24
+    Width = 185
+    Height = 677
+    Anchors = [akTop, akRight, akBottom]
+    TabOrder = 2
   end
   object toolbarMainImages: TImageList
     Left = 872
     Top = 8
     Bitmap = {
-      494C010107001800280010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010107001800440010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -537,7 +585,7 @@ object formMain: TformMain
     Left = 872
     Top = 56
     Bitmap = {
-      494C010106000800140010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106000800300010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
