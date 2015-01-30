@@ -56,17 +56,13 @@ object formMain: TformMain
     Top = 24
     Width = 801
     Height = 681
-    ActivePage = tabshProject
+    ActivePage = TabSheet1
     Anchors = [akLeft, akTop, akRight, akBottom]
     MultiLine = True
     TabHeight = 30
     TabOrder = 1
     object tabshInitial: TTabSheet
       Caption = 'Welcome'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tabshProject: TTabSheet
       Caption = 'Project Name'
@@ -289,8 +285,8 @@ object formMain: TformMain
       Caption = 'TabSheet1'
       ImageIndex = 2
       object DBEdit1: TDBEdit
-        Left = 8
-        Top = 72
+        Left = 13
+        Top = 16
         Width = 121
         Height = 21
         DataSource = datamoduleMain.datasourceDomain

@@ -181,10 +181,10 @@ begin
     [akLeft, akTop]);
   CreateDBEdit(formMain, datamoduleMain.datasourceSingleDomain,
     'DomainName', Tab, 120, 30, 5, 60, [akLeft, akTop, akRight]);
-  CreateLabel(formMain, '.', Tab, 0, 0, 130, 60,
+  CreateLabel(formMain, '.', Tab, 0, 0, 125, 60,
     [akLeft, akTop]);
   CreateDBEdit(formMain, datamoduleMain.datasourceSingleDomain,
-    'DomainExtension', Tab, 60, 30, 135, 60, [akLeft, akTop, akRight]);
+    'DomainExtension', Tab, 60, 30, 130, 60, [akLeft, akTop, akRight]);
 end;
 
 procedure TformMain.strgrDomainListClick(Sender: TObject);

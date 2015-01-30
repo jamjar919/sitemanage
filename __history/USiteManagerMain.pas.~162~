@@ -107,7 +107,7 @@ begin
   strgrDomainList.Cells[0, 0] := 'Domain Name';
   strgrDomainList.Cells[1, 0] := 'Expiration Date';
   strgrDomainList.Cells[2, 0] := 'View/Edit Details';
-  strgrHostingList.Cells[0, 0] := 'Unique Hosting ID';
+  strgrHostingList.Cells[0, 0] := 'ID';
   strgrHostingList.Cells[1, 0] := 'FTP Server';
   strgrHostingList.Cells[2, 0] := 'Expiration Date';
   strgrHostingList.Cells[3, 0] := 'View/Edit Details';
@@ -161,9 +161,6 @@ procedure TformMain.openDomain(dName: string; dExten: string);
 var
   Tab: TTabSheet;
   titleLabel: TLabel;
-  domainDotLabel: TLabel;
-  domainEdit: TDBEdit;
-  DataSource: TDataSource;
 begin
   // select only the needed domain
   with datamoduleMain.datasetSingleDomain do
@@ -180,16 +177,20 @@ begin
     [akLeft, akTop]);
   titleLabel.Font.Size := 14;
   // make domain edit options
-  domainEdit := CreateDBEdit(formMain, datamoduleMain.datasourceSingleDomain,
-    'DomainName', Tab, 300, 30, 3, 40, [akLeft, akTop, akRight]);
-  domainDotLabel := CreateLabel(formMain, '.', Tab, 0, 0, 305, 40,
+  CreateLabel(formMain, 'Domain Name:', Tab, 0, 0, 125, 40,
     [akLeft, akTop]);
+  CreateDBEdit(formMain, datamoduleMain.datasourceSingleDomain,
+    'DomainName', Tab, 120, 30, 3, 40, [akLeft, akTop, akRight]);
+  CreateLabel(formMain, '.', Tab, 0, 0, 125, 40,
+    [akLeft, akTop]);
+  CreateDBEdit(formMain, datamoduleMain.datasourceSingleDomain,
+    'DomainExtension', Tab, 60, 30, 130, 40, [akLeft, akTop, akRight]);
 end;
 
 procedure TformMain.strgrDomainListClick(Sender: TObject);
 var
   domain, dName, dExtension: string;
-  i, n: integer;
+  i: integer;
   foundDot: boolean;
 begin
   // decide if a button cell was clicked

@@ -177,14 +177,14 @@ begin
     [akLeft, akTop]);
   titleLabel.Font.Size := 14;
   // make domain edit options
-  CreateLabel(formMain, 'Domain Name:', Tab, 0, 0, 5, 40,
+  CreateLabel(formMain, 'Domain Name:', Tab, 0, 0, 3, 40,
     [akLeft, akTop]);
   CreateDBEdit(formMain, datamoduleMain.datasourceSingleDomain,
-    'DomainName', Tab, 120, 30, 5, 60, [akLeft, akTop, akRight]);
-  CreateLabel(formMain, '.', Tab, 0, 0, 130, 60,
+    'DomainName', Tab, 120, 30, 3, 60, [akLeft, akTop, akRight]);
+  CreateLabel(formMain, '.', Tab, 0, 0, 125, 60,
     [akLeft, akTop]);
   CreateDBEdit(formMain, datamoduleMain.datasourceSingleDomain,
-    'DomainExtension', Tab, 60, 30, 135, 60, [akLeft, akTop, akRight]);
+    'DomainExtension', Tab, 60, 30, 130, 60, [akLeft, akTop, akRight]);
 end;
 
 procedure TformMain.strgrDomainListClick(Sender: TObject);
