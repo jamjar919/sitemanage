@@ -12,6 +12,12 @@ uses
 
 type
 
+  TDomainDetails = class
+  private
+  public
+
+  end;
+
   TProject = class
   private
     PID: integer;
@@ -69,9 +75,9 @@ implementation
 
 uses UDataModule, ULoadProject, UFormElementCreators;
 
-procedure formMain.buttonUpdateDBClick(Sender: TObject);
+procedure TformMain.buttonUpdateDBClick(Sender: TObject);
 begin
-  SaveDomain(^dNameEdit.text);
+  //SaveDomain(dNameEdit.text);
 end;
 
 

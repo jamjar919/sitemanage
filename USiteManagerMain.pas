@@ -77,7 +77,7 @@ uses UDataModule, ULoadProject, UFormElementCreators;
 
 procedure TformMain.buttonUpdateDBClick(Sender: TObject);
 begin
-  SaveDomain(dNameEdit.text);
+  //SaveDomain(dNameEdit.text);
 end;
 
 
@@ -254,12 +254,13 @@ begin
   CreateLabel(formMain, 'Registered with:', Tab, 0, 0, 5, 120, [akLeft, akTop]);
   CreateDBDropdown(formMain, datamoduleMain.datasourceDomainReg, 'Name', rName,
     Tab, 130, 30, 160, 117, [akLeft, akTop]);
-  CreateButton(formMain, 'View Details', buttonUpdateDBClick, Tab, 100, 30, 290, 117,
+  CreateButton(formMain, 'View Details', buttonUpdateDBClick, Tab, 100, 20, 300, 117,
     [akLeft, akTop]);
   // domain expiration
   CreateLabel(formMain, 'Expires on:', Tab, 0, 0, 5, 145, [akLeft, akTop]);
   CreateDateTimePicker(formMain, expireDate, Tab, 130, 30, 160, 145,
     [akLeft, akTop]);
+  //domain cost
 end;
 
 procedure TformMain.strgrDomainListClick(Sender: TObject);
