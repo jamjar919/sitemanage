@@ -21,7 +21,6 @@ type
     datasetDomainReg: TADODataSet;
     datasetSingleDomainReg: TADODataSet;
     datasourceDomainReg: TDataSource;
-    datasourceSingleDomainReg: TDataSource;
   private
     { Private declarations }
   public

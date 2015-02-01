@@ -16,12 +16,6 @@ type
     datasourceHosting: TDataSource;
     datasetSingleDomain: TADODataSet;
     dataSourceSingleDomain: TDataSource;
-    datasetSingleProject: TADODataSet;
-    datasourceSingleProject: TDataSource;
-    datasetDomainReg: TADODataSet;
-    datasetSingleDomainReg: TADODataSet;
-    datasourceDomainReg: TDataSource;
-    datasourceSingleDomainReg: TDataSource;
   private
     { Private declarations }
   public

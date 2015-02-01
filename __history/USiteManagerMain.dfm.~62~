@@ -56,7 +56,7 @@ object formMain: TformMain
     Top = 33
     Width = 789
     Height = 681
-    ActivePage = tabshInitial
+    ActivePage = tabshProject
     Anchors = [akLeft, akTop, akRight, akBottom]
     MultiLine = True
     PopupMenu = popupTabMenu
@@ -287,6 +287,10 @@ object formMain: TformMain
           100)
       end
     end
+    object TabSheet1: TTabSheet
+      Caption = 'TabSheet1'
+      ImageIndex = 2
+    end
   end
   object panelSide: TPanel
     Left = 803
@@ -295,6 +299,15 @@ object formMain: TformMain
     Height = 677
     Anchors = [akTop, akRight, akBottom]
     TabOrder = 2
+  end
+  object DateTimePicker1: TDateTimePicker
+    Left = 48
+    Top = 104
+    Width = 186
+    Height = 21
+    Date = 42036.696858506950000000
+    Time = 42036.696858506950000000
+    TabOrder = 3
   end
   object toolbarMainImages: TImageList
     Left = 872

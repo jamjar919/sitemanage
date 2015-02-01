@@ -52,11 +52,11 @@ object formMain: TformMain
     end
   end
   object pagecontrolMain: TPageControl
-    Left = 8
-    Top = 33
-    Width = 789
+    Left = -4
+    Top = 24
+    Width = 801
     Height = 681
-    ActivePage = tabshInitial
+    ActivePage = tabshProject
     Anchors = [akLeft, akTop, akRight, akBottom]
     MultiLine = True
     PopupMenu = popupTabMenu
@@ -64,14 +64,12 @@ object formMain: TformMain
     TabOrder = 1
     object tabshInitial: TTabSheet
       Caption = 'Welcome'
-      ExplicitWidth = 793
     end
     object tabshProject: TTabSheet
       Caption = 'Project Name'
       ImageIndex = 1
-      ExplicitWidth = 793
       DesignSize = (
-        781
+        793
         641)
       object lblProjectName: TLabel
         Left = 3
@@ -245,7 +243,7 @@ object formMain: TformMain
       object strgrDomainList: TStringGrid
         Left = 3
         Top = 56
-        Width = 762
+        Width = 774
         Height = 161
         Anchors = [akLeft, akTop, akRight, akBottom]
         Color = clBtnFace
@@ -260,7 +258,6 @@ object formMain: TformMain
         ShowHint = False
         TabOrder = 0
         OnClick = strgrDomainListClick
-        ExplicitWidth = 774
         ColWidths = (
           52
           401
@@ -270,7 +267,7 @@ object formMain: TformMain
       object strgrHostingList: TStringGrid
         Left = 0
         Top = 245
-        Width = 765
+        Width = 777
         Height = 218
         Anchors = [akLeft, akTop, akRight, akBottom]
         ColCount = 4
@@ -279,7 +276,6 @@ object formMain: TformMain
         FixedCols = 0
         RowCount = 2
         TabOrder = 1
-        ExplicitWidth = 777
         ColWidths = (
           50
           406
@@ -300,7 +296,7 @@ object formMain: TformMain
     Left = 872
     Top = 8
     Bitmap = {
-      494C0101070018004C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010107001800480010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -575,7 +571,7 @@ object formMain: TformMain
     Left = 872
     Top = 56
     Bitmap = {
-      494C010106000800380010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106000800340010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -851,7 +847,6 @@ object formMain: TformMain
     Top = 112
     object moCloseTab: TMenuItem
       Caption = 'Close Tab'
-      OnClick = moCloseTabClick
     end
   end
 end

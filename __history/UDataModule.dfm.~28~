@@ -43,15 +43,14 @@ object datamoduleMain: TdatamoduleMain
     CommandText = 'select * from hosting;'
     Parameters = <>
     Left = 112
-    Top = 128
+    Top = 184
   end
   object datasourceHosting: TDataSource
     DataSet = datasetDomain
     Left = 232
-    Top = 128
+    Top = 184
   end
   object datasetSingleDomain: TADODataSet
-    Active = True
     Connection = ADOCmain
     CursorType = ctStatic
     CommandText = 'SELECT *  FROM domain WHERE DomainID = :did;'
@@ -65,16 +64,15 @@ object datamoduleMain: TdatamoduleMain
         Size = 255
         Value = Null
       end>
-    Left = 384
-    Top = 72
+    Left = 112
+    Top = 128
   end
   object dataSourceSingleDomain: TDataSource
     DataSet = datasetSingleDomain
-    Left = 528
-    Top = 72
+    Left = 232
+    Top = 128
   end
   object datasetSingleProject: TADODataSet
-    Active = True
     Connection = ADOCmain
     CursorType = ctStatic
     CommandText = 'SELECT * FROM project WHERE ProjectID = :pid;'
@@ -88,48 +86,7 @@ object datamoduleMain: TdatamoduleMain
         Size = 255
         Value = Null
       end>
-    Left = 384
+    Left = 344
     Top = 16
-  end
-  object datasourceSingleProject: TDataSource
-    DataSet = datasetSingleProject
-    Left = 528
-    Top = 16
-  end
-  object datasetDomainReg: TADODataSet
-    Connection = ADOCmain
-    CursorType = ctStatic
-    CommandText = 'SELECT * FROM domainregistrar;'
-    Parameters = <>
-    Left = 112
-    Top = 184
-  end
-  object datasetSingleDomainReg: TADODataSet
-    Active = True
-    Connection = ADOCmain
-    CursorType = ctStatic
-    CommandText = 'SELECT *  FROM domainregistrar WHERE RegistrarID = :rid;'
-    Parameters = <
-      item
-        Name = 'rid'
-        Attributes = [paNullable]
-        DataType = ftString
-        NumericScale = 232
-        Precision = 255
-        Size = 255
-        Value = Null
-      end>
-    Left = 384
-    Top = 184
-  end
-  object datasourceDomainReg: TDataSource
-    DataSet = datasetDomainReg
-    Left = 232
-    Top = 184
-  end
-  object datasourceSingleDomainReg: TDataSource
-    DataSet = datasetSingleDomainReg
-    Left = 528
-    Top = 184
   end
 end

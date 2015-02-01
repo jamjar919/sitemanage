@@ -56,7 +56,7 @@ object formMain: TformMain
     Top = 33
     Width = 789
     Height = 681
-    ActivePage = tabshInitial
+    ActivePage = tabshProject
     Anchors = [akLeft, akTop, akRight, akBottom]
     MultiLine = True
     PopupMenu = popupTabMenu

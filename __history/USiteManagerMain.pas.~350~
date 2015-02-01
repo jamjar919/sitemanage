@@ -12,9 +12,7 @@ uses
 
 type
 
-  TDomainDetails = class
-  private
-  public
+  TDomain = class
 
   end;
 
@@ -75,7 +73,7 @@ implementation
 
 uses UDataModule, ULoadProject, UFormElementCreators;
 
-procedure TformMain.buttonUpdateDBClick(Sender: TObject);
+procedure formMain.buttonUpdateDBClick(Sender: TObject);
 begin
   SaveDomain(dNameEdit.text);
 end;

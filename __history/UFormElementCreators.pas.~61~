@@ -33,7 +33,7 @@ function CreateDateTimePicker(form: TForm; Date: TDate; parent: TWinControl;
   width: integer; height: integer; left: integer; top: integer;
   anchors: TAnchors): TDateTimePicker;
 
-function CreateButton(form: TForm; caption: string; onClickEvent: TNotifyEvent; parent: TWinControl;
+function CreateButton(form: TForm; caption: string; onClickEvent: TProcedure; parent: TWinControl;
   width: integer; height: integer; left: integer; top: integer;
   anchors: TAnchors): TButton;
 
@@ -149,13 +149,13 @@ begin
   result := DTP;
 end;
 
-function CreateButton(form: TForm; caption: string; onClickEvent: TNotifyEvent; parent: TWinControl;
+function CreateButton(form: TForm; caption: string; onClickEvent: TProcedure; parent: TWinControl;
   width: integer; height: integer; left: integer; top: integer;
   anchors: TAnchors): TButton;
 var
   BUT: TButton;
 begin
-  BUT := TButton.Create(form);
+  BUT := TDateTimePicker.Create(form);
   BUT.left := left;
   BUT.top := top;
   BUT.width := width;
@@ -163,7 +163,7 @@ begin
   BUT.Visible := True;
   BUT.parent := parent;
   BUT.anchors := anchors;
-  //BUT.OnClick := onClickEvent;
+  BUT.OnClick := onClickEvent;'
   BUT.Caption := caption;
   result := BUT;
 end;

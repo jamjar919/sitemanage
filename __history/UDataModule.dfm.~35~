@@ -65,12 +65,12 @@ object datamoduleMain: TdatamoduleMain
         Size = 255
         Value = Null
       end>
-    Left = 384
+    Left = 344
     Top = 72
   end
   object dataSourceSingleDomain: TDataSource
     DataSet = datasetSingleDomain
-    Left = 528
+    Left = 464
     Top = 72
   end
   object datasetSingleProject: TADODataSet
@@ -88,12 +88,12 @@ object datamoduleMain: TdatamoduleMain
         Size = 255
         Value = Null
       end>
-    Left = 384
+    Left = 344
     Top = 16
   end
   object datasourceSingleProject: TDataSource
     DataSet = datasetSingleProject
-    Left = 528
+    Left = 464
     Top = 16
   end
   object datasetDomainReg: TADODataSet
@@ -119,7 +119,7 @@ object datamoduleMain: TdatamoduleMain
         Size = 255
         Value = Null
       end>
-    Left = 384
+    Left = 344
     Top = 184
   end
   object datasourceDomainReg: TDataSource
@@ -129,7 +129,7 @@ object datamoduleMain: TdatamoduleMain
   end
   object datasourceSingleDomainReg: TDataSource
     DataSet = datasetSingleDomainReg
-    Left = 528
+    Left = 464
     Top = 184
   end
 end

@@ -12,12 +12,6 @@ uses
 
 type
 
-  TDomainDetails = class
-  private
-  public
-
-  end;
-
   TProject = class
   private
     PID: integer;
@@ -75,7 +69,7 @@ implementation
 
 uses UDataModule, ULoadProject, UFormElementCreators;
 
-procedure TformMain.buttonUpdateDBClick(Sender: TObject);
+procedure formMain.buttonUpdateDBClick(Sender: TObject);
 begin
   SaveDomain(dNameEdit.text);
 end;
@@ -254,7 +248,7 @@ begin
   CreateLabel(formMain, 'Registered with:', Tab, 0, 0, 5, 120, [akLeft, akTop]);
   CreateDBDropdown(formMain, datamoduleMain.datasourceDomainReg, 'Name', rName,
     Tab, 130, 30, 160, 117, [akLeft, akTop]);
-  CreateButton(formMain, 'View Details', buttonUpdateDBClick, Tab, 100, 30, 290, 117,
+  CreateButton(formMain, 'View Details', saveDomain, Tab, 100, 30, 290, 117,
     [akLeft, akTop]);
   // domain expiration
   CreateLabel(formMain, 'Expires on:', Tab, 0, 0, 5, 145, [akLeft, akTop]);
