@@ -11,6 +11,7 @@ object formLoadProject: TformLoadProject
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object dbcomboProject: TDBLookupComboBox
@@ -18,6 +19,9 @@ object formLoadProject: TformLoadProject
     Top = 8
     Width = 145
     Height = 21
+    KeyField = 'ProjectName'
+    ListField = 'ProjectName'
+    ListSource = tadodsourceProjectData
     TabOrder = 0
   end
   object buttonLoadProject: TButton
@@ -27,5 +31,19 @@ object formLoadProject: TformLoadProject
     Height = 21
     Caption = 'Load'
     TabOrder = 1
+    OnClick = buttonLoadProjectClick
+  end
+  object tadodsetLoadProject: TADODataSet
+    Active = True
+    Connection = datamoduleMain.ADONextnorth
+    CursorType = ctStatic
+    CommandText = 'SELECT * FROM project;'
+    Parameters = <>
+    Left = 8
+  end
+  object tadodsourceProjectData: TDataSource
+    DataSet = tadodsetLoadProject
+    Left = 112
+    Top = 8
   end
 end

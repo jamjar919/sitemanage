@@ -12,5 +12,10 @@
     <Transaction>2015/02/02 19:38:28.853,=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
     <Transaction>2015/02/02 19:38:47.685,J:\Git\sitemanager\sitemanage\UData.pas=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
     <Transaction>2015/02/02 19:38:47.685,J:\Git\sitemanager\sitemanage\UData.dfm=J:\Git\sitemanager\sitemanage\Unit1.dfm</Transaction>
+    <Transaction>2015/02/02 20:19:26.661,=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
+    <Transaction>2015/02/02 20:20:25.177,J:\Git\sitemanager\sitemanage\ULoadProject.pas=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
+    <Transaction>2015/02/02 20:20:25.177,J:\Git\sitemanager\sitemanage\ULoadProject.dfm=J:\Git\sitemanager\sitemanage\Unit1.dfm</Transaction>
+    <Transaction>2015/02/02 20:21:52.490,=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
+    <Transaction>2015/02/02 20:21:59.861,J:\Git\sitemanager\sitemanage\UClass.pas=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
   </Transactions>
 </BorlandProject>

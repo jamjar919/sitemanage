@@ -90,7 +90,8 @@ object formMain: TformMain
       Left = 23
       Top = 12
       Width = 210
-      Height = 85
+      Height = 90
+      Center = True
       Picture.Data = {
         0954506E67496D61676589504E470D0A1A0A0000000D49484452000000D20000
         005A080200000042189FA0000000097048597300000B1300000B1301009A9C18
@@ -656,6 +657,7 @@ object formMain: TformMain
         E0539901A82D4AA996E35266FA434B72EDF205977F7263CF5691A78504F55A8C
         7E11B762AE5DDAE50392AAA5A8FBE7767A452DB06BE163A769B5CF4C93F276F9
         FF2A601EFF1FDB7C4EF202C5596A0000000049454E44AE426082}
+      Stretch = True
     end
     object imageButtonClose: TImage
       Left = 232
@@ -682,18 +684,19 @@ object formMain: TformMain
       OnClick = imageButtonCloseClick
     end
     object buttonWelcomeOpenProject: TButton
-      Left = 46
+      Left = 32
       Top = 146
-      Width = 175
+      Width = 189
       Height = 41
       Caption = 'Open Project'
       Style = bsCommandLink
       TabOrder = 0
+      OnClick = buttonWelcomeOpenProjectClick
     end
     object buttonWelcomeGenerateReport: TButton
-      Left = 46
+      Left = 32
       Top = 240
-      Width = 175
+      Width = 189
       Height = 41
       Caption = 'Generate Reports'
       Style = bsCommandLink
@@ -701,19 +704,18 @@ object formMain: TformMain
     end
   end
   object buttonWelcomeSearchData: TButton
-    Left = 82
+    Left = 68
     Top = 249
-    Width = 175
+    Width = 189
     Height = 41
     Caption = 'Search Database'
     Style = bsCommandLink
     TabOrder = 3
   end
   object imglistToolbar: TImageList
-    Left = 48
-    Top = 80
+    Left = 240
     Bitmap = {
-      494C010105000800140010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010105000800180010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       000000000000000000000000000000000000000000000000000000000000016A
       9F000284BA000373A80000000000000000000000000000000000000000000000
