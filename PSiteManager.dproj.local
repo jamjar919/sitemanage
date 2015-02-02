@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2015/02/02 18:59:03.000.078,=J:\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2015/02/02 18:59:39.763,=J:\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2015/02/02 19:00:29.264,J:\Git\sitemanager\sitemanage\UMain.pas=J:\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2015/02/02 19:00:29.264,J:\Git\sitemanager\sitemanage\UMain.dfm=J:\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2015/02/02 19:00:32.914,J:\Git\sitemanager\sitemanage\PSiteManager.dproj=J:\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2015/02/02 19:10:25.692,=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
+    <Transaction>2015/02/02 19:11:02.622,J:\Git\sitemanager\sitemanage\UDomainView.dfm=J:\Git\sitemanager\sitemanage\Unit1.dfm</Transaction>
+    <Transaction>2015/02/02 19:11:02.622,J:\Git\sitemanager\sitemanage\UDomainView.pas=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
+    <Transaction>2015/02/02 19:38:28.853,=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
+    <Transaction>2015/02/02 19:38:47.685,J:\Git\sitemanager\sitemanage\UData.pas=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
+    <Transaction>2015/02/02 19:38:47.685,J:\Git\sitemanager\sitemanage\UData.dfm=J:\Git\sitemanager\sitemanage\Unit1.dfm</Transaction>
+  </Transactions>
+</BorlandProject>
