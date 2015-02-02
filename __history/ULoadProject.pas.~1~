@@ -1,0 +1,25 @@
+unit ULoadProject;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.DBCtrls;
+
+type
+  TformLoadProject = class(TForm)
+    DBLookupComboBox1: TDBLookupComboBox;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  formLoadProject: TformLoadProject;
+
+implementation
+
+{$R *.dfm}
+
+end.
