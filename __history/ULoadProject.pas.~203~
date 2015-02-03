@@ -95,11 +95,10 @@ begin
       Next;
     end; // ENDWHILE
   end; // ENDWITH
-  // find out which domains are unassigned
+  //find out which domains are unassigned
   for Host in Project.HostingList do
-    for Domain in Project.DomainList do
-      if Host.DomainID = Domain.DomainID then
-        Domain.HasHosting := True;
+
+
   result := Project;
 end;
 

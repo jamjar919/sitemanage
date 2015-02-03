@@ -70,7 +70,6 @@ object formMain: TformMain
     Top = 25
     Width = 326
     Height = 600
-    AutoExpand = True
     Indent = 19
     ReadOnly = True
     TabOrder = 1

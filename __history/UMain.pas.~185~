@@ -65,7 +65,7 @@ procedure TformMain.treeMainDblClick(Sender: TObject);
 begin
   if Assigned(treeMain.Selected) then
   begin
-    treeMain.Selected.Expanded := not treeMain.Selected.Expanded;
+    ShowMessage(inttostr(treeMain.Selected.Index));
   end;
 end;
 
@@ -111,20 +111,16 @@ begin
   ProjectNode := treeMain.Items.AddFirst(treeMain.Selected, Project.Name);
   URegDomainNode := treeMain.Items.AddChild(ProjectNode, 'Unassigned Domains');
   for Host in Project.HostingList do
-  begin
     CurrentNode := treeMain.Items.AddChildObject(ProjectNode,
       Host.FTPServer, Host);
     for Domain in Project.DomainList do
       if Domain.DomainID = Host.DomainID then
         treeMain.Items.AddChildObject(CurrentNode, Domain.DomainName + '.' +
           Domain.DomainExtension, Domain);
-  end;
-  for Domain in Project.DomainList do
-    if not Domain.HasHosting then
-      treeMain.Items.AddChildObject(URegDomainNode, Domain.DomainName + '.' +
-        Domain.DomainExtension, Domain);
-  treeMain.FullExpand;
-end;
+    for Host in Project.DomainList do
+      if not Domain.HasHosting then
+        treeMain.Items.AddChildObject(URegDomainNode, Domain.DomainName + '.' +
+          Domain.DomainExtension, Domain);
 
 end.
 

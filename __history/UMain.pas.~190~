@@ -65,7 +65,7 @@ procedure TformMain.treeMainDblClick(Sender: TObject);
 begin
   if Assigned(treeMain.Selected) then
   begin
-    treeMain.Selected.Expanded := not treeMain.Selected.Expanded;
+    ShowMessage(inttostr(treeMain.Selected.Index));
   end;
 end;
 
@@ -119,12 +119,10 @@ begin
         treeMain.Items.AddChildObject(CurrentNode, Domain.DomainName + '.' +
           Domain.DomainExtension, Domain);
   end;
-  for Domain in Project.DomainList do
+  for Host in Project.DomainList do
     if not Domain.HasHosting then
       treeMain.Items.AddChildObject(URegDomainNode, Domain.DomainName + '.' +
         Domain.DomainExtension, Domain);
-  treeMain.FullExpand;
 end;
-
 end.
 

@@ -15,7 +15,7 @@ type
     rDate: TDate;
     rCost: real;
   public
-    HasHosting:boolean;
+    IsPublished:boolean;
     property DomainID: integer read DID;
     property ProjectID: integer read PID;
     property DomainRegistrarID: integer read DRID;
@@ -94,7 +94,7 @@ begin
   Self.dExten := dExten;
   Self.rDate := rDate;
   Self.rCost := rCost;
-  Self.HasHosting := False;
+  Self.IsPublished := False;
 end;
 
 constructor TProject.Create(PID: integer; CID: integer; pName: string);

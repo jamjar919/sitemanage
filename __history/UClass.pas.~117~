@@ -15,7 +15,7 @@ type
     rDate: TDate;
     rCost: real;
   public
-    HasHosting:boolean;
+    IsPublished:boolean;
     property DomainID: integer read DID;
     property ProjectID: integer read PID;
     property DomainRegistrarID: integer read DRID;

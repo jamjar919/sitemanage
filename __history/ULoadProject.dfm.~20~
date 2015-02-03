@@ -34,6 +34,7 @@ object formLoadProject: TformLoadProject
     OnClick = buttonLoadProjectClick
   end
   object tadodsetLoadProject: TADODataSet
+    Active = True
     Connection = datamoduleMain.ADONextnorth
     CursorType = ctStatic
     CommandText = 'SELECT * FROM project;'

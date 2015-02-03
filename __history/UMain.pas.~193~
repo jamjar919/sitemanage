@@ -65,6 +65,7 @@ procedure TformMain.treeMainDblClick(Sender: TObject);
 begin
   if Assigned(treeMain.Selected) then
   begin
+    ShowMessage(inttostr(treeMain.Selected.Index));
     treeMain.Selected.Expanded := not treeMain.Selected.Expanded;
   end;
 end;
@@ -125,6 +126,5 @@ begin
         Domain.DomainExtension, Domain);
   treeMain.FullExpand;
 end;
-
 end.
 

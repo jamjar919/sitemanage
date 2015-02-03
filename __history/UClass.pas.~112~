@@ -14,8 +14,8 @@ type
     dName, dExten: string;
     rDate: TDate;
     rCost: real;
+    Pub: boolean;
   public
-    HasHosting:boolean;
     property DomainID: integer read DID;
     property ProjectID: integer read PID;
     property DomainRegistrarID: integer read DRID;
@@ -23,6 +23,7 @@ type
     property DomainExtension: string read dExten;
     property RenewalDate: TDate read rDate;
     property RenewalCost: real read rCost;
+    Property IsPublished:boolean read Pub;
     constructor Create(DID, PID, DRID: integer; dName, dExten: string;
       rDate: TDate; rCost: real);
   end;
@@ -94,7 +95,6 @@ begin
   Self.dExten := dExten;
   Self.rDate := rDate;
   Self.rCost := rCost;
-  Self.HasHosting := False;
 end;
 
 constructor TProject.Create(PID: integer; CID: integer; pName: string);

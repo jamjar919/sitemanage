@@ -32,6 +32,7 @@ type
     procedure buttonWelcomeOpenProjectClick(Sender: TObject);
     procedure treeMainChange(Sender: TObject; Node: TTreeNode);
     procedure treeMainDblClick(Sender: TObject);
+    procedure treeMainClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -59,6 +60,14 @@ end;
 procedure TformMain.treeMainChange(Sender: TObject; Node: TTreeNode);
 begin
   SelectedNode := Node;
+end;
+
+procedure TformMain.treeMainClick(Sender: TObject);
+begin
+  if Assigned(treeMain.Selected) then
+  begin
+    treeMain.Selected.Expanded := not treeMain.Selected.Expanded;
+  end;
 end;
 
 procedure TformMain.treeMainDblClick(Sender: TObject);
