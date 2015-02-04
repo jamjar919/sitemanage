@@ -6,8 +6,9 @@ uses Generics.Collections;
 { This unit contains all the class definitions that are used across multiple units }
 
 type
+  TDataType = (dtDomain,dtHosting,dtCMS,dtDatabase);
 
-  TDomain = class
+  TDomain = class(TObject)
   private
     DID, PID, DRID: integer;
     // id's for domain, project and domain registrar
@@ -15,7 +16,6 @@ type
     rDate: TDate;
     rCost: real;
   public
-    HasHosting:boolean;
     property DomainID: integer read DID;
     property ProjectID: integer read PID;
     property DomainRegistrarID: integer read DRID;
@@ -27,7 +27,7 @@ type
       rDate: TDate; rCost: real);
   end;
 
-  THosting = class
+  THosting = class(TObject)
   private
     HID, PID, DID, HRID: integer;
     // id's for hosting, project, domain and hosting registrar
@@ -50,7 +50,7 @@ type
       Server, User, Pass: string; Port: integer);
   end;
 
-  TProject = class
+  TProject = class(TObject)
   private
     PID, CID: integer;
     pName: string;
@@ -94,7 +94,6 @@ begin
   Self.dExten := dExten;
   Self.rDate := rDate;
   Self.rCost := rCost;
-  Self.HasHosting := False;
 end;
 
 constructor TProject.Create(PID: integer; CID: integer; pName: string);

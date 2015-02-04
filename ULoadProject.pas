@@ -32,8 +32,6 @@ implementation
 function TformLoadProject.LoadProject(ProjectName: string): TProject;
 var
   Project: TProject;
-  Host: THosting;
-  Domain: TDomain;
   ProjectID, ClientID: integer;
 begin
   // get project data from the database
@@ -95,11 +93,6 @@ begin
       Next;
     end; // ENDWHILE
   end; // ENDWITH
-  // find out which domains are unassigned
-  for Host in Project.HostingList do
-    for Domain in Project.DomainList do
-      if Host.DomainID = Domain.DomainID then
-        Domain.HasHosting := True;
   result := Project;
 end;
 
