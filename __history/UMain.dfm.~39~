@@ -70,8 +70,13 @@ object formMain: TformMain
     Top = 25
     Width = 326
     Height = 600
+    AutoExpand = True
     Indent = 19
+    ReadOnly = True
     TabOrder = 1
+    OnChange = treeMainChange
+    OnClick = treeMainClick
+    OnDblClick = treeMainDblClick
   end
   object panelWelcome: TPanel
     Left = 36
@@ -715,7 +720,7 @@ object formMain: TformMain
   object imglistToolbar: TImageList
     Left = 240
     Bitmap = {
-      494C010105000800200010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010105000800240010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       000000000000000000000000000000000000000000000000000000000000016A
       9F000284BA000373A80000000000000000000000000000000000000000000000

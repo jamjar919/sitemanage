@@ -32,6 +32,8 @@ implementation
 function TformLoadProject.LoadProject(ProjectName: string): TProject;
 var
   Project: TProject;
+  Host: THosting;
+  Domain: TDomain;
   ProjectID, ClientID: integer;
 begin
   // get project data from the database
@@ -106,7 +108,7 @@ begin
   begin
     CurrentProject := LoadProject(PName);
     formLoadProject.Hide;
-    displayProjectOnTree(CurrentProject);
+    formMain.displayProjectOnTree(CurrentProject);
   end
   else
     MessageDlg('Please select a valid project.', mtError, [mbOk], 0);

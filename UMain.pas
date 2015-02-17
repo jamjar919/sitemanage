@@ -35,15 +35,24 @@ type
     procedure buttonWelcomeOpenProjectClick(Sender: TObject);
     procedure treeMainChange(Sender: TObject; Node: TTreeNode);
     procedure treeMainDblClick(Sender: TObject);
+<<<<<<< HEAD
     procedure tbLoadClick(Sender: TObject);
+=======
+    procedure treeMainClick(Sender: TObject);
+>>>>>>> origin/master
   private
     { Private declarations }
   public
     SelectedNode: TTreeNode;
+<<<<<<< HEAD
     procedure OpenProject;
     procedure OpenHosting(Host: THosting);
     procedure OpenDomain(Domain: TDomain);
     procedure DeleteDomain(DomainID: integer);
+=======
+    procedure OpenHosting(Host: THosting);
+    procedure OpenDomain(Domain: TDomain);
+>>>>>>> origin/master
     procedure displayProjectOnTree(Project: TProject);
     procedure closeWelcomeForm;
     procedure showLoadProjectForm;
@@ -58,6 +67,7 @@ implementation
 
 uses ULoadProject;
 
+<<<<<<< HEAD
 procedure TformMain.DeleteDomain(DomainID: integer);
 begin
   // delete the domain from the domains table
@@ -86,12 +96,15 @@ begin
   showLoadProjectForm;
 end;
 
+=======
+>>>>>>> origin/master
 procedure TformMain.OpenHosting(Host: THosting);
 begin
   ShowMessage(Host.FTPServer);
 end;
 
 procedure TformMain.OpenDomain(Domain: TDomain);
+<<<<<<< HEAD
 var
   openDomainForm: TFormDomainView;
 begin
@@ -99,6 +112,11 @@ begin
   openDomainForm.Domain := Domain;
   openDomainForm.doOpen(Domain);
   openDomainForm.Show;
+=======
+begin
+  // open the domain
+  ShowMessage(Domain.DomainName);
+>>>>>>> origin/master
 end;
 
 procedure TformMain.showLoadProjectForm;
@@ -115,6 +133,26 @@ end;
 procedure TformMain.treeMainChange(Sender: TObject; Node: TTreeNode);
 begin
   SelectedNode := Node;
+end;
+
+procedure TformMain.treeMainClick(Sender: TObject);
+var
+  Node: TTreeNode;
+  UnknownObject: TObject;
+begin
+  if Assigned(treeMain.Selected) then
+  begin
+    Node := treeMain.Selected;
+    UnknownObject := Node.Data;
+    if UnknownObject is TDomain then
+    begin
+      OpenDomain(UnknownObject as TDomain);
+    end
+    else if UnknownObject is THosting then
+    begin
+      OpenHosting(UnknownObject as THosting);
+    end;
+  end;
 end;
 
 procedure TformMain.treeMainDblClick(Sender: TObject);
@@ -176,14 +214,21 @@ var
   Database: TDatabase;
 begin
   // display the project on the tree
+<<<<<<< HEAD
   ProjectNode := treeMain.Items.AddFirst(nil, Project.Name);
   ProjectNode.ImageIndex := 0;
   ProjectNode.SelectedIndex := ProjectNode.ImageIndex;
   URegNode := treeMain.Items.AddChild(ProjectNode, 'Unassigned');
+=======
+  // http://jedi.grizzlydev.com/www/art_usingtreeviews.html
+  ProjectNode := treeMain.Items.AddFirst(treeMain.Selected, Project.Name);
+  URegDomainNode := treeMain.Items.AddChild(ProjectNode, 'Unassigned Hosts');
+>>>>>>> origin/master
   for Domain in Project.DomainList do
   begin
     CurrentNode := treeMain.Items.AddChildObject(ProjectNode,
       Domain.DomainName + '.' + Domain.DomainExtension, Domain);
+<<<<<<< HEAD
     CurrentNode.ImageIndex := 1;
     CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
     for Host in Project.HostingList do
@@ -229,6 +274,14 @@ begin
       CurrentNode.ImageIndex := 3;
       CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
     end;
+=======
+    for Host in Project.HostingList do
+      if Domain.DomainID = Host.DomainID then
+      begin
+        treeMain.Items.AddChildObject(CurrentNode, Host.FTPServer, Host);
+      end;
+  end;
+>>>>>>> origin/master
   treeMain.FullExpand;
 end;
 

@@ -37,6 +37,8 @@ type
     { Private declarations }
   public
     SelectedNode: TTreeNode;
+    procedure OpenHosting(Host: THosting);
+    procedure OpenDomain(Domain: TDomain);
     procedure displayProjectOnTree(Project: TProject);
     procedure closeWelcomeForm;
     procedure showLoadProjectForm;
@@ -51,6 +53,17 @@ implementation
 
 uses ULoadProject;
 
+procedure TformMain.OpenHosting(Host: THosting);
+begin
+  ShowMessage(Host.FTPServer);
+end;
+
+procedure TformMain.OpenDomain(Domain: TDomain);
+begin
+  // open the domain
+  ShowMessage(Domain.DomainName);
+end;
+
 procedure TformMain.showLoadProjectForm;
 begin
   // show the form
@@ -63,10 +76,25 @@ begin
 end;
 
 procedure TformMain.treeMainClick(Sender: TObject);
+var
+  Node: TTreeNode;
+  UnknownObject: TObject;
+  Domain: TDomain;
+  Host: THosting;
 begin
   if Assigned(treeMain.Selected) then
   begin
-    treeMain.Selected.Expanded := not treeMain.Selected.Expanded;
+    Node := treeMain.Selected;
+    UnknownObject := Node.Data;
+    if UnknownObject is TDomain then
+    begin
+      Domain := UnknownObject;
+      OpenDomain(Domain);
+    end
+    else if UnknownObject is THosting then
+    begin
+
+    end;
   end;
 end;
 
@@ -118,21 +146,19 @@ begin
   // display the project on the tree
   // http://jedi.grizzlydev.com/www/art_usingtreeviews.html
   ProjectNode := treeMain.Items.AddFirst(treeMain.Selected, Project.Name);
-  URegDomainNode := treeMain.Items.AddChild(ProjectNode, 'Unassigned Domains');
-  for Host in Project.HostingList do
+  URegDomainNode := treeMain.Items.AddChild(ProjectNode, 'Unassigned Hosts');
+  for Domain in Project.DomainList do
   begin
     CurrentNode := treeMain.Items.AddChildObject(ProjectNode,
-      Host.FTPServer, Host);
-    for Domain in Project.DomainList do
+      Domain.DomainName + '.' + Domain.DomainExtension, Domain);
+    for Host in Project.HostingList do
       if Domain.DomainID = Host.DomainID then
-        treeMain.Items.AddChildObject(CurrentNode, Domain.DomainName + '.' +
-          Domain.DomainExtension, Domain);
+      begin
+        treeMain.Items.AddChildObject(CurrentNode, Host.FTPServer, Host);
+      end;
   end;
-  for Domain in Project.DomainList do
-    if not Domain.HasHosting then
-      treeMain.Items.AddChildObject(URegDomainNode, Domain.DomainName + '.' +
-        Domain.DomainExtension, Domain);
   treeMain.FullExpand;
 end;
+
 end.
 
