@@ -1,7 +1,7 @@
 object datamoduleMain: TdatamoduleMain
   OldCreateOrder = False
   Height = 64
-  Width = 304
+  Width = 239
   object ADONextnorth: TADOConnection
     Connected = True
     ConnectionString = 
@@ -17,22 +17,6 @@ object datamoduleMain: TdatamoduleMain
     CursorType = ctStatic
     Parameters = <>
     Left = 120
-    Top = 8
-  end
-  object commandDelete: TADOCommand
-    CommandText = 'DELETE FROM domain WHERE DomainID = :did'
-    Connection = ADONextnorth
-    Parameters = <
-      item
-        Name = 'did'
-        Attributes = [paNullable]
-        DataType = ftString
-        NumericScale = 232
-        Precision = 255
-        Size = 255
-        Value = Null
-      end>
-    Left = 216
     Top = 8
   end
 end

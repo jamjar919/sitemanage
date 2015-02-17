@@ -155,14 +155,14 @@ object formDomainView: TformDomainView
       Caption = 'View'
       TabOrder = 1
     end
-    object dbcomboProject: TDBLookupComboBox
+    object DBLookupComboBox1: TDBLookupComboBox
       Left = 108
       Top = 63
       Width = 145
       Height = 21
-      KeyField = 'ProjectID'
-      ListField = 'ProjectName'
-      ListSource = datasourceProject
+      KeyField = 'RegistrarID'
+      ListField = 'Name'
+      ListSource = datasourceDomainReg
       TabOrder = 2
     end
   end
@@ -277,16 +277,8 @@ object formDomainView: TformDomainView
     Top = 147
   end
   object datasetproject: TADODataSet
-    Connection = datamoduleMain.ADONextnorth
-    CursorType = ctStatic
-    CommandText = 'SELECT * FROM project'
     Parameters = <>
-    Left = 200
-    Top = 295
-  end
-  object datasourceProject: TDataSource
-    DataSet = datasetproject
-    Left = 104
-    Top = 295
+    Left = 176
+    Top = 287
   end
 end

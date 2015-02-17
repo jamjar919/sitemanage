@@ -2,7 +2,7 @@ unit UMain;
 
 interface
 
-// icons http://www.fatcow.com/free-icons
+//icons http://www.fatcow.com/free-icons
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
@@ -35,24 +35,15 @@ type
     procedure buttonWelcomeOpenProjectClick(Sender: TObject);
     procedure treeMainChange(Sender: TObject; Node: TTreeNode);
     procedure treeMainDblClick(Sender: TObject);
-<<<<<<< HEAD
     procedure tbLoadClick(Sender: TObject);
-=======
-    procedure treeMainClick(Sender: TObject);
->>>>>>> origin/master
   private
     { Private declarations }
   public
     SelectedNode: TTreeNode;
-<<<<<<< HEAD
     procedure OpenProject;
     procedure OpenHosting(Host: THosting);
     procedure OpenDomain(Domain: TDomain);
     procedure DeleteDomain(DomainID: integer);
-=======
-    procedure OpenHosting(Host: THosting);
-    procedure OpenDomain(Domain: TDomain);
->>>>>>> origin/master
     procedure displayProjectOnTree(Project: TProject);
     procedure closeWelcomeForm;
     procedure showLoadProjectForm;
@@ -67,26 +58,26 @@ implementation
 
 uses ULoadProject;
 
-<<<<<<< HEAD
 procedure TformMain.DeleteDomain(DomainID: integer);
 begin
   // delete the domain from the domains table
-  // we can't use a dataset as the query won't return a result  so we use a tadocommand
-  datamoduleMain.datasetDelete.CommandText :=
-    'DELETE FROM domain WHERE DomainID = ' + inttostr(DomainID);
-  datamoduleMain.datasetDelete.Open;
-  // resolve dependencies in other tables
-  datamoduleMain.datasetDelete.Close;
-  datamoduleMain.datasetDelete.CommandText :=
-    'SELECT * FROM hosting WHERE DomainID = ' + inttostr(DomainID);
-  datamoduleMain.datasetDelete.Open;
-  while not datamoduleMain.datasetDelete.EOF do
+  with datamoduleMain.datasetDelete do
   begin
-    datamoduleMain.datasetDelete.FieldValues['DomainID'] := 0;
-    datamoduleMain.datasetDelete.Next;
-  end; // END EOF
-  datamoduleMain.datasetDelete.Close;
-  datamoduleMain.datasetDelete.CommandText := '';
+    CommandText := 'DELETE FROM domain WHERE DomainID = ' + inttostr(DomainID);
+    Open;
+    // resolve dependencies in other tables
+    Close;
+    CommandText := 'SELECT * FROM hosting WHERE DomainID = ' +
+      inttostr(DomainID);
+    Open;
+    while not EOF do
+    begin
+      FieldValues['DomainID'] := 0;
+      Next;
+    end; // END EOF
+    Close;
+    CommandText := '';
+  end; // END WITH
 end;
 
 procedure TformMain.OpenProject;
@@ -96,15 +87,12 @@ begin
   showLoadProjectForm;
 end;
 
-=======
->>>>>>> origin/master
 procedure TformMain.OpenHosting(Host: THosting);
 begin
   ShowMessage(Host.FTPServer);
 end;
 
 procedure TformMain.OpenDomain(Domain: TDomain);
-<<<<<<< HEAD
 var
   openDomainForm: TFormDomainView;
 begin
@@ -112,11 +100,6 @@ begin
   openDomainForm.Domain := Domain;
   openDomainForm.doOpen(Domain);
   openDomainForm.Show;
-=======
-begin
-  // open the domain
-  ShowMessage(Domain.DomainName);
->>>>>>> origin/master
 end;
 
 procedure TformMain.showLoadProjectForm;
@@ -133,26 +116,6 @@ end;
 procedure TformMain.treeMainChange(Sender: TObject; Node: TTreeNode);
 begin
   SelectedNode := Node;
-end;
-
-procedure TformMain.treeMainClick(Sender: TObject);
-var
-  Node: TTreeNode;
-  UnknownObject: TObject;
-begin
-  if Assigned(treeMain.Selected) then
-  begin
-    Node := treeMain.Selected;
-    UnknownObject := Node.Data;
-    if UnknownObject is TDomain then
-    begin
-      OpenDomain(UnknownObject as TDomain);
-    end
-    else if UnknownObject is THosting then
-    begin
-      OpenHosting(UnknownObject as THosting);
-    end;
-  end;
 end;
 
 procedure TformMain.treeMainDblClick(Sender: TObject);
@@ -214,21 +177,14 @@ var
   Database: TDatabase;
 begin
   // display the project on the tree
-<<<<<<< HEAD
   ProjectNode := treeMain.Items.AddFirst(nil, Project.Name);
   ProjectNode.ImageIndex := 0;
   ProjectNode.SelectedIndex := ProjectNode.ImageIndex;
   URegNode := treeMain.Items.AddChild(ProjectNode, 'Unassigned');
-=======
-  // http://jedi.grizzlydev.com/www/art_usingtreeviews.html
-  ProjectNode := treeMain.Items.AddFirst(treeMain.Selected, Project.Name);
-  URegDomainNode := treeMain.Items.AddChild(ProjectNode, 'Unassigned Hosts');
->>>>>>> origin/master
   for Domain in Project.DomainList do
   begin
     CurrentNode := treeMain.Items.AddChildObject(ProjectNode,
       Domain.DomainName + '.' + Domain.DomainExtension, Domain);
-<<<<<<< HEAD
     CurrentNode.ImageIndex := 1;
     CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
     for Host in Project.HostingList do
@@ -242,16 +198,14 @@ begin
         for CMS in Project.CMSList do
           if CMS.HostingID = Host.HostingID then
           begin
-            CurrentNode := treeMain.Items.AddChildObject(HostNode,
-              CMS.Directory, CMS);
+            CurrentNode := treeMain.Items.AddChildObject(HostNode, CMS.Directory, CMS);
             CurrentNode.ImageIndex := 3;
             CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
           end;
         for Database in Project.DatabaseList do
           if Database.HostingID = Host.HostingID then
           begin
-            CurrentNode := treeMain.Items.AddChildObject(HostNode,
-              Database.Name, Database);
+            CurrentNode := treeMain.Items.AddChildObject(HostNode,Database.Name, Database);
             CurrentNode.ImageIndex := 4;
             CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
           end;
@@ -261,27 +215,17 @@ begin
   for Host in Project.HostingList do
     if Host.DomainID = 0 then
     begin
-      CurrentNode := treeMain.Items.AddChildObject(URegNode,
-        Host.FTPServer, Host);
+      CurrentNode := treeMain.Items.AddChildObject(URegNode, Host.FTPServer, Host);
       CurrentNode.ImageIndex := 2;
       CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
     end;
   for CMS in Project.CMSList do
     if CMS.HostingID = 0 then
     begin
-      CurrentNode := treeMain.Items.AddChildObject(URegNode,
-        CMS.Directory, CMS);
+      CurrentNode := treeMain.Items.AddChildObject(URegNode, CMS.Directory, CMS);
       CurrentNode.ImageIndex := 3;
       CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
     end;
-=======
-    for Host in Project.HostingList do
-      if Domain.DomainID = Host.DomainID then
-      begin
-        treeMain.Items.AddChildObject(CurrentNode, Host.FTPServer, Host);
-      end;
-  end;
->>>>>>> origin/master
   treeMain.FullExpand;
 end;
 

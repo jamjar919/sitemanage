@@ -9,7 +9,6 @@ type
   TdatamoduleMain = class(TDataModule)
     ADONextnorth: TADOConnection;
     datasetDelete: TADODataSet;
-    commandDelete: TADOCommand;
   private
     { Private declarations }
   public
