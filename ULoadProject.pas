@@ -19,7 +19,7 @@ type
   private
     { Private declarations }
   public
-    function LoadProject(ProjectName: string): TProject;
+    function LoadProject(ProjectID: integer): TProject;
   end;
 
 var
@@ -29,10 +29,11 @@ implementation
 
 {$R *.dfm}
 
-function TformLoadProject.LoadProject(ProjectName: string): TProject;
+function TformLoadProject.LoadProject(ProjectID: integer): TProject;
 var
   Project: TProject;
-  ProjectID, ClientID: integer;
+  ClientID: integer;
+  ProjectName: string;
 begin
   // get project data from the database
   dbcomboProject.ListField := '';
@@ -42,10 +43,10 @@ begin
   begin
     Close;
     CommandText :=
-      'SELECT `ProjectID`,`ClientID` FROM project WHERE `ProjectName` = "' +
-      ProjectName + '";';
+      'SELECT `ProjectName`,`ClientID` FROM project WHERE `ProjectID` = "' +
+      inttostr(ProjectID) + '";';
     Open;
-    ProjectID := FieldValues['ProjectID'];
+    ProjectName := FieldValues['ProjectName'];
     ClientID := FieldValues['ClientID'];
     // load the project into a new memory object
     Project := TProject.Create(ProjectID, ClientID, ProjectName);
@@ -130,12 +131,14 @@ end;
 procedure TformLoadProject.buttonLoadProjectClick(Sender: TObject);
 var
   PName: string;
+  PID: integer;
 begin
   // get data from combobox
   PName := dbcomboProject.Text;
+  PID := dbcomboProject.KeyValue;
   if PName <> '' then // check a project was selected
   begin
-    CurrentProject := LoadProject(PName);
+    CurrentProject := LoadProject(PID);
     formLoadProject.Hide;
     formMain.displayProjectOnTree(CurrentProject);
   end
@@ -153,7 +156,7 @@ begin
     Open;
   end;
   dbcomboProject.ListField := 'ProjectName';
-  dbcomboProject.KeyField := 'ProjectName';
+  dbcomboProject.KeyField := 'ProjectID';
 end;
 
 end.

@@ -50,11 +50,13 @@ type
     procedure llabelTitleClick(Sender: TObject);
     procedure buttonDeleteClick(Sender: TObject);
     procedure buttonUpdateClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
   public
     Domain: TDomain;
     procedure doOpen(Domain: TDomain);
+    procedure doUpdate(DomainID:integer);
   end;
 
 var
@@ -65,6 +67,11 @@ implementation
 {$R *.dfm}
 
 uses UMain;
+
+procedure tFormDomainView.doUpdate(DomainID: Integer);
+begin
+  //update domain
+end;
 
 procedure TformDomainView.buttonDeleteClick(Sender: TObject);
 var
@@ -78,6 +85,7 @@ begin
     mrOk:
       begin
         formmain.DeleteDomain(Domain.DomainID);
+        formmain.RefreshProject(Domain.ProjectID);
         self.free;
       end;
     mrCancel:
@@ -86,11 +94,8 @@ begin
 end;
 
 procedure TformDomainView.buttonUpdateClick(Sender: TObject);
-var
-  DID: integer;
 begin
-  //change the domain object
-  //Domain :=  tDomain.Create();
+  doUpdate(Domain.DomainID);
 end;
 
 procedure TformDomainView.doOpen(Domain: TDomain);
@@ -124,9 +129,42 @@ begin
     ['DomainRegistrarID'], []);
   dbcomboDomainReg.KeyValue := datasetSingleDomain.FieldValues
     ['DomainRegistrarID'];
-  datasetProject.Active := true;
-  datasetProject.Locate('ProjectID',Domain.ProjectID,[]);
+  datasetproject.Active := true;
+  datasetproject.Locate('ProjectID', Domain.ProjectID, []);
   dbcomboProject.KeyValue := Domain.ProjectID;
+end;
+
+procedure TformDomainView.FormDestroy(Sender: TObject);
+begin
+  { this code is needed to prevent an error from
+  occuring when the program is closed with domain
+  forms still open, it destroys objects in the
+  correct order }
+  // unassign db components
+  dbeditDomainName.free;
+  dbcomboDomainExtension.free;
+  dbeditRenewalCost.free;
+  dbcomboDomainReg.free;
+  dbcomboProject.free;
+  // free memory objects
+  // single domain
+  datasetSingleDomain.Active := false;
+  datasetSingleDomain.free;
+  datasourceSingleDomain.free;
+  // domain reg
+  datasetDomainReg.Active := false;
+  datasetDomainReg.free;
+  datasourceDomainReg.free;
+  // single domain reg
+  datasetSingleDomainReg.Active := false;
+  datasetSingleDomainReg.free;
+  datasourceSingleDomainReg.free;
+  // project
+  datasetproject.Active := false;
+  datasetproject.free;
+  datasourceProject.free;
+  //domain object
+  Domain.Free;
 end;
 
 procedure TformDomainView.llabelTitleClick(Sender: TObject);

@@ -2,7 +2,7 @@ unit UMain;
 
 interface
 
-//icons http://www.fatcow.com/free-icons
+// icons http://www.fatcow.com/free-icons
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
@@ -30,20 +30,25 @@ type
     buttonWelcomeSearchData: TButton;
     imageButtonClose: TImage;
     imglistTree: TImageList;
+    treeViewProjectPopup: TPopupMenu;
+    popRefreshProject: TMenuItem;
     procedure imageButtonCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure buttonWelcomeOpenProjectClick(Sender: TObject);
     procedure treeMainChange(Sender: TObject; Node: TTreeNode);
     procedure treeMainDblClick(Sender: TObject);
     procedure tbLoadClick(Sender: TObject);
+    procedure treeMainMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
   public
     SelectedNode: TTreeNode;
     procedure OpenProject;
+    procedure RefreshProject(ProjectID: Integer);
     procedure OpenHosting(Host: THosting);
     procedure OpenDomain(Domain: TDomain);
-    procedure DeleteDomain(DomainID: integer);
+    procedure DeleteDomain(DomainID: Integer);
     procedure displayProjectOnTree(Project: TProject);
     procedure closeWelcomeForm;
     procedure showLoadProjectForm;
@@ -58,10 +63,33 @@ implementation
 
 uses ULoadProject;
 
-procedure TformMain.DeleteDomain(DomainID: integer);
+procedure TformMain.RefreshProject(ProjectID: Integer);
+var
+  CurrentNode: TTreeNode;
+  CurrentObject: TObject;
+  CurrentProject: TProject;
+begin
+  // find the project
+  CurrentNode := treeMain.TopItem;
+  while Assigned(CurrentNode) do
+  begin
+    CurrentObject := CurrentNode.Data;
+    if CurrentObject is TProject then
+    begin
+      CurrentProject := CurrentObject as TProject;
+      if CurrentProject.ProjectID = ProjectID then
+        CurrentNode.Delete;
+    end;
+    CurrentNode := CurrentNode.getNextSibling;
+  end;
+  // and reopen it again
+  displayProjectOnTree(formLoadProject.LoadProject(ProjectID));
+end;
+
+procedure TformMain.DeleteDomain(DomainID: Integer);
 begin
   // delete the domain from the domains table
-  // we can't use a dataset as the query won't return a result  so we use a tadocommand
+  // we can't use a dataset as the query won't return a result so we use a tadocommand
   datamoduleMain.commandDelete.CommandText :=
     'DELETE FROM domain WHERE DomainID = ' + inttostr(DomainID);
   datamoduleMain.commandDelete.Execute;
@@ -141,6 +169,28 @@ begin
   end;
 end;
 
+procedure TformMain.treeMainMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var
+  Node: TTreeNode;
+  UnknownObject: TObject;
+begin
+  if Button = mbRight then
+  begin
+    if Assigned(treeMain.Selected) then
+    begin
+      treeMain.Selected.Expanded := not treeMain.Selected.Expanded;
+      Node := treeMain.Selected;
+      UnknownObject := Node.Data;
+      if UnknownObject is TProject then
+      begin
+        //show the popup
+        treeviewProjectPopup.Popup(X,Y);
+      end;
+    end; //endif assigned
+  end; //endif button
+end;
+
 procedure TformMain.buttonWelcomeOpenProjectClick(Sender: TObject);
 begin
   OpenProject;
@@ -179,7 +229,7 @@ var
   Database: TDatabase;
 begin
   // display the project on the tree
-  ProjectNode := treeMain.Items.AddFirst(nil, Project.Name);
+  ProjectNode := treeMain.Items.AddObject(nil, Project.Name, Project);
   ProjectNode.ImageIndex := 0;
   ProjectNode.SelectedIndex := ProjectNode.ImageIndex;
   URegNode := treeMain.Items.AddChild(ProjectNode, 'Unassigned');
@@ -200,14 +250,16 @@ begin
         for CMS in Project.CMSList do
           if CMS.HostingID = Host.HostingID then
           begin
-            CurrentNode := treeMain.Items.AddChildObject(HostNode, CMS.Directory, CMS);
+            CurrentNode := treeMain.Items.AddChildObject(HostNode,
+              CMS.Directory, CMS);
             CurrentNode.ImageIndex := 3;
             CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
           end;
         for Database in Project.DatabaseList do
           if Database.HostingID = Host.HostingID then
           begin
-            CurrentNode := treeMain.Items.AddChildObject(HostNode,Database.Name, Database);
+            CurrentNode := treeMain.Items.AddChildObject(HostNode,
+              Database.Name, Database);
             CurrentNode.ImageIndex := 4;
             CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
           end;
@@ -217,14 +269,16 @@ begin
   for Host in Project.HostingList do
     if Host.DomainID = 0 then
     begin
-      CurrentNode := treeMain.Items.AddChildObject(URegNode, Host.FTPServer, Host);
+      CurrentNode := treeMain.Items.AddChildObject(URegNode,
+        Host.FTPServer, Host);
       CurrentNode.ImageIndex := 2;
       CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
     end;
   for CMS in Project.CMSList do
     if CMS.HostingID = 0 then
     begin
-      CurrentNode := treeMain.Items.AddChildObject(URegNode, CMS.Directory, CMS);
+      CurrentNode := treeMain.Items.AddChildObject(URegNode,
+        CMS.Directory, CMS);
       CurrentNode.ImageIndex := 3;
       CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
     end;
