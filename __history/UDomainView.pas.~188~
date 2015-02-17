@@ -24,7 +24,7 @@ type
     dbeditRenewalCost: TDBEdit;
     labelRenewalDate: TLabel;
     labelRenewalCost: TLabel;
-    gboxDomainRegDetails: TGroupBox;
+    gboxOtherDetails: TGroupBox;
     datasetSingleDomainReg: TADODataSet;
     datasourceSingleDomainReg: TDataSource;
     mmClose: TMenuItem;
@@ -43,8 +43,12 @@ type
     buttonUpdate: TButton;
     gboxControls: TGroupBox;
     buttonDelete: TButton;
+    labelProject: TLabel;
+    DBLookupComboBox1: TDBLookupComboBox;
+    datasetproject: TADODataSet;
     procedure llabelTitleClick(Sender: TObject);
     procedure buttonDeleteClick(Sender: TObject);
+    procedure buttonUpdateClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -70,49 +74,61 @@ begin
     Domain.DomainName + '.' + Domain.DomainExtension +
     '? This operation cannot be undone.', mtConfirmation, mbOKCancel, 0);
   case butSelected of
-    mrOk: formmain.DeleteDomain(Domain.DomainID);
-    self.free;
-    mrCancel: MessageDlg('Domain not deleted',mtInformation, [mbOK], 0);
+    mrOk:
+      begin
+        formmain.DeleteDomain(Domain.DomainID);
+        self.free;
+      end;
+    mrCancel:
+      MessageDlg('Domain not deleted', mtInformation, [mbOK], 0);
   end;
 end;
 
-  procedure TformDomainView.doOpen(Domain: TDomain);
-  var
-    fullDomain: string;
-  begin
-    // make connection and select data
-    datasetDomainReg.Active := true;
-    with datasetSingleDomain do
-    begin
-      Close;
-      parameters.ParamByName('did').Value := Domain.DomainID;
-      Open;
-      Active := true;
-    end;
-    with datasetSingleDomainReg do
-    begin
-      Close;
-      parameters.ParamByName('rid').Value := Domain.DomainRegistrarID;
-      Open;
-      Active := true;
-    end;
-    fullDomain := datasetSingleDomain.FieldValues['DomainName'] + '.' +
-      datasetSingleDomain.FieldValues['DomainExtension'];
-    // most fields will get data some we have to change ourselves
-    llabelTitle.Caption := '<a href="http://' + fullDomain + '">' +
-      fullDomain + '</a>';
-    dtpickDomainRenewal.Date := datasetSingleDomain.FieldValues['RenewalDate'];
-    // dbcomboDomainReg.Align := datasetSingleDomainReg.FieldValues['Name'];
-    datasetDomainReg.Locate('RegistrarID', datasetSingleDomain.FieldValues
-      ['DomainRegistrarID'], []);
-    dbcomboDomainReg.KeyValue := datasetSingleDomain.FieldValues
-      ['DomainRegistrarID'];
-  end;
+procedure TformDomainView.buttonUpdateClick(Sender: TObject);
+var
+  DID: integer;
+begin
+  //change the domain object
+  //Domain :=  tDomain.Create();
+end;
 
-  procedure TformDomainView.llabelTitleClick(Sender: TObject);
+procedure TformDomainView.doOpen(Domain: TDomain);
+var
+  fullDomain: string;
+begin
+  // make connection and select data
+  datasetDomainReg.Active := true;
+  with datasetSingleDomain do
   begin
-    ShellAPI.ShellExecute(0, 'Open', PChar(llabelTitle.Caption), PChar(''), nil,
-      SW_SHOWNORMAL);
+    Close;
+    parameters.ParamByName('did').Value := Domain.DomainID;
+    Open;
+    Active := true;
   end;
+  with datasetSingleDomainReg do
+  begin
+    Close;
+    parameters.ParamByName('rid').Value := Domain.DomainRegistrarID;
+    Open;
+    Active := true;
+  end;
+  fullDomain := datasetSingleDomain.FieldValues['DomainName'] + '.' +
+    datasetSingleDomain.FieldValues['DomainExtension'];
+  // most fields will get data some we have to change ourselves
+  llabelTitle.Caption := '<a href="http://' + fullDomain + '">' +
+    fullDomain + '</a>';
+  dtpickDomainRenewal.Date := datasetSingleDomain.FieldValues['RenewalDate'];
+  // dbcomboDomainReg.Align := datasetSingleDomainReg.FieldValues['Name'];
+  datasetDomainReg.Locate('RegistrarID', datasetSingleDomain.FieldValues
+    ['DomainRegistrarID'], []);
+  dbcomboDomainReg.KeyValue := datasetSingleDomain.FieldValues
+    ['DomainRegistrarID'];
+end;
+
+procedure TformDomainView.llabelTitleClick(Sender: TObject);
+begin
+  ShellAPI.ShellExecute(0, 'Open', PChar(llabelTitle.Caption), PChar(''), nil,
+    SW_SHOWNORMAL);
+end;
 
 end.

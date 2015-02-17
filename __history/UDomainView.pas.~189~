@@ -24,7 +24,7 @@ type
     dbeditRenewalCost: TDBEdit;
     labelRenewalDate: TLabel;
     labelRenewalCost: TLabel;
-    gboxDomainRegDetails: TGroupBox;
+    gboxOtherDetails: TGroupBox;
     datasetSingleDomainReg: TADODataSet;
     datasourceSingleDomainReg: TDataSource;
     mmClose: TMenuItem;
@@ -43,6 +43,9 @@ type
     buttonUpdate: TButton;
     gboxControls: TGroupBox;
     buttonDelete: TButton;
+    labelProject: TLabel;
+    DBLookupComboBox1: TDBLookupComboBox;
+    datasetproject: TADODataSet;
     procedure llabelTitleClick(Sender: TObject);
     procedure buttonDeleteClick(Sender: TObject);
     procedure buttonUpdateClick(Sender: TObject);
@@ -82,8 +85,11 @@ begin
 end;
 
 procedure TformDomainView.buttonUpdateClick(Sender: TObject);
+var
+  DID: integer;
 begin
   //change the domain object
+  //Domain :=  tDomain.Create();
 end;
 
 procedure TformDomainView.doOpen(Domain: TDomain);
@@ -117,6 +123,9 @@ begin
     ['DomainRegistrarID'], []);
   dbcomboDomainReg.KeyValue := datasetSingleDomain.FieldValues
     ['DomainRegistrarID'];
+  datasetProject.Active := true;
+  datasetProject.Locate('ProjectID',Domain.ProjectID,[]);
+  dbcomboProject.KeyValue := Domain.ProjectID;
 end;
 
 procedure TformDomainView.llabelTitleClick(Sender: TObject);

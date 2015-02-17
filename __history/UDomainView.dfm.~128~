@@ -2,7 +2,7 @@ object formDomainView: TformDomainView
   Left = 0
   Top = 0
   Caption = 'Domain View'
-  ClientHeight = 383
+  ClientHeight = 344
   ClientWidth = 381
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -116,12 +116,12 @@ object formDomainView: TformDomainView
       TabOrder = 3
     end
   end
-  object gboxDomainRegDetails: TGroupBox
+  object gboxOtherDetails: TGroupBox
     Left = 8
-    Top = 230
+    Top = 175
     Width = 361
-    Height = 137
-    Caption = 'Domain Registrar Details'
+    Height = 98
+    Caption = 'Other Details'
     TabOrder = 2
     object labelDomainReg: TLabel
       Left = 16
@@ -129,6 +129,13 @@ object formDomainView: TformDomainView
       Width = 86
       Height = 13
       Caption = 'Domain Registrar:'
+    end
+    object labelProject: TLabel
+      Left = 17
+      Top = 67
+      Width = 38
+      Height = 13
+      Caption = 'Project:'
     end
     object dbcomboDomainReg: TDBLookupComboBox
       Left = 108
@@ -148,10 +155,20 @@ object formDomainView: TformDomainView
       Caption = 'View'
       TabOrder = 1
     end
+    object dbcomboProject: TDBLookupComboBox
+      Left = 108
+      Top = 63
+      Width = 145
+      Height = 21
+      KeyField = 'RegistrarID'
+      ListField = 'Name'
+      ListSource = datasourceDomainReg
+      TabOrder = 2
+    end
   end
   object gboxControls: TGroupBox
     Left = 8
-    Top = 175
+    Top = 279
     Width = 363
     Height = 49
     Caption = 'Controls'
@@ -166,6 +183,7 @@ object formDomainView: TformDomainView
       CommandLinkHint = 'Update the database with data in the fields'
       ImageAlignment = iaRight
       TabOrder = 0
+      OnClick = buttonUpdateClick
     end
     object buttonDelete: TButton
       Left = 280
@@ -174,6 +192,7 @@ object formDomainView: TformDomainView
       Height = 25
       Caption = 'Delete'
       TabOrder = 1
+      OnClick = buttonDeleteClick
     end
   end
   object mmDomainView: TMainMenu
@@ -256,5 +275,17 @@ object formDomainView: TformDomainView
     DataSet = datasetDomainReg
     Left = 48
     Top = 147
+  end
+  object datasetproject: TADODataSet
+    Connection = datamoduleMain.ADONextnorth
+    CommandText = 'SELECT * FROM project;'
+    Parameters = <>
+    Left = 176
+    Top = 287
+  end
+  object datasourceProject: TDataSource
+    DataSet = datasetproject
+    Left = 112
+    Top = 287
   end
 end

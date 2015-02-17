@@ -64,18 +64,15 @@ begin
   // we can't use a dataset as the query won't return a result  so we use a tadocommand
   datamoduleMain.commandDelete.CommandText :=
     'DELETE FROM domain WHERE DomainID = ' + inttostr(DomainID);
-  datamoduleMain.commandDelete.Execute;
-  // resolve dependencies in other tables with dataset
+  datamoduleMain.datasetDelete.Open;
+  // resolve dependencies in other tables
   datamoduleMain.datasetDelete.Close;
   datamoduleMain.datasetDelete.CommandText :=
     'SELECT * FROM hosting WHERE DomainID = ' + inttostr(DomainID);
   datamoduleMain.datasetDelete.Open;
-  datamoduleMain.datasetDelete.First;
   while not datamoduleMain.datasetDelete.EOF do
   begin
-    datamoduleMain.datasetDelete.Edit;
     datamoduleMain.datasetDelete.FieldValues['DomainID'] := 0;
-    datamoduleMain.datasetDelete.Post;
     datamoduleMain.datasetDelete.Next;
   end; // END EOF
   datamoduleMain.datasetDelete.Close;

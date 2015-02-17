@@ -65,17 +65,14 @@ begin
   datamoduleMain.commandDelete.CommandText :=
     'DELETE FROM domain WHERE DomainID = ' + inttostr(DomainID);
   datamoduleMain.commandDelete.Execute;
-  // resolve dependencies in other tables with dataset
+  // resolve dependencies in other tables
   datamoduleMain.datasetDelete.Close;
   datamoduleMain.datasetDelete.CommandText :=
     'SELECT * FROM hosting WHERE DomainID = ' + inttostr(DomainID);
   datamoduleMain.datasetDelete.Open;
-  datamoduleMain.datasetDelete.First;
   while not datamoduleMain.datasetDelete.EOF do
   begin
-    datamoduleMain.datasetDelete.Edit;
     datamoduleMain.datasetDelete.FieldValues['DomainID'] := 0;
-    datamoduleMain.datasetDelete.Post;
     datamoduleMain.datasetDelete.Next;
   end; // END EOF
   datamoduleMain.datasetDelete.Close;

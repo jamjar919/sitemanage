@@ -73,9 +73,7 @@ begin
   datamoduleMain.datasetDelete.First;
   while not datamoduleMain.datasetDelete.EOF do
   begin
-    datamoduleMain.datasetDelete.Edit;
     datamoduleMain.datasetDelete.FieldValues['DomainID'] := 0;
-    datamoduleMain.datasetDelete.Post;
     datamoduleMain.datasetDelete.Next;
   end; // END EOF
   datamoduleMain.datasetDelete.Close;

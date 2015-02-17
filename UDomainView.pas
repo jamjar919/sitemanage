@@ -44,8 +44,9 @@ type
     gboxControls: TGroupBox;
     buttonDelete: TButton;
     labelProject: TLabel;
-    DBLookupComboBox1: TDBLookupComboBox;
+    dbcomboProject: TDBLookupComboBox;
     datasetproject: TADODataSet;
+    datasourceProject: TDataSource;
     procedure llabelTitleClick(Sender: TObject);
     procedure buttonDeleteClick(Sender: TObject);
     procedure buttonUpdateClick(Sender: TObject);
@@ -123,6 +124,9 @@ begin
     ['DomainRegistrarID'], []);
   dbcomboDomainReg.KeyValue := datasetSingleDomain.FieldValues
     ['DomainRegistrarID'];
+  datasetProject.Active := true;
+  datasetProject.Locate('ProjectID',Domain.ProjectID,[]);
+  dbcomboProject.KeyValue := Domain.ProjectID;
 end;
 
 procedure TformDomainView.llabelTitleClick(Sender: TObject);

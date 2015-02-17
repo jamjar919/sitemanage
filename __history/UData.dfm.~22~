@@ -1,7 +1,7 @@
 object datamoduleMain: TdatamoduleMain
   OldCreateOrder = False
   Height = 64
-  Width = 320
+  Width = 239
   object ADONextnorth: TADOConnection
     Connected = True
     ConnectionString = 
@@ -17,12 +17,6 @@ object datamoduleMain: TdatamoduleMain
     CursorType = ctStatic
     Parameters = <>
     Left = 120
-    Top = 8
-  end
-  object commandDelete: TADOCommand
-    Connection = ADONextnorth
-    Parameters = <>
-    Left = 200
     Top = 8
   end
 end
