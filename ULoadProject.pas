@@ -32,8 +32,6 @@ implementation
 function TformLoadProject.LoadProject(ProjectName: string): TProject;
 var
   Project: TProject;
-  Host: THosting;
-  Domain: TDomain;
   ProjectID, ClientID: integer;
 begin
   // get project data from the database
@@ -94,12 +92,38 @@ begin
         FieldValues['FTPPort']));
       Next;
     end; // ENDWHILE
+    // select CMS details
+    Close;
+    CommandText :=
+      'SELECT cms.* FROM `cms`,`hosting` WHERE cms.HostingID = hosting.HostingID and hosting.ProjectID = '
+      + inttostr(ProjectID);
+    Open;
+    // get cms details and add it to the project list
+    while (not EOF) do
+    begin
+      Project.CMSList.Add(TCMS.Create(FieldValues['CMSID'],
+        FieldValues['CMSTypeID'], FieldValues['HostingID'],
+        FieldValues['DatabaseID'], FieldValues['Directory'],
+        FieldValues['TablePrefix'], FieldValues['ThemeName'],
+        FieldValues['AdminUsername'], FieldValues['AdminPassword'],
+        FieldValues['ClientUsername'], FieldValues['ClientPassword']));
+      Next;
+    end; // ENDWHILE
+    // select database details
+    Close;
+    CommandText :=
+      'SELECT dbase.* FROM `dbase`,`hosting` WHERE dbase.HostingID = hosting.HostingID AND hosting.ProjectID = '
+      + inttostr(ProjectID);
+    Open;
+    while not EOF do
+    begin
+      Project.DatabaseList.Add(TDatabase.Create(FieldValues['DatabaseID'],
+        FieldValues['HostRegistrarID'], FieldValues['HostingID'],
+        FieldValues['Name'], FieldValues['Username'], FieldValues['Password'],
+        FieldValues['Hostname']));
+      Next;
+    end; // ENDWHILE
   end; // ENDWITH
-  // find out which domains are unassigned
-  for Host in Project.HostingList do
-    for Domain in Project.DomainList do
-      if Host.DomainID = Domain.DomainID then
-        Domain.HasHosting := True;
   result := Project;
 end;
 
