@@ -37,6 +37,8 @@ object formMain: TformMain
       object tbNew: TToolButton
         Left = 0
         Top = 0
+        Hint = 'Create new projects, domains and other elements'
+        DropdownMenu = popupNew
         ImageIndex = 0
       end
       object tbLoad: TToolButton
@@ -722,7 +724,7 @@ object formMain: TformMain
   object imglistToolbar: TImageList
     Left = 224
     Bitmap = {
-      494C010105000800440010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010105000800500010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       000000000000000000000000000000000000000000000000000000000000016A
       9F000284BA000373A80000000000000000000000000000000000000000000000
@@ -997,7 +999,7 @@ object formMain: TformMain
     Masked = False
     Left = 288
     Bitmap = {
-      494C010105000800580010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010105000800640010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000EAEAEA00C2C2C200ABABAB00A09F9F009D9D9D00AAAAA900C4C4C400ECEC
@@ -1275,6 +1277,20 @@ object formMain: TformMain
     Top = 456
     object popRefreshProject: TMenuItem
       Caption = 'Refesh Selected Project'
+    end
+  end
+  object popupNew: TPopupMenu
+    Left = 176
+    Top = 520
+    object newProject: TMenuItem
+      Caption = 'New Project'
+      OnClick = newProjectClick
+    end
+    object newDomain: TMenuItem
+      Caption = 'New Domain'
+    end
+    object newHosting: TMenuItem
+      Caption = 'New Hosting'
     end
   end
 end

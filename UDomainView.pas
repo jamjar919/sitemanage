@@ -7,7 +7,7 @@ uses
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Menus, Vcl.ExtCtrls,
   Vcl.Mask, Vcl.DBCtrls, Data.DB, Data.Win.ADODB, UData, UClass, Vcl.ComCtrls,
-  ShellAPI;
+  ShellAPI, System.UITypes;
 
 type
   TformDomainView = class(TForm)

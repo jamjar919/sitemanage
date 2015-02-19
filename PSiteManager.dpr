@@ -7,7 +7,8 @@ uses
   UData in 'UData.pas' {datamoduleMain: TDataModule},
   ULoadProject in 'ULoadProject.pas' {formLoadProject},
   UClass in 'UClass.pas',
-  UHostingView in 'UHostingView.pas' {formHostingView};
+  UHostingView in 'UHostingView.pas' {formHostingView},
+  UProjectView in 'UProjectView.pas' {formProjectView};
 
 {$R *.res}
 
@@ -19,5 +20,6 @@ begin
   Application.CreateForm(TdatamoduleMain, datamoduleMain);
   Application.CreateForm(TformLoadProject, formLoadProject);
   Application.CreateForm(TformHostingView, formHostingView);
+  Application.CreateForm(TformProjectView, formProjectView);
   Application.Run;
 end.

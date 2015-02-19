@@ -9,7 +9,7 @@ uses
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ComCtrls, Vcl.ToolWin,
   Vcl.ImgList, Vcl.Imaging.pngimage, Vcl.ExtCtrls, Vcl.StdCtrls,
-  UClass, UData, UDomainView, UHostingView;
+  UClass, UData, UDomainView, UHostingView, UProjectView;
 
 type
   TformMain = class(TForm)
@@ -32,6 +32,10 @@ type
     imglistTree: TImageList;
     treeViewProjectPopup: TPopupMenu;
     popRefreshProject: TMenuItem;
+    popupNew: TPopupMenu;
+    newProject: TMenuItem;
+    newDomain: TMenuItem;
+    newHosting: TMenuItem;
     procedure imageButtonCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure buttonWelcomeOpenProjectClick(Sender: TObject);
@@ -40,6 +44,7 @@ type
     procedure tbLoadClick(Sender: TObject);
     procedure treeMainMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure newProjectClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -175,7 +180,6 @@ end;
 
 procedure TformMain.showLoadProjectForm;
 begin
-  // show the form
   formLoadProject.Show;
 end;
 
@@ -259,6 +263,14 @@ end;
 procedure TformMain.imageButtonCloseClick(Sender: TObject);
 begin
   closeWelcomeForm;
+end;
+
+procedure TformMain.newProjectClick(Sender: TObject);
+var
+  ProjectForm: TformProjectView;
+begin
+  ProjectForm := TFormProjectView.Create(formMain);
+  ProjectForm.Show;
 end;
 
 procedure TformMain.displayProjectOnTree(Project: TProject);
