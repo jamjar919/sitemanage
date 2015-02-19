@@ -197,9 +197,11 @@ object formDomainView: TformDomainView
     end
   end
   object mmDomainView: TMainMenu
-    Left = 64
+    Left = 104
+    Top = 16
     object mmClose: TMenuItem
       Caption = 'Close'
+      OnClick = mmCloseClick
     end
   end
   object datasetSingleDomain: TADODataSet

@@ -51,12 +51,13 @@ type
     procedure buttonDeleteClick(Sender: TObject);
     procedure buttonUpdateClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure mmCloseClick(Sender: TObject);
   private
     { Private declarations }
   public
     Domain: TDomain;
     procedure doOpen(Domain: TDomain);
-    procedure doUpdate(DomainID:integer);
+    procedure doUpdate(DomainID: integer);
   end;
 
 var
@@ -68,9 +69,36 @@ implementation
 
 uses UMain;
 
-procedure tFormDomainView.doUpdate(DomainID: Integer);
+procedure TformDomainView.doUpdate(DomainID: integer);
+var
+  NewDomain: TDomain;
+  CostStr: string;
 begin
-  //update domain
+  // remove currency sign
+  CostStr := dbeditRenewalCost.Text;
+  Delete(CostStr, 1, 1);
+  // make new domain object
+  NewDomain := TDomain.Create(DomainID, dbcomboProject.KeyValue,
+    dbcomboDomainReg.KeyValue, dbeditDomainName.Text,
+    dbcomboDomainExtension.Text, dtpickDomainRenewal.Date, strtofloat(CostStr));
+  // push details to server
+  with datasetSingleDomain do
+  begin
+    Close;
+    Parameters.ParamByName('did').Value := DomainID;
+    Open;
+    Edit;
+    FieldValues['DomainName'] := NewDomain.DomainName;
+    FieldValues['DomainExtension'] := NewDomain.DomainExtension;
+    FieldValues['ProjectID'] := NewDomain.ProjectID;
+    FieldValues['DomainRegistrarID'] := NewDomain.DomainRegistrarID;
+    FieldValues['RenewalDate'] := NewDOmain.RenewalDate;
+    FieldValues['RenewalCost'] := NewDomain.RenewalCost;
+    Post;
+  end;
+  formmain.RefreshProject(NewDomain.ProjectID);
+  NewDomain.Free;
+  self.Free;
 end;
 
 procedure TformDomainView.buttonDeleteClick(Sender: TObject);
@@ -107,14 +135,14 @@ begin
   with datasetSingleDomain do
   begin
     Close;
-    parameters.ParamByName('did').Value := Domain.DomainID;
+    Parameters.ParamByName('did').Value := Domain.DomainID;
     Open;
     Active := true;
   end;
   with datasetSingleDomainReg do
   begin
     Close;
-    parameters.ParamByName('rid').Value := Domain.DomainRegistrarID;
+    Parameters.ParamByName('rid').Value := Domain.DomainRegistrarID;
     Open;
     Active := true;
   end;
@@ -137,9 +165,9 @@ end;
 procedure TformDomainView.FormDestroy(Sender: TObject);
 begin
   { this code is needed to prevent an error from
-  occuring when the program is closed with domain
-  forms still open, it destroys objects in the
-  correct order }
+    occuring when the program is closed with domain
+    forms still open, it destroys objects in the
+    correct order }
   // unassign db components
   dbeditDomainName.free;
   dbcomboDomainExtension.free;
@@ -163,14 +191,19 @@ begin
   datasetproject.Active := false;
   datasetproject.free;
   datasourceProject.free;
-  //domain object
-  Domain.Free;
+  // domain object
+  Domain.free;
 end;
 
 procedure TformDomainView.llabelTitleClick(Sender: TObject);
 begin
   ShellAPI.ShellExecute(0, 'Open', PChar(llabelTitle.Caption), PChar(''), nil,
     SW_SHOWNORMAL);
+end;
+
+procedure TformDomainView.mmCloseClick(Sender: TObject);
+begin
+  self.Free;
 end;
 
 end.

@@ -1,0 +1,174 @@
+unit UHostingView;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.StdCtrls, Vcl.Mask,
+  Vcl.DBCtrls, Vcl.ComCtrls, Vcl.ExtCtrls, UClass, Data.DB, Data.Win.ADODB,
+  UData;
+
+type
+  TformHostingView = class(TForm)
+    mmHostingView: TMainMenu;
+    mmDomainClose: TMenuItem;
+    gboxRenewalDetails: TGroupBox;
+    gboxServerDetails: TGroupBox;
+    dbeditFTPServer: TDBEdit;
+    dbeditFTPPort: TDBEdit;
+    lblFTPServer: TLabel;
+    lblColon: TLabel;
+    dbeditFTPUsername: TDBEdit;
+    dbeditFTPPassword: TDBEdit;
+    lblFTPUsername: TLabel;
+    lblFTPPassword: TLabel;
+    dtpickRenewalDate: TDateTimePicker;
+    lblRenewalDate: TLabel;
+    lblRenewalCost: TLabel;
+    dbeditRenewalCost: TDBEdit;
+    llabelTitle: TLinkLabel;
+    gboxOtherDetails: TGroupBox;
+    dbcomboHostRegistrar: TDBLookupComboBox;
+    dbcomboProject: TDBLookupComboBox;
+    lblHostRegistrar: TLabel;
+    lblProject: TLabel;
+    dbcomboDomain: TDBLookupComboBox;
+    lblDomain: TLabel;
+    gboxControls: TGroupBox;
+    buttonUpdate: TButton;
+    buttonDelete: TButton;
+    datasetSingleHosting: TADODataSet;
+    datasetProject: TADODataSet;
+    datasetHostReg: TADODataSet;
+    datasetDomain: TADODataSet;
+    datasourceSingleHosting: TDataSource;
+    datasetSingleHostingHostingID: TAutoIncField;
+    datasetSingleHostingProjectID: TIntegerField;
+    datasetSingleHostingDomainID: TIntegerField;
+    datasetSingleHostingRenewalDate: TDateField;
+    datasetSingleHostingRenewalCost: TFloatField;
+    datasetSingleHostingHostRegistrarID: TIntegerField;
+    datasetSingleHostingFTPServer: TStringField;
+    datasetSingleHostingFTPUsername: TStringField;
+    datasetSingleHostingFTPPassword: TStringField;
+    datasetSingleHostingFTPPort: TIntegerField;
+    datasourceHostReg: TDataSource;
+    datasourceProject: TDataSource;
+    datasourceDomain: TDataSource;
+    procedure buttonDeleteClick(Sender: TObject);
+    procedure mmDomainCloseClick(Sender: TObject);
+    procedure buttonUpdateClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    Hosting: THosting;
+    procedure doOpen(Hosting: THosting);
+    procedure doUpdate(HostingID: Integer);
+  end;
+
+var
+  formHostingView: TformHostingView;
+
+implementation
+
+uses UMain;
+{$R *.dfm}
+
+procedure TformHostingView.doUpdate(HostingID: Integer);
+var
+  NewHosting: THosting;
+  RenewalCost: string;
+begin
+  // handle renewal cost
+  RenewalCost := dbeditRenewalCost.Text;
+  Delete(RenewalCost, 1, 1);
+  //make new hosting object
+  NewHosting := THosting.Create(Hosting.HostingID, dbcomboProject.KeyValue,
+    dbcomboDomain.KeyValue, dbcomboHostRegistrar.KeyValue,
+    dtpickRenewalDate.Date, strtofloat(RenewalCost), dbeditFTPServer.Text,
+    dbeditFTPUsername.Text, dbeditFTPPassword.Text,
+    strtoint(dbeditFTPPort.Text));
+  // push details to server
+  with datasetSingleHosting do
+  begin
+    Close;
+    Parameters.ParamByName('hid').Value := HostingID;
+    Open;
+    Edit;
+    FieldValues['ProjectID'] := NewHosting.ProjectID;
+    FieldValues['DomainID'] := NewHosting.DomainID;
+    FieldValues['RenewalDate'] := NewHosting.RenewalDate;
+    FieldValues['RenewalCost'] := NewHosting.RenewalCost;
+    FieldValues['HostRegistrarID'] := NewHosting.HostRegistrarID;
+    FieldValues['FTPServer'] := NewHosting.FTPServer;
+    FieldValues['FTPUsername'] := NewHosting.FTPUsername;
+    FieldValues['FTPPassword'] := NewHosting.FTPPassword;
+    FieldValues['FTPPort'] := NewHosting.FTPPort;
+    Post;
+  end;
+  formmain.RefreshProject(NewHosting.ProjectID);
+  NewHosting.Free;
+  self.Free;
+end;
+
+procedure TformHostingView.buttonDeleteClick(Sender: TObject);
+var
+  butSelected: integer;
+begin
+  // show a messagebox confirming delete
+  butSelected := MessageDlg('Are you sure you want to delete ' +
+    Hosting.FTPServer + '? This operation cannot be undone.', mtConfirmation,
+    mbOKCancel, 0);
+  case butSelected of
+    mrOk:
+      begin
+        formmain.DeleteHosting(Hosting.HostingID);
+        formmain.RefreshProject(Hosting.ProjectID);
+        self.free;
+      end;
+    mrCancel:
+      MessageDlg('Hosting not deleted', mtInformation, [mbOK], 0);
+  end;
+end;
+
+procedure TformHostingView.buttonUpdateClick(Sender: TObject);
+begin
+  doUpdate();
+end;
+
+procedure TformHostingView.doOpen(Hosting: THosting);
+begin
+  // handle parameters in datasets
+  with datasetSingleHosting do
+  begin
+    Close;
+    Parameters.ParamByName('hid').Value := Hosting.HostingID;
+    Open;
+  end;
+  with datasetDomain do
+  begin
+    Close;
+    Parameters.ParamByName('pid').Value := Hosting.ProjectID;
+    Open;
+  end;
+  // deal with dtpick
+  dtpickRenewalDate.Date := datasetSingleHosting.FieldValues['RenewalDate'];
+  // title label
+  llabelTitle.Caption := Hosting.FTPServer + ':' + inttostr(Hosting.FTPPort);
+  // locate records
+  datasetProject.Locate('ProjectID', Hosting.ProjectID, []);
+  datasetHostReg.Locate('RegistrarID', Hosting.HostRegistrarID, []);
+  datasetDomain.Locate('DomainID', Hosting.DomainID, []);
+  // set keyvalues
+  dbcomboProject.KeyValue := Hosting.ProjectID;
+  dbcomboHostRegistrar.KeyValue := Hosting.HostRegistrarID;
+  dbcomboDomain.KeyValue := Hosting.DomainID;
+end;
+
+procedure TformHostingView.mmDomainCloseClick(Sender: TObject);
+begin
+  self.free;
+end;
+
+end.

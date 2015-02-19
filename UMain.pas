@@ -9,7 +9,7 @@ uses
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ComCtrls, Vcl.ToolWin,
   Vcl.ImgList, Vcl.Imaging.pngimage, Vcl.ExtCtrls, Vcl.StdCtrls,
-  UClass, UData, UDomainView;
+  UClass, UData, UDomainView, UHostingView;
 
 type
   TformMain = class(TForm)
@@ -47,6 +47,7 @@ type
     procedure OpenProject;
     procedure RefreshProject(ProjectID: Integer);
     procedure OpenHosting(Host: THosting);
+    procedure DeleteHosting(HostingID: Integer);
     procedure OpenDomain(Domain: TDomain);
     procedure DeleteDomain(DomainID: Integer);
     procedure displayProjectOnTree(Project: TProject);
@@ -62,6 +63,41 @@ implementation
 {$R *.dfm}
 
 uses ULoadProject;
+
+procedure TformMain.DeleteHosting(HostingID: Integer);
+begin
+  // delete the host from host table
+  datamoduleMain.commandDelete.CommandText :=
+    'DELETE FROM hosting WHERE HostingID = ' + inttostr(HostingID);
+  datamoduleMain.commandDelete.Execute;
+  // resolve dependencies in other tables
+  // cms
+  datamoduleMain.datasetDelete.Close;
+  datamoduleMain.datasetDelete.CommandText :=
+    'SELECT * FROM cms WHERE HostingID = ' + inttostr(HostingID);
+  datamoduleMain.datasetDelete.Open;
+  datamoduleMain.datasetDelete.First;
+  while not datamoduleMain.datasetDelete.EOF do
+  begin
+    datamoduleMain.datasetDelete.Edit;
+    datamoduleMain.datasetDelete.FieldValues['HostingID'] := 0;
+    datamoduleMain.datasetDelete.Post;
+    datamoduleMain.datasetDelete.Next;
+  end; // END EOF
+  // database
+  datamoduleMain.datasetDelete.Close;
+  datamoduleMain.datasetDelete.CommandText :=
+    'SELECT * FROM dbase WHERE HostingID = ' + inttostr(HostingID);
+  datamoduleMain.datasetDelete.Open;
+  datamoduleMain.datasetDelete.First;
+  while not datamoduleMain.datasetDelete.EOF do
+  begin
+    datamoduleMain.datasetDelete.Edit;
+    datamoduleMain.datasetDelete.FieldValues['HostingID'] := 0;
+    datamoduleMain.datasetDelete.Post;
+    datamoduleMain.datasetDelete.Next;
+  end; // END EOF
+end;
 
 procedure TformMain.RefreshProject(ProjectID: Integer);
 var
@@ -118,8 +154,13 @@ begin
 end;
 
 procedure TformMain.OpenHosting(Host: THosting);
+var
+  openHostingForm: TFormHostingView;
 begin
-  ShowMessage(Host.FTPServer);
+  openHostingForm := TFormHostingView.Create(formMain);
+  openHostingForm.Hosting := Host;
+  openHostingForm.doOpen(Host);
+  openHostingForm.Show;
 end;
 
 procedure TformMain.OpenDomain(Domain: TDomain);
@@ -184,11 +225,11 @@ begin
       UnknownObject := Node.Data;
       if UnknownObject is TProject then
       begin
-        //show the popup
-        treeviewProjectPopup.Popup(X,Y);
+        // show the popup
+        treeViewProjectPopup.Popup(X, Y);
       end;
-    end; //endif assigned
-  end; //endif button
+    end; // endif assigned
+  end; // endif button
 end;
 
 procedure TformMain.buttonWelcomeOpenProjectClick(Sender: TObject);
@@ -222,7 +263,7 @@ end;
 
 procedure TformMain.displayProjectOnTree(Project: TProject);
 var
-  ProjectNode, CurrentNode, HostNode, URegNode: TTreeNode;
+  ProjectNode, CurrentNode, HostNode, DomainNode, URegNode: TTreeNode;
   Host: THosting;
   Domain: TDomain;
   CMS: TCMS;
@@ -235,15 +276,15 @@ begin
   URegNode := treeMain.Items.AddChild(ProjectNode, 'Unassigned');
   for Domain in Project.DomainList do
   begin
-    CurrentNode := treeMain.Items.AddChildObject(ProjectNode,
+    DomainNode := treeMain.Items.AddChildObject(ProjectNode,
       Domain.DomainName + '.' + Domain.DomainExtension, Domain);
-    CurrentNode.ImageIndex := 1;
-    CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
+    DomainNode.ImageIndex := 1;
+    DomainNode.SelectedIndex := DomainNode.ImageIndex;
     for Host in Project.HostingList do
     begin
       if Domain.DomainID = Host.DomainID then
       begin
-        HostNode := treeMain.Items.AddChildObject(CurrentNode,
+        HostNode := treeMain.Items.AddChildObject(DomainNode,
           Host.FTPServer, Host);
         HostNode.ImageIndex := 2;
         HostNode.SelectedIndex := HostNode.ImageIndex;
@@ -254,7 +295,7 @@ begin
               CMS.Directory, CMS);
             CurrentNode.ImageIndex := 3;
             CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
-          end;
+          end; // ENDIFCMS
         for Database in Project.DatabaseList do
           if Database.HostingID = Host.HostingID then
           begin
@@ -262,8 +303,8 @@ begin
               Database.Name, Database);
             CurrentNode.ImageIndex := 4;
             CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
-          end;
-      end;
+          end; // ENDIFDB
+      end; // ENDIFDOMAIN
     end; // ENDFORHOST
   end; // ENDFORDOMAIN
   for Host in Project.HostingList do
