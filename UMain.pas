@@ -9,7 +9,8 @@ uses
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ComCtrls, Vcl.ToolWin,
   Vcl.ImgList, Vcl.Imaging.pngimage, Vcl.ExtCtrls, Vcl.StdCtrls,
-  UClass, UData, UDomainView, UHostingView, UProjectView;
+  UClass, UData, UDomainView, UHostingView, UProjectView, Vcl.ButtonGroup,
+  UCMSView;
 
 type
   TformMain = class(TForm)
@@ -36,6 +37,7 @@ type
     newProject: TMenuItem;
     newDomain: TMenuItem;
     newHosting: TMenuItem;
+    butgrMain: TButtonGroup;
     procedure imageButtonCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure buttonWelcomeOpenProjectClick(Sender: TObject);
@@ -55,6 +57,8 @@ type
     procedure DeleteHosting(HostingID: Integer);
     procedure OpenDomain(Domain: TDomain);
     procedure DeleteDomain(DomainID: Integer);
+    procedure OpenCMS(CMS: TCMS);
+    procedure DeleteCMS(CMSID: Integer);
     procedure displayProjectOnTree(Project: TProject);
     procedure closeWelcomeForm;
     procedure showLoadProjectForm;
@@ -68,6 +72,21 @@ implementation
 {$R *.dfm}
 
 uses ULoadProject;
+
+procedure TformMain.OpenCMS(CMS: TCMS);
+var
+  openCMSForm: TFormCMSView;
+begin
+  openCMSForm := TFormCMSView.Create(formMain);
+  openCMSForm.CMS := CMS;
+  openCMSForm.doOpen(CMS);
+  openCMSForm.Show;
+end;
+
+procedure TformMain.DeleteCMS(CMSID: Integer);
+begin
+  // delete cms
+end;
 
 procedure TformMain.DeleteHosting(HostingID: Integer);
 begin
@@ -204,13 +223,11 @@ begin
     Node := treeMain.Selected;
     UnknownObject := Node.Data;
     if UnknownObject is TDomain then
-    begin
-      OpenDomain(UnknownObject as TDomain);
-    end
+      OpenDomain(UnknownObject as TDomain)
     else if UnknownObject is THosting then
-    begin
-      OpenHosting(UnknownObject as THosting);
-    end;
+      OpenHosting(UnknownObject as THosting)
+    else if UnknownObject is TCMS then
+      OpenCMS(UnknownObject as TCMS)
   end;
 end;
 
@@ -269,7 +286,7 @@ procedure TformMain.newProjectClick(Sender: TObject);
 var
   ProjectForm: TformProjectView;
 begin
-  ProjectForm := TFormProjectView.Create(formMain);
+  ProjectForm := TformProjectView.Create(formMain);
   ProjectForm.Show;
 end;
 
@@ -304,7 +321,7 @@ begin
           if CMS.HostingID = Host.HostingID then
           begin
             CurrentNode := treeMain.Items.AddChildObject(HostNode,
-              CMS.Directory, CMS);
+              '/'+CMS.Directory, CMS);
             CurrentNode.ImageIndex := 3;
             CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
           end; // ENDIFCMS
