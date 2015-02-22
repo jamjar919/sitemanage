@@ -10,7 +10,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ComCtrls, Vcl.ToolWin,
   Vcl.ImgList, Vcl.Imaging.pngimage, Vcl.ExtCtrls, Vcl.StdCtrls,
   UClass, UData, UDomainView, UHostingView, UProjectView, Vcl.ButtonGroup,
-  UCMSView;
+  UCMSView, UDatabaseView;
 
 type
   TformMain = class(TForm)
@@ -38,10 +38,10 @@ type
     newDomain: TMenuItem;
     newHosting: TMenuItem;
     butgrMain: TButtonGroup;
+    // events
     procedure imageButtonCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure buttonWelcomeOpenProjectClick(Sender: TObject);
-    procedure treeMainChange(Sender: TObject; Node: TTreeNode);
     procedure treeMainDblClick(Sender: TObject);
     procedure tbLoadClick(Sender: TObject);
     procedure treeMainMouseDown(Sender: TObject; Button: TMouseButton;
@@ -50,18 +50,27 @@ type
   private
     { Private declarations }
   public
-    SelectedNode: TTreeNode;
+    // project
     procedure OpenProject;
     procedure RefreshProject(ProjectID: Integer);
+    procedure showLoadProjectForm;
+    procedure displayProjectOnTree(Project: TProject);
+    // hosting
     procedure OpenHosting(Host: THosting);
     procedure DeleteHosting(HostingID: Integer);
+    // domain
     procedure OpenDomain(Domain: TDomain);
     procedure DeleteDomain(DomainID: Integer);
+    // cms
     procedure OpenCMS(CMS: TCMS);
     procedure DeleteCMS(CMSID: Integer);
-    procedure displayProjectOnTree(Project: TProject);
+    // database
+    procedure OpenDatabase(Database: TDatabase);
+    procedure DeleteDatabase(DBID: Integer);
+    // button group
+    procedure ChangeButtonGroup(DataType: TDataType; ButtonGroup: TButtonGroup);
+    // misc
     procedure closeWelcomeForm;
-    procedure showLoadProjectForm;
   end;
 
 var
@@ -73,6 +82,18 @@ implementation
 
 uses ULoadProject;
 
+{ ****OPENING**** }
+
+procedure TformMain.OpenDatabase(Database: TDatabase);
+var
+  OpenDBForm: TformDatabaseView;
+begin
+  OpenDBForm := TformDatabaseView.Create(formMain);
+  OpenDBForm.Database := Database;
+  OpenDBForm.doOpen(Database);
+  OpenDBForm.Show;
+end;
+
 procedure TformMain.OpenCMS(CMS: TCMS);
 var
   openCMSForm: TFormCMSView;
@@ -83,9 +104,49 @@ begin
   openCMSForm.Show;
 end;
 
+procedure TformMain.OpenProject;
+begin
+  closeWelcomeForm;
+  CurrentProject := TProject.Create(0, 0, 'Project 1');
+  showLoadProjectForm;
+end;
+
+procedure TformMain.OpenHosting(Host: THosting);
+var
+  openHostingForm: TFormHostingView;
+begin
+  openHostingForm := TFormHostingView.Create(formMain);
+  openHostingForm.Hosting := Host;
+  openHostingForm.doOpen(Host);
+  openHostingForm.Show;
+end;
+
+procedure TformMain.OpenDomain(Domain: TDomain);
+var
+  openDomainForm: TFormDomainView;
+begin
+  openDomainForm := TFormDomainView.Create(formMain);
+  openDomainForm.Domain := Domain;
+  openDomainForm.doOpen(Domain);
+  openDomainForm.Show;
+end;
+
+{ ****DELETION**** }
+
+procedure TformMain.DeleteDatabase(DBID: Integer);
+begin
+  // delete the database from the database table
+  datamoduleMain.commandDelete.CommandText :=
+    'DELETE FROM dbase WHERE DatabaseID = ' + inttostr(DBID);
+  datamoduleMain.commandDelete.Execute;
+end;
+
 procedure TformMain.DeleteCMS(CMSID: Integer);
 begin
-  // delete cms
+  // only need to delete form one table
+  datamoduleMain.commandDelete.CommandText := 'DELETE FROM cms WHERE CMSID = ' +
+    inttostr(CMSID);
+  datamoduleMain.commandDelete.Execute;
 end;
 
 procedure TformMain.DeleteHosting(HostingID: Integer);
@@ -123,29 +184,6 @@ begin
   end; // END EOF
 end;
 
-procedure TformMain.RefreshProject(ProjectID: Integer);
-var
-  CurrentNode: TTreeNode;
-  CurrentObject: TObject;
-  CurrentProject: TProject;
-begin
-  // find the project
-  CurrentNode := treeMain.TopItem;
-  while Assigned(CurrentNode) do
-  begin
-    CurrentObject := CurrentNode.Data;
-    if CurrentObject is TProject then
-    begin
-      CurrentProject := CurrentObject as TProject;
-      if CurrentProject.ProjectID = ProjectID then
-        CurrentNode.Delete;
-    end;
-    CurrentNode := CurrentNode.getNextSibling;
-  end;
-  // and reopen it again
-  displayProjectOnTree(formLoadProject.LoadProject(ProjectID));
-end;
-
 procedure TformMain.DeleteDomain(DomainID: Integer);
 begin
   // delete the domain from the domains table
@@ -170,124 +208,29 @@ begin
   datamoduleMain.datasetDelete.CommandText := '';
 end;
 
-procedure TformMain.OpenProject;
-begin
-  closeWelcomeForm;
-  CurrentProject := TProject.Create(0, 0, 'Project 1');
-  showLoadProjectForm;
-end;
+{ ****TREEVIEW HANDLING**** }
 
-procedure TformMain.OpenHosting(Host: THosting);
+procedure TformMain.RefreshProject(ProjectID: Integer);
 var
-  openHostingForm: TFormHostingView;
+  CurrentNode: TTreeNode;
+  CurrentObject: TObject;
+  CurrentProject: TProject;
 begin
-  openHostingForm := TFormHostingView.Create(formMain);
-  openHostingForm.Hosting := Host;
-  openHostingForm.doOpen(Host);
-  openHostingForm.Show;
-end;
-
-procedure TformMain.OpenDomain(Domain: TDomain);
-var
-  openDomainForm: TFormDomainView;
-begin
-  openDomainForm := TFormDomainView.Create(formMain);
-  openDomainForm.Domain := Domain;
-  openDomainForm.doOpen(Domain);
-  openDomainForm.Show;
-end;
-
-procedure TformMain.showLoadProjectForm;
-begin
-  formLoadProject.Show;
-end;
-
-procedure TformMain.tbLoadClick(Sender: TObject);
-begin
-  OpenProject;
-end;
-
-procedure TformMain.treeMainChange(Sender: TObject; Node: TTreeNode);
-begin
-  SelectedNode := Node;
-end;
-
-procedure TformMain.treeMainDblClick(Sender: TObject);
-var
-  Node: TTreeNode;
-  UnknownObject: TObject;
-begin
-  if Assigned(treeMain.Selected) then
+  // find the project
+  CurrentNode := treeMain.TopItem;
+  while Assigned(CurrentNode) do
   begin
-    treeMain.Selected.Expanded := not treeMain.Selected.Expanded;
-    Node := treeMain.Selected;
-    UnknownObject := Node.Data;
-    if UnknownObject is TDomain then
-      OpenDomain(UnknownObject as TDomain)
-    else if UnknownObject is THosting then
-      OpenHosting(UnknownObject as THosting)
-    else if UnknownObject is TCMS then
-      OpenCMS(UnknownObject as TCMS)
-  end;
-end;
-
-procedure TformMain.treeMainMouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-var
-  Node: TTreeNode;
-  UnknownObject: TObject;
-begin
-  if Button = mbRight then
-  begin
-    if Assigned(treeMain.Selected) then
+    CurrentObject := CurrentNode.Data;
+    if CurrentObject is TProject then
     begin
-      treeMain.Selected.Expanded := not treeMain.Selected.Expanded;
-      Node := treeMain.Selected;
-      UnknownObject := Node.Data;
-      if UnknownObject is TProject then
-      begin
-        // show the popup
-        treeViewProjectPopup.Popup(X, Y);
-      end;
-    end; // endif assigned
-  end; // endif button
-end;
-
-procedure TformMain.buttonWelcomeOpenProjectClick(Sender: TObject);
-begin
-  OpenProject;
-end;
-
-procedure TformMain.closeWelcomeForm;
-begin
-  // unfreeze toolbar
-  toolbarMain.Enabled := true;
-  // free components
-  imageLogo.Free;
-  buttonWelcomeOpenProject.Free;
-  buttonWelcomeGenerateReport.Free;
-  buttonWelcomeSearchData.Free;
-  imageButtonClose.Free;
-  panelWelcome.Free;
-end;
-
-procedure TformMain.FormCreate(Sender: TObject);
-begin
-  // disable toolbar
-  toolbarMain.Enabled := false;
-end;
-
-procedure TformMain.imageButtonCloseClick(Sender: TObject);
-begin
-  closeWelcomeForm;
-end;
-
-procedure TformMain.newProjectClick(Sender: TObject);
-var
-  ProjectForm: TformProjectView;
-begin
-  ProjectForm := TformProjectView.Create(formMain);
-  ProjectForm.Show;
+      CurrentProject := CurrentObject as TProject;
+      if CurrentProject.ProjectID = ProjectID then
+        CurrentNode.Delete;
+    end;
+    CurrentNode := CurrentNode.getNextSibling;
+  end;
+  // and reopen it again
+  displayProjectOnTree(formLoadProject.LoadProject(ProjectID));
 end;
 
 procedure TformMain.displayProjectOnTree(Project: TProject);
@@ -321,7 +264,7 @@ begin
           if CMS.HostingID = Host.HostingID then
           begin
             CurrentNode := treeMain.Items.AddChildObject(HostNode,
-              '/'+CMS.Directory, CMS);
+              '/' + CMS.Directory, CMS);
             CurrentNode.ImageIndex := 3;
             CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
           end; // ENDIFCMS
@@ -353,6 +296,106 @@ begin
       CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
     end;
   treeMain.FullExpand;
+end;
+
+{ ****WELCOME FORM**** }
+procedure TformMain.closeWelcomeForm;
+begin
+  // unfreeze toolbar
+  toolbarMain.Enabled := true;
+  // free components
+  imageLogo.Free;
+  buttonWelcomeOpenProject.Free;
+  buttonWelcomeGenerateReport.Free;
+  buttonWelcomeSearchData.Free;
+  imageButtonClose.Free;
+  panelWelcome.Free;
+end;
+
+{ ****BUTTON GROUP**** }
+procedure TformMain.ChangeButtonGroup(DataType: TDataType;
+  ButtonGroup: TButtonGroup);
+begin
+  // modify button group items based on currently selected items
+end;
+
+{ ****EVENTS**** }
+
+procedure TformMain.tbLoadClick(Sender: TObject);
+begin
+  OpenProject;
+end;
+
+procedure TformMain.treeMainDblClick(Sender: TObject);
+var
+  Node: TTreeNode;
+  UnknownObject: TObject;
+begin
+  if Assigned(treeMain.Selected) then
+  begin
+    treeMain.Selected.Expanded := not treeMain.Selected.Expanded;
+    Node := treeMain.Selected;
+    UnknownObject := Node.Data;
+    if UnknownObject is TDomain then
+      OpenDomain(UnknownObject as TDomain)
+    else if UnknownObject is THosting then
+      OpenHosting(UnknownObject as THosting)
+    else if UnknownObject is TCMS then
+      OpenCMS(UnknownObject as TCMS)
+    else if UnknownObject is TDatabase then
+      OpenDatabase(UnknownObject as TDatabase);
+  end;
+end;
+
+procedure TformMain.treeMainMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var
+  Node: TTreeNode;
+  UnknownObject: TObject;
+begin
+  if Button = mbRight then
+  begin
+    if Assigned(treeMain.Selected) then
+    begin
+      treeMain.Selected.Expanded := not treeMain.Selected.Expanded;
+      Node := treeMain.Selected;
+      UnknownObject := Node.Data;
+      if UnknownObject is TProject then
+      begin
+        // show the popup
+        treeViewProjectPopup.Popup(X, Y);
+      end;
+    end; // endif assigned
+  end; // endif button
+end;
+
+procedure TformMain.buttonWelcomeOpenProjectClick(Sender: TObject);
+begin
+  OpenProject;
+end;
+
+procedure TformMain.showLoadProjectForm;
+begin
+  formLoadProject.Show;
+end;
+
+procedure TformMain.FormCreate(Sender: TObject);
+begin
+  // disable toolbar
+  toolbarMain.Enabled := false;
+end;
+
+procedure TformMain.imageButtonCloseClick(Sender: TObject);
+begin
+  closeWelcomeForm;
+end;
+
+procedure TformMain.newProjectClick(Sender: TObject);
+var
+  ProjectForm: TformProjectView;
+begin
+  ProjectForm := TformProjectView.Create(formMain);
+  ProjectForm.Show;
 end;
 
 end.

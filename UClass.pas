@@ -60,7 +60,7 @@ type
     property DatabaseID: integer read DBID;
     property Directory: string read Direc;
     property TablePrefix: string read TbPrefix;
-    property TableName: string read TName;
+    property ThemeName: string read TName;
     property AdminUsername: string read AdminUser;
     property AdminPassword: string read AdminPass;
     property ClientUsername: string read ClientUser;
@@ -72,17 +72,17 @@ type
 
   TDatabase = class(TObject)
   private
-    DBID, DRID, HID: integer;
+    DBID, HRID, HID: integer;
     DBName, DBUser, DBPassword, hName: string;
   public
     property DatabaseID: integer read DBID;
-    property DomainRegistrarID: integer read DRID;
+    property HostRegistrarID: integer read HRID;
     property HostingID: integer read HID;
     property Name: string read DBName;
     property Username: string read DBUser;
     property Password: string read DBPassword;
     property Hostname: string read hName;
-    constructor Create(DBID, DRID, HID: integer;
+    constructor Create(DBID, HRID, HID: integer;
       DBName, DBUser, DBPassword, hName: string);
   end;
 
@@ -106,11 +106,11 @@ var
 
 implementation
 
-constructor TDatabase.Create(DBID: integer; DRID: integer; HID: integer;
+constructor TDatabase.Create(DBID: integer; HRID: integer; HID: integer;
   DBName: string; DBUser: string; DBPassword: string; hName: string);
 begin
   Self.DBID := DBID;
-  Self.DRID := DRID;
+  Self.HRID := HRID;
   Self.HID := HID;
   Self.DBName := DBName;
   Self.DBUser := DBUser;

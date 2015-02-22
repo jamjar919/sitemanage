@@ -9,7 +9,8 @@ uses
   UClass in 'UClass.pas',
   UHostingView in 'UHostingView.pas' {formHostingView},
   UProjectView in 'UProjectView.pas' {formProjectView},
-  UCMSView in 'UCMSView.pas' {formCMSView};
+  UCMSView in 'UCMSView.pas' {formCMSView},
+  UDatabaseView in 'UDatabaseView.pas' {formDatabaseView};
 
 {$R *.res}
 
@@ -17,6 +18,7 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TformMain, formMain);
+  //Application.CreateForm(TformDatabaseView, formDatabaseView);
   //Application.CreateForm(TformDomainView, formDomainView);
   Application.CreateForm(TdatamoduleMain, datamoduleMain);
   Application.CreateForm(TformLoadProject, formLoadProject);

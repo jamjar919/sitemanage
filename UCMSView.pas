@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ExtCtrls, Vcl.StdCtrls,
-  Vcl.DBCtrls, Vcl.Mask, UClass, Data.DB, Data.Win.ADODB, UData;
+  Vcl.DBCtrls, Vcl.Mask, UClass, Data.DB, Data.Win.ADODB, UData, System.UITypes;
 
 type
   TformCMSView = class(TForm)
@@ -51,6 +51,9 @@ type
     lblSlash: TLabel;
     procedure dbcomboHostingClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure mmCloseClick(Sender: TObject);
+    procedure buttonDeleteClick(Sender: TObject);
+    procedure buttonUpdateClick(Sender: TObject);
   private
     hostingChanged: boolean;
   public
@@ -66,9 +69,86 @@ implementation
 
 {$R *.dfm}
 
-procedure TformCMSView.doUpdate(CMSID:integer);
+uses UMain;
+
+procedure TformCMSView.doUpdate(CMSID: integer);
+var
+  NewCMS: TCMS;
+  ProjectID: integer;
 begin
-  //update cms details
+  // make new cms object
+  NewCMS := TCMS.Create(CMSID, dbcomboCMSType.KeyValue, dbcomboHosting.KeyValue,
+    dbcomboDatabase.KeyValue, dbeditInstallDirectory.Text,
+    dbeditTablePrefix.Text, dbeditThemeName.Text, dbeditAdminUsername.Text,
+    dbeditAdminPassword.Text, dbeditClientUsername.Text,
+    dbeditClientPassword.Text);
+  // push to db
+  with datasetSingleCMS do
+  begin
+    Close;
+    Parameters.ParamByName('cmid').Value := CMSID;
+    Open;
+    Edit;
+    FieldValues['CMSTypeID'] := NewCMS.CMSTypeID;
+    FieldValues['HostingID'] := NewCMS.HostingID;
+    FieldValues['DatabaseID'] := NewCMS.DatabaseID;
+    FieldValues['Directory'] := NewCMS.Directory;
+    FieldValues['TablePrefix'] := NewCMS.TablePrefix;
+    FieldValues['ThemeName'] := NewCMS.ThemeName;
+    FieldValues['AdminUsername'] := NewCMS.AdminUsername;
+    FieldValues['AdminPassword'] := NewCMS.AdminPassword;
+    FieldValues['ClientUsername'] := NewCMS.ClientUsername;
+    FieldValues['ClientPassword'] := NewCMS.ClientPassword;
+    Post;
+  end;
+  // get project id
+  dbcomboHosting.ListSource := nil;
+  with datasetHosting do
+  begin
+    Close;
+    CommandText := 'SELECT `ProjectID` FROM `hosting` WHERE `HostingID` = ' +
+      inttostr(CMS.HostingID);
+    Open;
+    ProjectID := FieldValues['ProjectID'];
+  end;
+  formmain.RefreshProject(ProjectID);
+  self.Free;
+end;
+
+procedure TformCMSView.buttonDeleteClick(Sender: TObject);
+var
+  butSelected, ProjectID: integer;
+begin
+  // show a messagebox confirming delete
+  butSelected := MessageDlg('Are you sure you want to delete ' + '/' +
+    CMS.Directory + '? This operation cannot be undone.', mtConfirmation,
+    mbOKCancel, 0);
+  case butSelected of
+    mrOk:
+      begin
+        // get project id
+        dbcomboHosting.ListSource := nil;
+        with datasetHosting do
+        begin
+          Close;
+          CommandText :=
+            'SELECT `ProjectID` FROM `hosting` WHERE `HostingID` = ' +
+            inttostr(CMS.HostingID);
+          Open;
+          ProjectID := FieldValues['ProjectID'];
+        end;
+        formmain.DeleteCMS(CMS.CMSID);
+        formmain.RefreshProject(ProjectID);
+        self.Free;
+      end;
+    mrCancel:
+      MessageDlg('CMS not deleted.', mtInformation, [mbOK], 0);
+  end;
+end;
+
+procedure TformCMSView.buttonUpdateClick(Sender: TObject);
+begin
+  doUpdate(CMS.CMSID);
 end;
 
 procedure TformCMSView.dbcomboHostingClick(Sender: TObject);
@@ -77,9 +157,9 @@ begin
   begin
     with datasetDatabase do
     begin
-      close;
-      parameters.ParamByName('hid').Value := dbcomboHosting.KeyValue;
-      open;
+      Close;
+      Parameters.ParamByName('hid').Value := dbcomboHosting.KeyValue;
+      Open;
     end;
     dbcomboDatabase.KeyValue := 0;
     hostingChanged := true;
@@ -93,16 +173,17 @@ begin
   // set parameters
   with datasetSingleCMS do
   begin
-    close;
-    parameters.ParamByName('cmid').Value := CMS.CMSID;
-    open;
+    Close;
+    Parameters.ParamByName('cmid').Value := CMS.CMSID;
+    Open;
   end;
   with datasetDatabase do
   begin
-    close;
-    parameters.ParamByName('hid').Value := CMS.HostingID;
-    open;
+    Close;
+    Parameters.ParamByName('hid').Value := CMS.HostingID;
+    Open;
   end;
+  // comboboxes
   dbcomboCMSType.KeyValue := CMS.CMSTypeID;
   dbcomboHosting.KeyValue := CMS.HostingID;
   dbcomboDatabase.KeyValue := CMS.DatabaseID;
@@ -111,6 +192,11 @@ end;
 procedure TformCMSView.FormCreate(Sender: TObject);
 begin
   hostingChanged := false;
+end;
+
+procedure TformCMSView.mmCloseClick(Sender: TObject);
+begin
+  self.Free;
 end;
 
 end.
