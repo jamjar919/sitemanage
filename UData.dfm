@@ -1,6 +1,6 @@
 object datamoduleMain: TdatamoduleMain
   OldCreateOrder = False
-  Height = 64
+  Height = 145
   Width = 320
   object ADONextnorth: TADOConnection
     Connected = True
@@ -24,5 +24,17 @@ object datamoduleMain: TdatamoduleMain
     Parameters = <>
     Left = 200
     Top = 8
+  end
+  object datasetCreate: TADODataSet
+    Connection = ADONextnorth
+    Parameters = <>
+    Left = 120
+    Top = 72
+  end
+  object commandCreate: TADOCommand
+    Connection = ADONextnorth
+    Parameters = <>
+    Left = 200
+    Top = 72
   end
 end

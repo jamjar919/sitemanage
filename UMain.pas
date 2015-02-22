@@ -38,6 +38,7 @@ type
     newDomain: TMenuItem;
     newHosting: TMenuItem;
     butgrMain: TButtonGroup;
+    imglistButtonGrp: TImageList;
     // events
     procedure imageButtonCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -47,6 +48,8 @@ type
     procedure treeMainMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure newProjectClick(Sender: TObject);
+    procedure butgrMainButtonClicked(Sender: TObject; Index: Integer);
+    procedure treeMainChange(Sender: TObject; Node: TTreeNode);
   private
     { Private declarations }
   public
@@ -58,6 +61,7 @@ type
     // hosting
     procedure OpenHosting(Host: THosting);
     procedure DeleteHosting(HostingID: Integer);
+    procedure AddHosting;
     // domain
     procedure OpenDomain(Domain: TDomain);
     procedure DeleteDomain(DomainID: Integer);
@@ -68,6 +72,7 @@ type
     procedure OpenDatabase(Database: TDatabase);
     procedure DeleteDatabase(DBID: Integer);
     // button group
+    procedure ClearButtonGroup(ButtonGroup: TButtonGroup);
     procedure ChangeButtonGroup(DataType: TDataType; ButtonGroup: TButtonGroup);
     // misc
     procedure closeWelcomeForm;
@@ -208,6 +213,31 @@ begin
   datamoduleMain.datasetDelete.CommandText := '';
 end;
 
+{ ****ADDING**** }
+procedure TformMain.AddHosting;
+var
+  newHosting: THosting;
+begin
+  // we use the global commandtext to create a blank record
+  datamoduleMain.commandcreate.CommandText :=
+    'INSERT INTO hosting (`HostingID`, `ProjectID`, `DomainID`, `RenewalDate`, `RenewalCost`, `HostRegistrarID`, `FTPServer`, `FTPUsername`, `FTPPassword`, `FTPPort`) VALUES (NULL, ''0'', ''0'', ''2015-01-01'', ''0'', ''0'', '''', '''', '''', ''0'')';
+  datamoduleMain.commandcreate.Execute;
+  // now get the record and open it in a new window, it will be the one with the highest id
+  with datamoduleMain.datasetCreate do
+  begin
+    Close;
+    CommandText := 'SELECT * FROM `hosting` ORDER BY `HostingID` DESC LIMIT 1';
+    Open;
+    newHosting := THosting.Create(FieldValues['HostingID'],
+      FieldValues['ProjectID'], FieldValues['DomainID'],
+      FieldValues['HostRegistrarID'], FieldValues['RenewalDate'],
+      FieldValues['RenewalCost'], FieldValues['FTPServer'],
+      FieldValues['FTPUsername'], FieldValues['FTPPassword'],
+      FieldValues['FTPPort']);
+  end;
+  OpenHosting(newHosting);
+end;
+
 { ****TREEVIEW HANDLING**** }
 
 procedure TformMain.RefreshProject(ProjectID: Integer);
@@ -313,10 +343,133 @@ begin
 end;
 
 { ****BUTTON GROUP**** }
+
+procedure TformMain.ClearButtonGroup(ButtonGroup: TButtonGroup);
+begin
+  ButtonGroup.Items.Clear;
+end;
+
 procedure TformMain.ChangeButtonGroup(DataType: TDataType;
   ButtonGroup: TButtonGroup);
+var
+  CurrentButton: TGrpButtonItem;
 begin
   // modify button group items based on currently selected items
+  ClearButtonGroup(ButtonGroup);
+  case DataType of
+    dtProject:
+      begin
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.ImageIndex := 0;
+        CurrentButton.Caption := 'Edit Project';
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Delete Project';
+        CurrentButton.ImageIndex := 1;
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Add New Domain';
+        CurrentButton.ImageIndex := 2;
+      end;
+    dtDomain:
+      begin
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.ImageIndex := 0;
+        CurrentButton.Caption := 'Edit Domain';
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Delete Domain';
+        CurrentButton.ImageIndex := 1;
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Add New Hosting';
+        CurrentButton.ImageIndex := 2;
+      end;
+    dtHosting:
+      begin
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.ImageIndex := 0;
+        CurrentButton.Caption := 'Edit Hosting';
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Delete Hosting';
+        CurrentButton.ImageIndex := 1;
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Add New CMS';
+        CurrentButton.ImageIndex := 2;
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Add New Database';
+        CurrentButton.ImageIndex := 2;
+      end;
+    dtCMS:
+      begin
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.ImageIndex := 0;
+        CurrentButton.Caption := 'Edit CMS';
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Delete CMS';
+        CurrentButton.ImageIndex := 1;
+      end;
+    dtDatabase:
+      begin
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.ImageIndex := 0;
+        CurrentButton.Caption := 'Edit Database';
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Delete Database';
+        CurrentButton.ImageIndex := 1;
+      end;
+  end;
+end;
+
+procedure TformMain.butgrMainButtonClicked(Sender: TObject; Index: Integer);
+var
+  Node: TTreeNode;
+  UnknownObject: TObject;
+begin
+  // based on type of selected object we can determine what buttons do what from their item index
+  if Assigned(treeMain.Selected) then
+  begin
+    Node := treeMain.Selected;
+    UnknownObject := Node.Data;
+    if UnknownObject is TDomain then
+    begin
+      case Index of
+        0:
+          OpenDomain(UnknownObject as TDomain); // edit
+        1:
+          ; // delete
+        2:
+          AddHosting; // add host
+      end;
+    end
+    else if UnknownObject is THosting then
+    begin
+      case index of
+        0:
+          OpenHosting(UnknownObject as THosting); // edit
+        1:
+          ; // delete
+        2:
+          ; // add cms
+        3:
+          ; // add db
+      end;
+    end
+    else if UnknownObject is TCMS then
+    begin
+      case index of
+        0:
+          OpenCMS(UnknownObject as TCMS); // edit
+        1:
+          ; // delete
+      end;
+    end
+    else if UnknownObject is TDatabase then
+    begin
+      case index of
+        0:
+          OpenDatabase(UnknownObject as TDatabase); // edit
+        1:
+          ; // delete
+      end;
+    end;
+  end;
 end;
 
 { ****EVENTS**** }
@@ -324,6 +477,31 @@ end;
 procedure TformMain.tbLoadClick(Sender: TObject);
 begin
   OpenProject;
+end;
+
+procedure TformMain.treeMainChange(Sender: TObject; Node: TTreeNode);
+var
+  UnknownObject: TObject;
+  ButtonGroup: TButtonGroup;
+begin
+  ButtonGroup := butgrMain;
+  if Assigned(treeMain.Selected) then
+  begin
+    Node := treeMain.Selected;
+    UnknownObject := Node.Data;
+    if UnknownObject is TDomain then
+      ChangeButtonGroup(dtDomain, ButtonGroup)
+    else if UnknownObject is THosting then
+      ChangeButtonGroup(dtHosting, ButtonGroup)
+    else if UnknownObject is TCMS then
+      ChangeButtonGroup(dtCMS, ButtonGroup)
+    else if UnknownObject is TDatabase then
+      ChangeButtonGroup(dtDatabase, ButtonGroup)
+    else if UnknownObject is TProject then
+      ChangeButtonGroup(dtProject, ButtonGroup)
+    else
+      ClearButtonGroup(ButtonGroup);
+  end;
 end;
 
 procedure TformMain.treeMainDblClick(Sender: TObject);

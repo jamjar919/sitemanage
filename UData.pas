@@ -10,6 +10,8 @@ type
     ADONextnorth: TADOConnection;
     datasetDelete: TADODataSet;
     commandDelete: TADOCommand;
+    datasetCreate: TADODataSet;
+    commandCreate: TADOCommand;
   private
     { Private declarations }
   public

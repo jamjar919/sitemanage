@@ -6,7 +6,7 @@ uses Generics.Collections;
 { This unit contains all the class definitions that are used across multiple units }
 
 type
-  TDataType = (dtDomain, dtHosting, dtCMS, dtDatabase);
+  TDataType = (dtProject, dtDomain, dtHosting, dtCMS, dtDatabase);
 
   TDomain = class(TObject)
   private

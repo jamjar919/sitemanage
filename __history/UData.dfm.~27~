@@ -1,0 +1,34 @@
+object datamoduleMain: TdatamoduleMain
+  OldCreateOrder = False
+  Height = 145
+  Width = 320
+  object ADONextnorth: TADOConnection
+    Connected = True
+    ConnectionString = 
+      'Provider=MSDASQL.1;Persist Security Info=False;User ID=james;Dat' +
+      'a Source=nextnorth;'
+    DefaultDatabase = 'north'
+    LoginPrompt = False
+    Left = 32
+    Top = 8
+  end
+  object datasetDelete: TADODataSet
+    Connection = ADONextnorth
+    CursorType = ctStatic
+    Parameters = <>
+    Left = 120
+    Top = 8
+  end
+  object commandDelete: TADOCommand
+    Connection = ADONextnorth
+    Parameters = <>
+    Left = 200
+    Top = 8
+  end
+  object datasetCreate: TADODataSet
+    Connection = ADONextnorth
+    Parameters = <>
+    Left = 120
+    Top = 72
+  end
+end
