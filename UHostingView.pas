@@ -78,15 +78,11 @@ uses UMain;
 procedure TformHostingView.doUpdate(HostingID: Integer);
 var
   NewHosting: THosting;
-  RenewalCost: string;
 begin
-  // handle renewal cost
-  RenewalCost := dbeditRenewalCost.Text;
-  Delete(RenewalCost, 1, 1);
   //make new hosting object
   NewHosting := THosting.Create(Hosting.HostingID, dbcomboProject.KeyValue,
     dbcomboDomain.KeyValue, dbcomboHostRegistrar.KeyValue,
-    dtpickRenewalDate.Date, strtofloat(RenewalCost), dbeditFTPServer.Text,
+    dtpickRenewalDate.Date, dbeditRenewalCost.Field.AsFloat, dbeditFTPServer.Text,
     dbeditFTPUsername.Text, dbeditFTPPassword.Text,
     strtoint(dbeditFTPPort.Text));
   // push details to server

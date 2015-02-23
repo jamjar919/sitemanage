@@ -12,7 +12,6 @@ object formProjectView: TformProjectView
   Font.Style = []
   Menu = mmProjectView
   OldCreateOrder = False
-  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object lblProjectName: TLabel
@@ -29,21 +28,14 @@ object formProjectView: TformProjectView
     Height = 13
     Caption = 'Client:'
   end
-  object editProjectName: TEdit
-    Left = 72
-    Top = 8
-    Width = 289
-    Height = 21
-    TabOrder = 0
-  end
-  object buttonCreateProject: TButton
-    Left = 286
+  object buttonUpdateProject: TButton
+    Left = 16
     Top = 73
     Width = 75
     Height = 25
-    Caption = 'Create'
-    TabOrder = 1
-    OnClick = buttonCreateProjectClick
+    Caption = 'Update'
+    TabOrder = 0
+    OnClick = buttonUpdateProjectClick
   end
   object dbcomboClient: TDBLookupComboBox
     Left = 72
@@ -53,7 +45,25 @@ object formProjectView: TformProjectView
     KeyField = 'ClientID'
     ListField = 'CompanyName'
     ListSource = datasourceClient
+    TabOrder = 1
+  end
+  object buttonDeleteProject: TButton
+    Left = 286
+    Top = 73
+    Width = 75
+    Height = 25
+    Caption = 'Delete'
     TabOrder = 2
+    OnClick = buttonDeleteProjectClick
+  end
+  object dbeditProjectName: TDBEdit
+    Left = 72
+    Top = 8
+    Width = 289
+    Height = 21
+    DataField = 'ProjectName'
+    DataSource = datasourceProject
+    TabOrder = 3
   end
   object mmProjectView: TMainMenu
     Left = 312
@@ -64,7 +74,7 @@ object formProjectView: TformProjectView
   end
   object datasourceClient: TDataSource
     DataSet = datasetClient
-    Left = 32
+    Left = 184
     Top = 64
   end
   object datasetClient: TADODataSet
@@ -76,24 +86,25 @@ object formProjectView: TformProjectView
     Left = 120
     Top = 64
   end
-  object commandProject: TADOCommand
-    CommandText = 
-      'INSERT INTO `project` (`ProjectID`, `ClientID`, `ProjectName`) V' +
-      'ALUES (NULL, :cid , :name);'
+  object datasetProject: TADODataSet
+    Active = True
     Connection = datamoduleMain.ADONextnorth
+    CursorType = ctStatic
+    CommandText = 'SELECT * FROM project WHERE ProjectID = :pid;'
     Parameters = <
       item
-        Name = 'cid'
+        Name = 'pid'
+        Attributes = [paNullable]
         DataType = ftInteger
+        NumericScale = 208
+        Precision = 255
+        Size = 255
         Value = 0
-      end
-      item
-        Name = 'name'
-        DataType = ftWideString
-        Size = 1
-        Value = ' '
       end>
-    Left = 216
-    Top = 64
+    Left = 120
+  end
+  object datasourceProject: TDataSource
+    DataSet = datasetProject
+    Left = 184
   end
 end

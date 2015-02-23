@@ -1,0 +1,110 @@
+unit UProjectView;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.StdCtrls, Vcl.DBCtrls,
+  Vcl.DBLookup, Data.DB, Data.Win.ADODB, UData, UClass, Vcl.Mask,
+  System.UITypes;
+
+type
+  TformProjectView = class(TForm)
+    mmProjectView: TMainMenu;
+    mmClose: TMenuItem;
+    lblProjectName: TLabel;
+    lblClient: TLabel;
+    buttonUpdateProject: TButton;
+    datasourceClient: TDataSource;
+    datasetClient: TADODataSet;
+    dbcomboClient: TDBLookupComboBox;
+    buttonDeleteProject: TButton;
+    datasetProject: TADODataSet;
+    datasourceProject: TDataSource;
+    dbeditProjectName: TDBEdit;
+    procedure mmCloseClick(Sender: TObject);
+    procedure buttonUpdateProjectClick(Sender: TObject);
+    procedure buttonDeleteProjectClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    Project: TProject;
+    procedure doOpen(Project: TProject);
+    procedure doUpdate(ProjectID: integer);
+  end;
+
+var
+  formProjectView: TformProjectView;
+
+implementation
+
+{$R *.dfm}
+
+uses UMain;
+
+procedure TformProjectView.buttonDeleteProjectClick(Sender: TObject);
+var
+  butSelected: integer;
+begin
+  // show a messagebox confirming delete
+  butSelected := MessageDlg
+    ('Are you sure you want to delete the project? This operation cannot be undone.',
+    mtConfirmation, mbOKCancel, 0);
+  case butSelected of
+    mrOk:
+      begin
+        formmain.DeleteProject(Project.ProjectID);
+        formmain.RemoveProjectFromTree(Project.ProjectID);
+        self.Free;
+      end;
+    mrCancel:
+      MessageDlg('Project not deleted.', mtInformation, [mbOK], 0);
+  end;
+end;
+
+procedure TformProjectView.buttonUpdateProjectClick(Sender: TObject);
+begin
+  doUpdate(Project.ProjectID);
+end;
+
+procedure TformProjectView.doOpen(Project: TProject);
+begin
+  // parameters
+  with datasetProject do
+  begin
+    Close;
+    Parameters.ParamByName('pid').Value := Project.ProjectID;
+    Open;
+    Active := True;
+  end;
+  // combobox
+  dbcomboClient.KeyValue := Project.ClientID;
+end;
+
+procedure TformProjectView.doUpdate(ProjectID: integer);
+var
+  NewProject: TProject;
+begin
+  NewProject:= Tproject.Create(ProjectID,dbcomboClient.KeyValue,dbeditProjectName.Text);
+  // update project
+  with datasetProject do
+  begin
+    Close;
+    Parameters.ParamByName('pid').Value := ProjectID;
+    Open;
+    Edit;
+    FieldValues['ClientID'] := NewProject.ClientID;
+    FieldValues['ProjectName'] :=   NewProject.Name;
+    Post;
+  end;
+  NewProject.Free;
+  Self.Free;
+end;
+
+procedure TformProjectView.mmCloseClick(Sender: TObject);
+begin
+  self.Free;
+end;
+
+end.
