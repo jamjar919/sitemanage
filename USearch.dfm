@@ -58,7 +58,6 @@ object formSearch: TformSearch
     Top = 39
     Width = 554
     Height = 235
-    DataSource = datamoduleSearch.datasourceSearch
     TabOrder = 3
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText

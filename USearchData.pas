@@ -15,6 +15,24 @@ type
     datasetSearchDatabase: TADODataSet;
     datasetSearchClient: TADODataSet;
     datasetSearchTask: TADODataSet;
+    datasetSearchDomainDomainID: TAutoIncField;
+    datasetSearchDomainDomainName: TStringField;
+    datasetSearchDomainDomainExtension: TStringField;
+    datasetSearchDomainRenewalDate: TDateField;
+    datasetSearchDomainRenewalCost: TFloatField;
+    datasetSearchDomainProjectName: TStringField;
+    datasetSearchDomainName: TStringField;
+    datasetSearchHostingFTPServer: TStringField;
+    datasetSearchHostingFTPPort: TIntegerField;
+    datasetSearchHostingRenewalDate: TDateField;
+    datasetSearchHostingRenewalCost: TFloatField;
+    datasetSearchHostingProjectName: TStringField;
+    datasetSearchHostingDomainName: TStringField;
+    datasetSearchHostingDomainExtension: TStringField;
+    datasetSearchHostingName: TStringField;
+    datasetSearchProjectProjectID: TAutoIncField;
+    datasetSearchProjectProjectName: TStringField;
+    datasetSearchProjectCompanyName: TStringField;
   private
     { Private declarations }
   public

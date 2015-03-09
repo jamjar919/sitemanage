@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.Grids, Vcl.StdCtrls,
-  UClass, USearchData, Vcl.DBGrids, Data.DB, Data.Win.ADODB;
+  UClass, USearchData, Vcl.DBGrids, Data.DB, Data.Win.ADODB, UData;
 
 Const
   TABLES_TO_SEARCH = 7;
@@ -70,29 +70,46 @@ end;
 procedure TformSearch.changeDataset(Datatype: TSingleDatatype);
 begin
   // change the data set dependent on the selected datatype
+  datamoduleSearch.datasourceSearch.DataSet.Close;
   case Datatype.Datatype of
     dtProject:
-      datamoduleSearch.datasourceSearch.DataSet :=
-        datamoduleSearch.datasetsearchProject;
+      begin
+        datamoduleSearch.datasourceSearch.DataSet :=
+          datamoduleSearch.datasetsearchProject;
+      end;
     dtDomain:
-      datamoduleSearch.datasourceSearch.DataSet :=
-        datamoduleSearch.datasetsearchDomain;
+      begin
+        datamoduleSearch.datasourceSearch.DataSet :=
+          datamoduleSearch.datasetsearchDomain;
+      end;
     dtHosting:
-      datamoduleSearch.datasourceSearch.DataSet :=
-        datamoduleSearch.datasetsearchHosting;
+      begin
+        datamoduleSearch.datasetSearchHosting.Close;
+        datamoduleSearch.datasourceSearch.DataSet :=
+          datamoduleSearch.datasetsearchHosting;
+      end;
     dtCMS:
-      datamoduleSearch.datasourceSearch.DataSet :=
-        datamoduleSearch.datasetsearchCMS;
+      begin
+        datamoduleSearch.datasourceSearch.DataSet :=
+          datamoduleSearch.datasetsearchCMS;
+      end;
     dtDatabase:
-      datamoduleSearch.datasourceSearch.DataSet :=
-        datamoduleSearch.datasetsearchDatabase;
+      begin
+        datamoduleSearch.datasourceSearch.DataSet :=
+          datamoduleSearch.datasetsearchDatabase;
+      end;
     dtClient:
-      datamoduleSearch.datasourceSearch.DataSet :=
-        datamoduleSearch.datasetsearchClient;
+      begin
+        datamoduleSearch.datasourceSearch.DataSet :=
+          datamoduleSearch.datasetsearchClient;
+      end;
     dtTask:
-      datamoduleSearch.datasourceSearch.DataSet :=
-        datamoduleSearch.datasetsearchTask;
+      begin
+        datamoduleSearch.datasourceSearch.DataSet :=
+          datamoduleSearch.datasetsearchTask;
+      end;
   end;
+  datamoduleSearch.datasourceSearch.DataSet.Open;
 end;
 
 procedure TformSearch.fillComboBox(var ComboBox: TComboBox;
