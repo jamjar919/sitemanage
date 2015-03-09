@@ -1,0 +1,179 @@
+unit UClass;
+
+interface
+
+uses Generics.Collections;
+{ This unit contains all the class definitions that are used across multiple units }
+
+type
+  TDataTypes = (dtProject, dtDomain, dtHosting, dtCMS, dtDatabase, dtClient);
+
+
+
+  TDomain = class(TObject)
+  private
+    DID, PID, DRID: integer;
+    dName, dExten: string;
+    rDate: TDate;
+    rCost: real;
+  public
+    property DomainID: integer read DID;
+    property ProjectID: integer read PID;
+    property DomainRegistrarID: integer read DRID;
+    property DomainName: string read dName;
+    property DomainExtension: string read dExten;
+    property RenewalDate: TDate read rDate;
+    property RenewalCost: real read rCost;
+    constructor Create(DID, PID, DRID: integer; dName, dExten: string;
+      rDate: TDate; rCost: real);
+  end;
+
+  THosting = class(TObject)
+  private
+    HID, PID, DID, HRID: integer;
+    rDate: TDate;
+    rCost: real;
+    Server, EncUser, EncPass: string; // encuser and encpass are encrypted
+    Port: integer;
+  public
+    property HostingID: integer read HID;
+    property ProjectID: integer read PID;
+    property DomainID: integer read DID;
+    property HostRegistrarID: integer read HRID;
+    property RenewalDate: TDate read rDate;
+    property RenewalCost: real read rCost;
+    property FTPServer: string read Server;
+    property FTPUsername: String read EncUser;
+    property FTPPassword: string read EncPass;
+    property FTPPort: integer read Port;
+    constructor Create(HID, PID, DID, HRID: integer; rDate: TDate; rCost: real;
+      Server, User, Pass: string; Port: integer);
+  end;
+
+  TCMS = class(TObject)
+  private
+    CMID, CMTID, HID, DBID: integer;
+    Direc, TbPrefix, TName, AdminUser, AdminPass, ClientUser,
+      ClientPass: string;
+  public
+    property CMSID: integer read CMID;
+    property CMSTypeID: integer read CMTID;
+    property HostingID: integer read HID;
+    property DatabaseID: integer read DBID;
+    property Directory: string read Direc;
+    property TablePrefix: string read TbPrefix;
+    property ThemeName: string read TName;
+    property AdminUsername: string read AdminUser;
+    property AdminPassword: string read AdminPass;
+    property ClientUsername: string read ClientUser;
+    property ClientPassword: string read ClientPass;
+    constructor Create(CMID, CMTID, HID, DBID: integer;
+      Direc, TbPrefix, TName, AdminUser, AdminPass, ClientUser,
+      ClientPass: string);
+  end;
+
+  TDatabase = class(TObject)
+  private
+    DBID, HRID, HID: integer;
+    DBName, DBUser, DBPassword, hName: string;
+  public
+    property DatabaseID: integer read DBID;
+    property HostRegistrarID: integer read HRID;
+    property HostingID: integer read HID;
+    property Name: string read DBName;
+    property Username: string read DBUser;
+    property Password: string read DBPassword;
+    property Hostname: string read hName;
+    constructor Create(DBID, HRID, HID: integer;
+      DBName, DBUser, DBPassword, hName: string);
+  end;
+
+  TProject = class(TObject)
+  private
+    PID, CID: integer;
+    pName: string;
+  public
+    DomainList: TObjectList<TDomain>;
+    HostingList: TObjectList<THosting>;
+    CMSList: TObjectList<TCMS>;
+    DatabaseList: TObjectList<TDatabase>;
+    property ClientID: integer read CID;
+    property ProjectID: integer read PID;
+    property Name: string read pName;
+    constructor Create(PID, CID: integer; pName: string);
+  end;
+
+var
+  CurrentProject: TProject;
+
+implementation
+
+constructor TDatabase.Create(DBID: integer; HRID: integer; HID: integer;
+  DBName: string; DBUser: string; DBPassword: string; hName: string);
+begin
+  Self.DBID := DBID;
+  Self.HRID := HRID;
+  Self.HID := HID;
+  Self.DBName := DBName;
+  Self.DBUser := DBUser;
+  Self.DBPassword := DBPassword;
+  Self.hName := hName;
+end;
+
+constructor TCMS.Create(CMID: integer; CMTID: integer; HID: integer;
+  DBID: integer; Direc: string; TbPrefix: string; TName: string;
+  AdminUser: string; AdminPass: string; ClientUser: string; ClientPass: string);
+begin
+  Self.CMID := CMID;
+  Self.CMTID := CMTID;
+  Self.HID := HID;
+  Self.DBID := DBID;
+  Self.Direc := Direc;
+  Self.TbPrefix := TbPrefix;
+  Self.TName := TName;
+  Self.AdminUser := AdminUser;
+  Self.AdminPass := AdminPass;
+  Self.ClientUser := ClientUser;
+  Self.ClientPass := ClientPass;
+end;
+
+constructor THosting.Create(HID: integer; PID: integer; DID: integer;
+  HRID: integer; rDate: TDate; rCost: real; Server: string; User: string;
+  Pass: string; Port: integer);
+begin
+  Self.HID := HID;
+  Self.PID := PID;
+  Self.DID := DID;
+  Self.HRID := HRID;
+  Self.rDate := rDate;
+  Self.rCost := rCost;
+  Self.Server := Server;
+  Self.EncUser := User;
+  Self.EncPass := Pass;
+  Self.Port := Port;
+end;
+
+constructor TDomain.Create(DID: integer; PID: integer; DRID: integer;
+  dName: string; dExten: string; rDate: TDate; rCost: real);
+begin
+  Self.DID := DID;
+  Self.PID := PID;
+  Self.DRID := DRID;
+  Self.dName := dName;
+  Self.dExten := dExten;
+  Self.rDate := rDate;
+  Self.rCost := rCost;
+end;
+
+constructor TProject.Create(PID: integer; CID: integer; pName: string);
+begin
+  Self.PID := PID;
+  Self.CID := CID;
+  Self.pName := pName;
+  DomainList := TObjectList<TDomain>.Create;
+  HostingList := TObjectList<THosting>.Create;
+  CMSList := TObjectList<TCMS>.Create;
+  DatabaseList := TObjectList<TDatabase>.Create;
+end;
+
+end.

@@ -37,9 +37,6 @@ Coordinates=327,10,90,58
 [datasetSingleDomainDomainID]
 Coordinates=1000,1,194,36
 
-[buttonDecrypt]
-Coordinates=627,10,95,58
-
 [datasetSingleDomainRenewalDate]
 Coordinates=1000,56,214,36
 
@@ -111,5 +108,5 @@ Coordinates=598,300,142,58
 Coordinates=474,300,114,58
 
 []
-Coordinates=0,465,91,36
+Coordinates=627,10,95,58
 

@@ -110,7 +110,7 @@ object formDomainView: TformDomainView
     object dbeditRenewalCost: TDBEdit
       Left = 108
       Top = 84
-      Width = 121
+      Width = 229
       Height = 21
       DataField = 'RenewalCost'
       DataSource = datasourceSingleDomain
@@ -141,30 +141,22 @@ object formDomainView: TformDomainView
     object dbcomboDomainReg: TDBLookupComboBox
       Left = 108
       Top = 28
-      Width = 145
+      Width = 229
       Height = 21
       KeyField = 'RegistrarID'
       ListField = 'Name'
       ListSource = datasourceDomainReg
       TabOrder = 0
     end
-    object buttonDecrypt: TButton
-      Left = 280
-      Top = 25
-      Width = 75
-      Height = 25
-      Caption = 'View'
-      TabOrder = 1
-    end
     object dbcomboProject: TDBLookupComboBox
       Left = 108
       Top = 63
-      Width = 145
+      Width = 229
       Height = 21
       KeyField = 'ProjectID'
       ListField = 'ProjectName'
       ListSource = datasourceProject
-      TabOrder = 2
+      TabOrder = 1
     end
   end
   object gboxControls: TGroupBox

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nodeSet version="1.0">
+  <view uin="s14qy1pdf9r_v">
+    <property name="$defaultDiagram" value="true" />
+    <property name="$metaclass" value="Package Diagram" />
+    <property name="$name" value="default" />
+    <reference referencedUin="delphi:e_class:src:PSiteManager:UClass.@unitclass">
+      <property name="$shortcutReference" value="true" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.@unitclass.CurrentProject" />
+      <reference referencedUin="delphi:l_ast:src:PSiteManager:UClass.@unitclass.CurrentProject" />
+    </reference>
+    <reference referencedUin="delphi:e_class:src:PSiteManager:UClass.TCMS">
+      <property name="$shortcutReference" value="true" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TCMS.CMID" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TCMS.CMTID" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TCMS.HID" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TCMS.DBID" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TCMS.Direc" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TCMS.TbPrefix" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TCMS.TName" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TCMS.AdminUser" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TCMS.AdminPass" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TCMS.ClientUser" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TCMS.ClientPass" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TCMS.CMSID" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TCMS.CMSTypeID" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TCMS.HostingID" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TCMS.DatabaseID" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TCMS.Directory" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TCMS.TablePrefix" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TCMS.ThemeName" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TCMS.AdminUsername" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TCMS.AdminPassword" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TCMS.ClientUsername" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TCMS.ClientPassword" />
+      <reference referencedUin="delphi:e_method:src:PSiteManager:UClass.TCMS.Create(System.Integer,System.Integer,System.Integer,System.Integer,System.string,System.string,System.string,System.string,System.string,System.string,System.string)" />
+    </reference>
+    <reference referencedUin="delphi:e_class:src:PSiteManager:UClass.TDomain">
+      <property name="$shortcutReference" value="true" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDomain.DID" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDomain.PID" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDomain.DRID" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDomain.dName" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDomain.dExten" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDomain.rDate" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDomain.rCost" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TDomain.DomainID" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TDomain.ProjectID" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TDomain.DomainRegistrarID" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TDomain.DomainName" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TDomain.DomainExtension" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TDomain.RenewalDate" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TDomain.RenewalCost" />
+      <reference referencedUin="delphi:e_method:src:PSiteManager:UClass.TDomain.Create(System.Integer,System.Integer,System.Integer,System.string,System.string,System.TDate,System.Real)" />
+    </reference>
+    <reference referencedUin="delphi:e_class:src:PSiteManager:UClass.THosting">
+      <property name="$shortcutReference" value="true" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.THosting.HID" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.THosting.PID" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.THosting.DID" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.THosting.HRID" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.THosting.rDate" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.THosting.rCost" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.THosting.Server" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.THosting.EncUser" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.THosting.EncPass" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.THosting.Port" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.THosting.HostingID" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.THosting.ProjectID" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.THosting.DomainID" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.THosting.HostRegistrarID" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.THosting.RenewalDate" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.THosting.RenewalCost" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.THosting.FTPServer" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.THosting.FTPUsername" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.THosting.FTPPassword" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.THosting.FTPPort" />
+      <reference referencedUin="delphi:e_method:src:PSiteManager:UClass.THosting.Create(System.Integer,System.Integer,System.Integer,System.Integer,System.TDate,System.Real,System.string,System.string,System.string,System.Integer)" />
+    </reference>
+    <reference referencedUin="delphi:e_class:src:PSiteManager:UClass.TDataType">
+      <property name="$shortcutReference" value="true" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDataType.dtProject" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDataType.dtDomain" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDataType.dtHosting" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDataType.dtCMS" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDataType.dtDatabase" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDataType.dtClient" />
+    </reference>
+    <reference referencedUin="delphi:e_class:src:PSiteManager:UClass.TProject">
+      <property name="$shortcutReference" value="true" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TProject.PID" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TProject.CID" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TProject.pName" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TProject.DomainList" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TProject.HostingList" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TProject.CMSList" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TProject.DatabaseList" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TProject.ClientID" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TProject.ProjectID" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TProject.Name" />
+      <reference referencedUin="delphi:e_method:src:PSiteManager:UClass.TProject.Create(System.Integer,System.Integer,System.string)" />
+      <reference referencedUin="design:link:::992ia58v90m_l" />
+      <reference referencedUin="design:link:::fe5q0g8rmgj_l" />
+      <reference referencedUin="design:link:::b0lir2txsio_l" />
+      <reference referencedUin="design:link:::2a41ggvpl5jsdj2r_l" />
+    </reference>
+    <reference referencedUin="delphi:e_class:src:PSiteManager:UClass.TDatabase">
+      <property name="$shortcutReference" value="true" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDatabase.DBID" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDatabase.HRID" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDatabase.HID" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDatabase.DBName" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDatabase.DBUser" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDatabase.DBPassword" />
+      <reference referencedUin="delphi:e_field:src:PSiteManager:UClass.TDatabase.hName" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TDatabase.DatabaseID" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TDatabase.HostRegistrarID" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TDatabase.HostingID" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TDatabase.Name" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TDatabase.Username" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TDatabase.Password" />
+      <reference referencedUin="delphi:e_property:src:PSiteManager:UClass.TDatabase.Hostname" />
+      <reference referencedUin="delphi:e_method:src:PSiteManager:UClass.TDatabase.Create(System.Integer,System.Integer,System.Integer,System.string,System.string,System.string,System.string)" />
+    </reference>
+    <reference referencedUin="design:view:::nj2gxi7daoq_v">
+      <property name="$shortcutReference" value="true" />
+    </reference>
+  </view>
+  <link uin="992ia58v90m_l">
+    <property name="$metaclass" value="Dependency Link" />
+    <property name="$name" value="Dependency Link1" />
+    <participant referencedUin="delphi:e_class:src:PSiteManager:UClass.TProject" role="Client" />
+    <participant referencedUin="delphi:e_class:src:PSiteManager:UClass.THosting" role="Supplier" />
+  </link>
+  <link uin="fe5q0g8rmgj_l">
+    <property name="$metaclass" value="Dependency Link" />
+    <property name="$name" value="Dependency Link2" />
+    <participant referencedUin="delphi:e_class:src:PSiteManager:UClass.TProject" role="Client" />
+    <participant referencedUin="delphi:e_class:src:PSiteManager:UClass.TDatabase" role="Supplier" />
+  </link>
+  <link uin="b0lir2txsio_l">
+    <property name="$metaclass" value="Dependency Link" />
+    <property name="$name" value="Dependency Link3" />
+    <participant referencedUin="delphi:e_class:src:PSiteManager:UClass.TProject" role="Client" />
+    <participant referencedUin="delphi:e_class:src:PSiteManager:UClass.TCMS" role="Supplier" />
+  </link>
+  <link uin="2a41ggvpl5jsdj2r_l">
+    <property name="$metaclass" value="Dependency Link" />
+    <property name="$name" value="Dependency Link4" />
+    <participant referencedUin="delphi:e_class:src:PSiteManager:UClass.TProject" role="Client" />
+    <participant referencedUin="delphi:e_class:src:PSiteManager:UClass.TDomain" role="Supplier" />
+  </link>
+</nodeSet>

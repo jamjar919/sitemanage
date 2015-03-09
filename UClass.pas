@@ -6,7 +6,12 @@ uses Generics.Collections;
 { This unit contains all the class definitions that are used across multiple units }
 
 type
-  TDataType = (dtProject, dtDomain, dtHosting, dtCMS, dtDatabase);
+  TDataTypes = (dtProject, dtDomain, dtHosting, dtCMS, dtDatabase, dtClient, dtTask);
+
+  TSingleDataType = class(TObject)
+    DataType: tDatatypes;
+    constructor Create(Datatype:Tdatatypes);
+  end;
 
   TDomain = class(TObject)
   private
@@ -172,6 +177,11 @@ begin
   HostingList := TObjectList<THosting>.Create;
   CMSList := TObjectList<TCMS>.Create;
   DatabaseList := TObjectList<TDatabase>.Create;
+end;
+
+constructor TSingleDatatype.Create(Datatype: TDataTypes);
+begin
+  Self.DataType := Datatype;
 end;
 
 end.

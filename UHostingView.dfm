@@ -172,7 +172,7 @@ object formHostingView: TformHostingView
     object dbcomboHostRegistrar: TDBLookupComboBox
       Left = 112
       Top = 24
-      Width = 145
+      Width = 235
       Height = 21
       KeyField = 'RegistrarID'
       ListField = 'Name'
@@ -182,7 +182,7 @@ object formHostingView: TformHostingView
     object dbcomboProject: TDBLookupComboBox
       Left = 112
       Top = 58
-      Width = 145
+      Width = 235
       Height = 21
       KeyField = 'ProjectID'
       ListField = 'ProjectName'
@@ -192,7 +192,7 @@ object formHostingView: TformHostingView
     object dbcomboDomain: TDBLookupComboBox
       Left = 112
       Top = 93
-      Width = 145
+      Width = 235
       Height = 21
       KeyField = 'DomainID'
       ListField = 'DomainName'

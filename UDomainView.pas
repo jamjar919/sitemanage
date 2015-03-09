@@ -39,7 +39,6 @@ type
     datasetSingleDomainRenewalDate: TDateField;
     datasetSingleDomainRenewalCost: TFloatField;
     dbcomboDomainReg: TDBLookupComboBox;
-    buttonDecrypt: TButton;
     buttonUpdate: TButton;
     gboxControls: TGroupBox;
     buttonDelete: TButton;
@@ -194,7 +193,7 @@ end;
 
 procedure TformDomainView.llabelTitleClick(Sender: TObject);
 begin
-  ShellAPI.ShellExecute(0, 'Open', PChar(llabelTitle.Caption), PChar(''), nil,
+  ShellAPI.ShellExecute(0, 'Open', PChar('http://'+Domain.DomainName+'.'+Domain.DomainExtension), PChar(''), nil,
     SW_SHOWNORMAL);
 end;
 

@@ -1,0 +1,5 @@
+object datamoduleSearch: TdatamoduleSearch
+  OldCreateOrder = False
+  Height = 319
+  Width = 550
+end

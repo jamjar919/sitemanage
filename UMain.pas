@@ -10,7 +10,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ComCtrls, Vcl.ToolWin,
   Vcl.ImgList, Vcl.Imaging.pngimage, Vcl.ExtCtrls, Vcl.StdCtrls,
   UClass, UData, UDomainView, UHostingView, UProjectView, Vcl.ButtonGroup,
-  UCMSView, UDatabaseView;
+  UCMSView, UDatabaseView, USearch;
 
 type
   TformMain = class(TForm)
@@ -48,6 +48,7 @@ type
     procedure treeMainChange(Sender: TObject; Node: TTreeNode);
     procedure newHostingClick(Sender: TObject);
     procedure newDomainClick(Sender: TObject);
+    procedure buttonWelcomeSearchDataClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -77,9 +78,10 @@ type
     procedure AddDatabase(Database: TDatabase);
     // button group
     procedure ClearButtonGroup(ButtonGroup: TButtonGroup);
-    procedure ChangeButtonGroup(DataType: TDataType; ButtonGroup: TButtonGroup);
+    procedure ChangeButtonGroup(DataType: TDataTypes; ButtonGroup: TButtonGroup);
     // misc
     procedure closeWelcomeForm;
+    procedure openSearch;
   end;
 
 var
@@ -359,8 +361,46 @@ begin
 end;
 
 procedure TformMain.AddDatabase(Database: TDatabase);
+var
+  ProjectID: Integer;
+  hostRegID: string;
 begin
+  if Database.HostRegistrarID = 0 then
+    hostRegID := '0'
+  else
+    hostRegID := inttostr(Database.HostRegistrarID);
   // add database
+  datamoduleMain.commandCreate.CommandText :=
+    'INSERT INTO dbase (`DatabaseID`, `HostRegistrarID`, `HostingID`, `Name`, `Username`, `Password`, `Hostname`) VALUES (NULL, '''
+    + hostRegID + ''', ''' + inttostr(Database.HostingID) + ''', ''' +
+    Database.Name + ''', ''' + Database.Username + ''', ''' + Database.Password
+    + ''', ''' + Database.Hostname + '''); ';
+  datamoduleMain.commandCreate.Execute;
+  Database.Free;
+  with datamoduleMain.datasetCreate do
+  begin
+    Close;
+    CommandText := 'SELECT * FROM `dbase` ORDER BY `DatabaseID` DESC LIMIT 1';
+    Open;
+    Database := TDatabase.Create(FieldValues['DatabaseID'],
+      FieldValues['HostRegistrarID'], FieldValues['HostingID'],
+      FieldValues['Name'], FieldValues['Username'], FieldValues['Password'],
+      FieldValues['Hostname']);
+  end;
+  OpenDatabase(Database);
+  // find project id
+  if Database.HostingID <> 0 then
+  begin
+    with datamoduleMain.datasetCreate do
+    begin
+      Close;
+      CommandText := 'SELECT * FROM `hosting` WHERE HostingID = ' +
+        inttostr(Database.HostingID);
+      Open;
+      ProjectID := FieldValues['ProjectID'];
+    end;
+    RefreshProject(ProjectID);
+  end;
 end;
 
 { ****TREEVIEW HANDLING**** }
@@ -498,7 +538,7 @@ begin
   ButtonGroup.Items.Clear;
 end;
 
-procedure TformMain.ChangeButtonGroup(DataType: TDataType;
+procedure TformMain.ChangeButtonGroup(DataType: TDataTypes;
   ButtonGroup: TButtonGroup);
 var
   CurrentButton: TGrpButtonItem;
@@ -585,8 +625,10 @@ begin
   begin
     Node := treeMain.Selected;
     UnknownObject := Node.Data;
-    if assigned(Node.Parent) then
-      UnknownParentObject := Node.Parent.Data;
+    if Assigned(Node.Parent) then
+      UnknownParentObject := Node.Parent.Data
+    else
+      UnknownParentObject := TObject.Create;
     if UnknownObject is TProject then
     begin
       Project := UnknownObject as TProject;
@@ -634,7 +676,8 @@ begin
             Host := THosting.Create(0, Domain.ProjectID, Domain.DomainID,
               2015 - 01 - 01, 0, 0, 'New Hosting', '', '', 21);
             AddHosting(Host);
-          end; // add host
+          end;
+        // add host
       end; // END CASE
     end // END IFDOMAIN
     else if UnknownObject is THosting then
@@ -666,7 +709,8 @@ begin
             Database := TDatabase.Create(0, 0, Host.HostingID, 'New Database',
               '', '', '');
             AddDatabase(Database);
-          end; // add db
+          end;
+        // add db
       end;
     end
     else if UnknownObject is TCMS then
@@ -715,6 +759,17 @@ begin
     end;
   end;
 end;
+
+{ ****SEARCH**** }
+procedure TformMain.openSearch;
+var
+  searchForm: TformSearch;
+begin
+  //make new search form
+  searchForm := TformSearch.create(formMain);
+  searchForm.Show;
+end;
+
 
 { ****EVENTS**** }
 
@@ -772,6 +827,11 @@ end;
 procedure TformMain.buttonWelcomeOpenProjectClick(Sender: TObject);
 begin
   OpenProject;
+end;
+
+procedure TformMain.buttonWelcomeSearchDataClick(Sender: TObject);
+begin
+  OpenSearch;
 end;
 
 procedure TformMain.showLoadProjectForm;

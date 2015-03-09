@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<TgConfig Version="3" SubLevelDisabled="False">
+  <Option Name="namespaceFolder.PSiteManager" Type="System.String" Value="PSiteManager" Category="General" IsBrowsable="False" />
+  <Option Name="namespaceFolder.UClass" Type="System.String" Value="UClass" Category="General" IsBrowsable="False" />
+</TgConfig>

@@ -10,7 +10,9 @@ uses
   UHostingView in 'UHostingView.pas' {formHostingView},
   UProjectView in 'UProjectView.pas' {formProjectView},
   UCMSView in 'UCMSView.pas' {formCMSView},
-  UDatabaseView in 'UDatabaseView.pas' {formDatabaseView};
+  UDatabaseView in 'UDatabaseView.pas' {formDatabaseView},
+  USearch in 'USearch.pas' {formSearch},
+  USearchData in 'USearchData.pas' {datamoduleSearch: TDataModule};
 
 {$R *.res}
 
@@ -18,12 +20,15 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TformMain, formMain);
-  //Application.CreateForm(TformDatabaseView, formDatabaseView);
-  //Application.CreateForm(TformDomainView, formDomainView);
   Application.CreateForm(TdatamoduleMain, datamoduleMain);
+  //Application.CreateForm(TdatamoduleSearch, datamoduleSearch);
+  // Application.CreateForm(TformSearch, formSearch);
+  // Application.CreateForm(TformDatabaseView, formDatabaseView);
+  // Application.CreateForm(TformDomainView, formDomainView);
   Application.CreateForm(TformLoadProject, formLoadProject);
-  //Application.CreateForm(TformHostingView, formHostingView);
-  //Application.CreateForm(TformProjectView, formProjectView);
-  //Application.CreateForm(TformCMSView, formCMSView);
+  // Application.CreateForm(TformHostingView, formHostingView);
+  // Application.CreateForm(TformProjectView, formProjectView);
+  // Application.CreateForm(TformCMSView, formCMSView);
   Application.Run;
+
 end.
