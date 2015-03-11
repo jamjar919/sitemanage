@@ -1,0 +1,162 @@
+unit ULoadProject;
+
+interface
+
+uses
+  Vcl.Forms, Dialogs, Winapi.Windows, Winapi.Messages, System.SysUtils,
+  System.Variants, System.Classes, System.UITypes,
+  Data.DB, Data.Win.ADODB, Vcl.StdCtrls, Vcl.Controls, Vcl.DBCtrls, Graphics,
+  UData, UClass, UMain;
+
+type
+  TformLoadProject = class(TForm)
+    dbcomboProject: TDBLookupComboBox;
+    buttonLoadProject: TButton;
+    tadodsetLoadProject: TADODataSet;
+    tadodsourceProjectData: TDataSource;
+    procedure buttonLoadProjectClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    function LoadProject(ProjectID: integer): TProject;
+  end;
+
+var
+  formLoadProject: TformLoadProject;
+
+implementation
+
+{$R *.dfm}
+
+function TformLoadProject.LoadProject(ProjectID: integer): TProject;
+var
+  Project: TProject;
+  ClientID: integer;
+  ProjectName: string;
+begin
+  // get project data from the database
+  dbcomboProject.ListField := '';
+  dbcomboProject.KeyField := '';
+  // needs to be wiped to prevent it trying to fetch additional data
+  with tadodsetLoadProject do
+  begin
+    Close;
+    CommandText :=
+      'SELECT `ProjectName`,`ClientID` FROM project WHERE `ProjectID` = "' +
+      inttostr(ProjectID) + '";';
+    Open;
+    ProjectName := FieldValues['ProjectName'];
+    ClientID := FieldValues['ClientID'];
+    // load the project into a new memory object
+    Project := TProject.Create(ProjectID, ClientID, ProjectName);
+    { Close;
+      CommandText :=
+      'SELECT COUNT(*) AS `Count` FROM `domain` WHERE `ProjectID` = ' +
+      inttostr(ProjectID) +
+      ' UNION SELECT COUNT( * ) FROM `hosting` WHERE `ProjectID` = ' +
+      inttostr(ProjectID) + ';';
+      Open;
+      NumDomains := FieldValues['Count'];
+      Next;
+      NumHosting := FieldValues['Count']; }
+    // old code for countingdomain/host no
+    // select domain details
+    Close;
+    CommandText := 'SELECT * FROM `domain` WHERE ProjectID = ' +
+      inttostr(Project.ProjectID) + ';';
+    Open;
+    First;
+    // get domain data and add it to the project list
+    while (not EOF) do
+    begin
+      Project.DomainList.Add(TDomain.Create(FieldValues['DomainID'],
+        FieldValues['ProjectID'], FieldValues['DomainRegistrarID'],
+        FieldValues['DomainName'], FieldValues['DomainExtension'],
+        FieldValues['RenewalDate'], FieldValues['RenewalCost']));
+      Next;
+    end; // ENDWHILE
+    // select hosting details
+    Close;
+    CommandText := 'SELECT * FROM `hosting` WHERE ProjectID = ' +
+      inttostr(Project.ProjectID) + ';';
+    Open;
+    First;
+    // get hosting data and add it to the project list
+    while (not EOF) do
+    begin
+      Project.HostingList.Add(THosting.Create(FieldValues['HostingID'],
+        FieldValues['ProjectID'], FieldValues['DomainID'],
+        FieldValues['HostRegistrarID'], FieldValues['RenewalDate'],
+        FieldValues['RenewalCost'], FieldValues['FTPServer'],
+        FieldValues['FTPUsername'], FieldValues['FTPPassword'],
+        FieldValues['FTPPort']));
+      Next;
+    end; // ENDWHILE
+    // select CMS details
+    Close;
+    CommandText :=
+      'SELECT cms.* FROM `cms`,`hosting` WHERE cms.HostingID = hosting.HostingID and hosting.ProjectID = '
+      + inttostr(ProjectID);
+    Open;
+    // get cms details and add it to the project list
+    while (not EOF) do
+    begin
+      Project.CMSList.Add(TCMS.Create(FieldValues['CMSID'],
+        FieldValues['CMSTypeID'], FieldValues['HostingID'],
+        FieldValues['DatabaseID'], FieldValues['Directory'],
+        FieldValues['TablePrefix'], FieldValues['ThemeName'],
+        FieldValues['AdminUsername'], FieldValues['AdminPassword'],
+        FieldValues['ClientUsername'], FieldValues['ClientPassword']));
+      Next;
+    end; // ENDWHILE
+    // select database details
+    Close;
+    CommandText :=
+      'SELECT dbase.* FROM `dbase`,`hosting` WHERE dbase.HostingID = hosting.HostingID AND hosting.ProjectID = '
+      + inttostr(ProjectID);
+    Open;
+    while not EOF do
+    begin
+      Project.DatabaseList.Add(TDatabase.Create(FieldValues['DatabaseID'],
+        FieldValues['HostRegistrarID'], FieldValues['HostingID'],
+        FieldValues['Name'], FieldValues['Username'], FieldValues['Password'],
+        FieldValues['Hostname']));
+      Next;
+    end; // ENDWHILE
+  end; // ENDWITH
+  result := Project;
+end;
+
+procedure TformLoadProject.buttonLoadProjectClick(Sender: TObject);
+var
+  PName: string;
+  PID: integer;
+begin
+  // get data from combobox
+  PName := dbcomboProject.Text;
+  PID := dbcomboProject.KeyValue;
+  if PName <> '' then // check a project was selected
+  begin
+    CurrentProject := LoadProject(PID);
+    formLoadProject.Hide;
+    formMain.displayProjectOnTree(CurrentProject);
+  end
+  else
+    MessageDlg('Please select a valid project.', mtError, [mbOk], 0);
+end;
+
+procedure TformLoadProject.FormShow(Sender: TObject);
+begin
+  // reset combobox
+  with tadodsetLoadProject do
+  begin
+    Close;
+    CommandText := 'SELECT * FROM project;';
+    Open;
+  end;
+  dbcomboProject.ListField := 'ProjectName';
+  dbcomboProject.KeyField := 'ProjectID';
+end;
+
+end.

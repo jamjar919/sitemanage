@@ -20,6 +20,7 @@ type
     lblIn: TLabel;
     comboboxData: TComboBox;
     dbgridDisplaySearch: TDBGrid;
+    datasetLookupRecord: TADODataSet;
     procedure FormCreate(Sender: TObject);
     procedure buttonSearchClick(Sender: TObject);
     procedure dbgridDisplaySearchDblClick(Sender: TObject);
@@ -33,7 +34,8 @@ type
     procedure changeDataset(Datatype: TSingleDatatype);
     procedure SearchDatabase(SearchText: string; Datatype: TSingleDatatype);
     procedure ClearDbGrid(dbGrid: TDBGrid);
-    procedure openData(Datatype: TSingleDatatype; dbGrid: TDBGrid);
+    procedure openData(Datatype: TSingleDatatype; ID: integer);
+    procedure setCommandText(Dataset: TADODataSet; Text: String);
   end;
 
 var
@@ -43,24 +45,72 @@ implementation
 
 {$R *.dfm}
 
-uses UMain;
+uses UMain, ULoadProject;
 
-procedure TformSearch.openData(Datatype: TSingleDatatype; dbGrid: TDBGrid);
+procedure TformSearch.setCommandText(Dataset: TADODataSet; Text: String);
+begin
+  with Dataset do
+  begin
+    Close;
+    CommandText := Text;
+    Open;
+    Active := True;
+  end;
+end;
+
+procedure TformSearch.openData(Datatype: TSingleDatatype; ID: integer);
 begin
   // perform different actions based on datatype
   case Datatype.Datatype of
     dtProject:
-      ;
+      begin
+        with datasetLookupRecord do
+          formMain.displayProjectOnTree(formLoadProject.LoadProject(ID));
+      end;
     dtDomain:
-      formMain.OpenDomain(TDomain.Create(dbgridDisplaySearch.Fields[0]
-        .AsInteger, 0, 0, dbgridDisplaySearch.Fields[1].AsString, DBGridDisplaySearch.Fields[2].AsString,
-        DBGridDisplaySearch.Fields[3].AsDateTime, DBGridDisplaySearch.Fields[4].AsFloat));
+      begin
+        setCommandText(datasetLookupRecord,
+          'SELECT * FROM domain WHERE DomainID = ' + inttostr(ID));
+        with datasetLookupRecord do
+          formMain.OpenDomain(TDomain.Create(ID, fieldValues['ProjectID'],
+            fieldValues['DomainRegistrarID'], fieldValues['DomainName'],
+            fieldValues['DomainExtension'], fieldValues['RenewalDate'],
+            fieldValues['RenewalCost']));
+      end;
     dtHosting:
-      ;
+      begin
+        setCommandText(datasetLookupRecord,
+          'SELECT * FROM hosting WHERE HostingID =' + inttostr(ID));
+        with datasetLookupRecord do
+          formMain.OpenHosting(THosting.Create(fieldValues['HostingID'],
+            fieldValues['ProjectID'], fieldValues['DomainID'],
+            fieldValues['HostRegistrarID'], fieldValues['RenewalDate'],
+            fieldValues['RenewalCost'], fieldValues['FTPServer'],
+            fieldValues['FTPUsername'], fieldValues['FTPPassword'],
+            fieldValues['FTPPort']));
+      end;
     dtCMS:
-      ;
+      begin
+        setCommandText(datasetLookupRecord, 'SELECT * FROM cms WHERE CMSID = ' +
+          inttostr(ID));
+        with datasetLookupRecord do
+          formMain.OpenCMS(TCMS.Create(fieldValues['CMSID'],
+            fieldValues['CMSTypeID'], fieldValues['HostingID'],
+            fieldValues['DatabaseID'], fieldValues['Directory'],
+            fieldValues['TablePrefix'], fieldValues['ThemeName'],
+            fieldValues['AdminUsername'], fieldValues['AdminPassword'],
+            fieldValues['ClientUsername'], fieldValues['ClientPassword']));
+      end;
     dtDatabase:
-      ;
+      begin
+        setCommandText(datasetLookupRecord,
+          'SELECT * FROM dbase WHERE DatabaseID =' + inttostr(ID));
+        with datasetLookupRecord do
+          formMain.OpenDatabase(TDatabase.Create(fieldValues['DatabaseID'],
+            fieldValues['HostRegistrarID'], fieldValues['HostingID'],
+            fieldValues['Name'], fieldValues['Username'],
+            fieldValues['Password'], fieldValues['Hostname']));
+      end;
     dtClient:
       ;
     dtTask:
@@ -85,7 +135,7 @@ var
 begin
   changeDataset(Datatype);
   // insert parameter
-  with (datamoduleSearch.datasourceSearch.DataSet as TADODataSet) do
+  with (datamoduleSearch.datasourceSearch.Dataset as TADODataSet) do
   begin
     Close;
     for i := 0 to Parameters.Count - 1 do
@@ -103,55 +153,56 @@ end;
 procedure TformSearch.changeDataset(Datatype: TSingleDatatype);
 begin
   // change the data set dependent on the selected datatype
-  if datamoduleSearch.datasourceSearch.DataSet <> nil then
+  if datamoduleSearch.datasourceSearch.Dataset <> nil then
   begin
-    datamoduleSearch.datasourceSearch.DataSet.Close;
-    datamoduleSearch.datasourceSearch.DataSet.Active := False;
+    datamoduleSearch.datasourceSearch.Dataset.Close;
+    datamoduleSearch.datasourceSearch.Dataset.Active := False;
   end;
   case Datatype.Datatype of
     dtProject:
       begin
-        datamoduleSearch.datasourceSearch.DataSet :=
+        datamoduleSearch.datasourceSearch.Dataset :=
           datamoduleSearch.datasetsearchProject;
       end;
     dtDomain:
       begin
-        datamoduleSearch.datasourceSearch.DataSet :=
+        datamoduleSearch.datasourceSearch.Dataset :=
           datamoduleSearch.datasetsearchDomain;
       end;
     dtHosting:
       begin
-        datamoduleSearch.datasourceSearch.DataSet :=
+        datamoduleSearch.datasourceSearch.Dataset :=
           datamoduleSearch.datasetsearchHosting;
       end;
     dtCMS:
       begin
-        datamoduleSearch.datasourceSearch.DataSet :=
+        datamoduleSearch.datasourceSearch.Dataset :=
           datamoduleSearch.datasetsearchCMS;
       end;
     dtDatabase:
       begin
-        datamoduleSearch.datasourceSearch.DataSet :=
+        datamoduleSearch.datasourceSearch.Dataset :=
           datamoduleSearch.datasetsearchDatabase;
       end;
     dtClient:
       begin
-        datamoduleSearch.datasourceSearch.DataSet :=
+        datamoduleSearch.datasourceSearch.Dataset :=
           datamoduleSearch.datasetsearchClient;
       end;
     dtTask:
       begin
-        datamoduleSearch.datasourceSearch.DataSet :=
+        datamoduleSearch.datasourceSearch.Dataset :=
           datamoduleSearch.datasetsearchTask;
       end;
   end;
-  datamoduleSearch.datasourceSearch.DataSet.Active := True;
-  datamoduleSearch.datasourceSearch.DataSet.Open;
+  datamoduleSearch.datasourceSearch.Dataset.Active := True;
+  datamoduleSearch.datasourceSearch.Dataset.Open;
 end;
 
 procedure TformSearch.dbgridDisplaySearchDblClick(Sender: TObject);
 begin
-  openData(typeArray[comboboxData.ItemIndex], dbgridDisplaySearch);
+  openData(typeArray[comboboxData.ItemIndex], dbgridDisplaySearch.Fields[0]
+    .AsInteger);
 end;
 
 procedure TformSearch.fillComboBox(var ComboBox: TComboBox;

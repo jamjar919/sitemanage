@@ -129,6 +129,10 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
+        <DCCReference Include="UClient.pas">
+            <Form>formClientView</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="ModelSupport_PSiteManager\default.txaPackage"/>
         <None Include="ModelSupport_PSiteManager\default.txvpck"/>
         <None Include="ModelSupport_PSiteManager\UClass\default.txvpck"/>

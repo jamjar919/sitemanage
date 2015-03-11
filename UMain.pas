@@ -832,6 +832,7 @@ end;
 procedure TformMain.buttonWelcomeSearchDataClick(Sender: TObject);
 begin
   OpenSearch;
+  CloseWelcomeForm;
 end;
 
 procedure TformMain.showLoadProjectForm;

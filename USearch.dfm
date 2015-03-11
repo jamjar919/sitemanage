@@ -84,4 +84,10 @@ object formSearch: TformSearch
       Caption = 'Close'
     end
   end
+  object datasetLookupRecord: TADODataSet
+    Connection = datamoduleMain.ADONextnorth
+    Parameters = <>
+    Left = 480
+    Top = 56
+  end
 end
