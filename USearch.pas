@@ -1,5 +1,5 @@
 unit USearch;
-
+
 interface
 
 uses
@@ -8,16 +8,6 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.Grids, Vcl.StdCtrls,
   UClass, USearchData, Vcl.DBGrids, Data.DB, Data.Win.ADODB, UData;
 
-Const
-  TABLES_TO_SEARCH = 7;
-  CLIENT_FIELDS = 11;
-  CMS_FIELDS = 4;
-  DATABASE_FIELDS = 3;
-  DOMAIN_FIELDS = 5;
-  HOSTING_FIELDS = 5;
-  PROJECT_FIELDS = 2;
-  TASK_FIELDS = 2;
-
 type
   TTypeArray = Array [0 .. 6] of TSingleDatatype;
 
@@ -25,13 +15,16 @@ type
     mmSearch: TMainMenu;
     mmClose: TMenuItem;
     editSearch: TEdit;
-    butttonSearch: TButton;
+    buttonSearch: TButton;
     lblSearchFor: TLabel;
     lblIn: TLabel;
     comboboxData: TComboBox;
     dbgridDisplaySearch: TDBGrid;
     procedure FormCreate(Sender: TObject);
-    procedure butttonSearchClick(Sender: TObject);
+    procedure buttonSearchClick(Sender: TObject);
+    procedure dbgridDisplaySearchDblClick(Sender: TObject);
+    procedure comboboxDataChange(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
   public
@@ -39,6 +32,8 @@ type
     procedure fillComboBox(var ComboBox: TComboBox; var typeArray: TTypeArray);
     procedure changeDataset(Datatype: TSingleDatatype);
     procedure SearchDatabase(SearchText: string; Datatype: TSingleDatatype);
+    procedure ClearDbGrid(dbGrid: TDBGrid);
+    procedure openData(Datatype: TSingleDatatype; dbGrid: TDBGrid);
   end;
 
 var
@@ -48,21 +43,59 @@ implementation
 
 {$R *.dfm}
 
+uses UMain;
+
+procedure TformSearch.openData(Datatype: TSingleDatatype; dbGrid: TDBGrid);
+begin
+  // perform different actions based on datatype
+  case Datatype.Datatype of
+    dtProject:
+      ;
+    dtDomain:
+      formMain.OpenDomain(TDomain.Create(dbgridDisplaySearch.Fields[0]
+        .AsInteger, 0, 0, dbgridDisplaySearch.Fields[1].AsString, DBGridDisplaySearch.Fields[2].AsString,
+        DBGridDisplaySearch.Fields[3].AsDateTime, DBGridDisplaySearch.Fields[4].AsFloat));
+    dtHosting:
+      ;
+    dtCMS:
+      ;
+    dtDatabase:
+      ;
+    dtClient:
+      ;
+    dtTask:
+      ;
+  end;
+end;
+
+procedure TformSearch.ClearDbGrid(dbGrid: TDBGrid);
+begin
+  dbGrid.DataSource := nil;
+end;
+
+procedure TformSearch.comboboxDataChange(Sender: TObject);
+begin
+  // ClearDbGrid(dbgridDisplaySearch);
+end;
+
 procedure TformSearch.SearchDatabase(SearchText: string;
   Datatype: TSingleDatatype);
+var
+  i: integer;
 begin
   changeDataset(Datatype);
   // insert parameter
   with (datamoduleSearch.datasourceSearch.DataSet as TADODataSet) do
   begin
     Close;
-    Parameters.ParamByName('search').value := SearchText;
+    for i := 0 to Parameters.Count - 1 do
+      Parameters[i].Value := SearchText;
     Open;
     Active := True;
   end;
 end;
 
-procedure TformSearch.butttonSearchClick(Sender: TObject);
+procedure TformSearch.buttonSearchClick(Sender: TObject);
 begin
   SearchDatabase(editSearch.Text, typeArray[comboboxData.ItemIndex]);
 end;
@@ -70,7 +103,11 @@ end;
 procedure TformSearch.changeDataset(Datatype: TSingleDatatype);
 begin
   // change the data set dependent on the selected datatype
-  datamoduleSearch.datasourceSearch.DataSet.Close;
+  if datamoduleSearch.datasourceSearch.DataSet <> nil then
+  begin
+    datamoduleSearch.datasourceSearch.DataSet.Close;
+    datamoduleSearch.datasourceSearch.DataSet.Active := False;
+  end;
   case Datatype.Datatype of
     dtProject:
       begin
@@ -84,7 +121,6 @@ begin
       end;
     dtHosting:
       begin
-        datamoduleSearch.datasetSearchHosting.Close;
         datamoduleSearch.datasourceSearch.DataSet :=
           datamoduleSearch.datasetsearchHosting;
       end;
@@ -109,7 +145,13 @@ begin
           datamoduleSearch.datasetsearchTask;
       end;
   end;
+  datamoduleSearch.datasourceSearch.DataSet.Active := True;
   datamoduleSearch.datasourceSearch.DataSet.Open;
+end;
+
+procedure TformSearch.dbgridDisplaySearchDblClick(Sender: TObject);
+begin
+  openData(typeArray[comboboxData.ItemIndex], dbgridDisplaySearch);
 end;
 
 procedure TformSearch.fillComboBox(var ComboBox: TComboBox;
@@ -133,9 +175,15 @@ begin
   typeArray[6] := TSingleDatatype.Create(dtTask);
 end;
 
+procedure TformSearch.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  ClearDbGrid(dbgridDisplaySearch);
+end;
+
 procedure TformSearch.FormCreate(Sender: TObject);
 begin
   fillComboBox(comboboxData, typeArray);
 end;
 
 end.
+

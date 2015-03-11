@@ -9,12 +9,14 @@ type
   TdatamoduleSearch = class(TDataModule)
     datasourceSearch: TDataSource;
     datasetSearchProject: TADODataSet;
-    datasetSearchDomain: TADODataSet;
-    datasetSearchHosting: TADODataSet;
     datasetSearchCMS: TADODataSet;
-    datasetSearchDatabase: TADODataSet;
     datasetSearchClient: TADODataSet;
     datasetSearchTask: TADODataSet;
+    datasetSearchProjectProjectID: TAutoIncField;
+    datasetSearchProjectProjectName: TStringField;
+    datasetSearchProjectCompanyName: TStringField;
+    datasetSearchHosting: TADODataSet;
+    datasetSearchDomain: TADODataSet;
     datasetSearchDomainDomainID: TAutoIncField;
     datasetSearchDomainDomainName: TStringField;
     datasetSearchDomainDomainExtension: TStringField;
@@ -30,9 +32,32 @@ type
     datasetSearchHostingDomainName: TStringField;
     datasetSearchHostingDomainExtension: TStringField;
     datasetSearchHostingName: TStringField;
-    datasetSearchProjectProjectID: TAutoIncField;
-    datasetSearchProjectProjectName: TStringField;
-    datasetSearchProjectCompanyName: TStringField;
+    datasetSearchCMSCMSID: TAutoIncField;
+    datasetSearchCMSDirectory: TStringField;
+    datasetSearchCMSTablePrefix: TStringField;
+    datasetSearchCMSThemeName: TStringField;
+    datasetSearchCMSFTPServer: TStringField;
+    datasetSearchCMSName: TStringField;
+    datasetSearchCMSName_1: TStringField;
+    datasetSearchHostingHostingID: TAutoIncField;
+    datasetSearchDatabase: TADODataSet;
+    datasetSearchDatabaseName: TStringField;
+    datasetSearchDatabaseHostname: TStringField;
+    datasetSearchDatabaseFTPServer: TStringField;
+    datasetSearchDatabaseName_1: TStringField;
+    datasetSearchDatabaseDatabaseID: TAutoIncField;
+    datasetSearchClientClientID: TAutoIncField;
+    datasetSearchClientFirstName: TStringField;
+    datasetSearchClientLastName: TStringField;
+    datasetSearchClientCompanyName: TStringField;
+    datasetSearchClientTelephone: TStringField;
+    datasetSearchClientEmail: TStringField;
+    datasetSearchTaskTaskID: TAutoIncField;
+    datasetSearchTaskProjectName: TStringField;
+    datasetSearchTaskTaskDescription: TStringField;
+    datasetSearchTaskMinutesWorked: TIntegerField;
+    datasetSearchTaskRatePerHour: TFloatField;
+    datasetSearchTaskCompleted: TBooleanField;
   private
     { Private declarations }
   public

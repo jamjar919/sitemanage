@@ -21,7 +21,7 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TformMain, formMain);
   Application.CreateForm(TdatamoduleMain, datamoduleMain);
-  //Application.CreateForm(TdatamoduleSearch, datamoduleSearch);
+  Application.CreateForm(TdatamoduleSearch, datamoduleSearch);
   // Application.CreateForm(TformSearch, formSearch);
   // Application.CreateForm(TformDatabaseView, formDatabaseView);
   // Application.CreateForm(TformDomainView, formDomainView);
