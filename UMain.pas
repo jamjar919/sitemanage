@@ -10,7 +10,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ComCtrls, Vcl.ToolWin,
   Vcl.ImgList, Vcl.Imaging.pngimage, Vcl.ExtCtrls, Vcl.StdCtrls,
   UClass, UData, UDomainView, UHostingView, UProjectView, Vcl.ButtonGroup,
-  UCMSView, UDatabaseView, USearch, UClient;
+  UCMSView, UDatabaseView, USearch, UClientView;
 
 type
   TformMain = class(TForm)
@@ -41,6 +41,8 @@ type
     popupView: TPopupMenu;
     viewClients: TMenuItem;
     viewRegistrars: TMenuItem;
+    newCms: TMenuItem;
+    newDatabase: TMenuItem;
     // events
     procedure imageButtonCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -54,6 +56,8 @@ type
     procedure newDomainClick(Sender: TObject);
     procedure buttonWelcomeSearchDataClick(Sender: TObject);
     procedure tbSearchClick(Sender: TObject);
+    procedure newCmsClick(Sender: TObject);
+    procedure newDatabaseClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -81,9 +85,12 @@ type
     procedure OpenDatabase(Database: TDatabase);
     procedure DeleteDatabase(DBID: Integer);
     procedure AddDatabase(Database: TDatabase);
+    // client
+    procedure OpenClient(Client: TClient);
     // button group
     procedure ClearButtonGroup(ButtonGroup: TButtonGroup);
-    procedure ChangeButtonGroup(DataType: TDataTypes; ButtonGroup: TButtonGroup);
+    procedure ChangeButtonGroup(DataType: TDataTypes;
+      ButtonGroup: TButtonGroup);
     // misc
     procedure closeWelcomeForm;
     procedure openSearch;
@@ -100,13 +107,23 @@ uses ULoadProject;
 
 { ****OPENING**** }
 
+procedure TformMain.OpenClient(Client: TClient);
+var
+  OpenClientForm: TformClientView;
+begin
+  OpenClientForm := TformClientView.Create(formMain);
+  OpenClientForm.Client := Client;
+  OpenClientForm.DoOpen(Client);
+  OpenClientForm.Show;
+end;
+
 procedure TformMain.OpenDatabase(Database: TDatabase);
 var
   OpenDBForm: TformDatabaseView;
 begin
   OpenDBForm := TformDatabaseView.Create(formMain);
   OpenDBForm.Database := Database;
-  OpenDBForm.doOpen(Database);
+  OpenDBForm.DoOpen(Database);
   OpenDBForm.Show;
 end;
 
@@ -116,7 +133,7 @@ var
 begin
   openCMSForm := TFormCMSView.Create(formMain);
   openCMSForm.CMS := CMS;
-  openCMSForm.doOpen(CMS);
+  openCMSForm.DoOpen(CMS);
   openCMSForm.Show;
 end;
 
@@ -133,7 +150,7 @@ var
 begin
   openHostingForm := TFormHostingView.Create(formMain);
   openHostingForm.Hosting := Host;
-  openHostingForm.doOpen(Host);
+  openHostingForm.DoOpen(Host);
   openHostingForm.Show;
 end;
 
@@ -143,7 +160,7 @@ var
 begin
   openDomainForm := TFormDomainView.Create(formMain);
   openDomainForm.Domain := Domain;
-  openDomainForm.doOpen(Domain);
+  openDomainForm.DoOpen(Domain);
   openDomainForm.Show;
 end;
 
@@ -153,7 +170,7 @@ var
 begin
   openProjectForm := TFormProjectView.Create(formMain);
   openProjectForm.Project := Project;
-  openProjectForm.doOpen(Project);
+  openProjectForm.DoOpen(Project);
   openProjectForm.Show;
 end;
 
@@ -770,11 +787,10 @@ procedure TformMain.openSearch;
 var
   searchForm: TformSearch;
 begin
-  //make new search form
-  searchForm := TformSearch.create(formMain);
+  // make new search form
+  searchForm := TformSearch.Create(formMain);
   searchForm.Show;
 end;
-
 
 { ****EVENTS**** }
 
@@ -785,7 +801,7 @@ end;
 
 procedure TformMain.tbSearchClick(Sender: TObject);
 begin
-  OpenSearch;
+  openSearch;
 end;
 
 procedure TformMain.treeMainChange(Sender: TObject; Node: TTreeNode);
@@ -841,8 +857,8 @@ end;
 
 procedure TformMain.buttonWelcomeSearchDataClick(Sender: TObject);
 begin
-  OpenSearch;
-  CloseWelcomeForm;
+  openSearch;
+  closeWelcomeForm;
 end;
 
 procedure TformMain.showLoadProjectForm;
@@ -859,6 +875,22 @@ end;
 procedure TformMain.imageButtonCloseClick(Sender: TObject);
 begin
   closeWelcomeForm;
+end;
+
+procedure TformMain.newCmsClick(Sender: TObject);
+var
+  CMS: TCMS;
+begin
+  CMS := TCMS.Create(0,0,0,0,'New CMS','','','','','','');
+  AddCMS(CMS);
+end;
+
+procedure TformMain.newDatabaseClick(Sender: TObject);
+var
+  Database: TDatabase;
+begin
+  Database := TDatabase.Create(0,0,0,'New Database','','','');
+  AddDatabase(Database);
 end;
 
 procedure TformMain.newDomainClick(Sender: TObject);
@@ -897,7 +929,7 @@ begin
   end;
   ProjectForm := TFormProjectView.Create(formMain);
   ProjectForm.Project := Project;
-  ProjectForm.doOpen(Project);
+  ProjectForm.DoOpen(Project);
   ProjectForm.Show;
 end;
 

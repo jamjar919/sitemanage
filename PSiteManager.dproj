@@ -129,7 +129,7 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="UClient.pas">
+        <DCCReference Include="UClientView.pas">
             <Form>formClientView</Form>
             <FormType>dfm</FormType>
         </DCCReference>

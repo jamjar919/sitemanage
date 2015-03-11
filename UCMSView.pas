@@ -128,17 +128,21 @@ begin
       begin
         // get project id
         dbcomboHosting.ListSource := nil;
-        with datasetHosting do
+        if CMS.HostingID <> 0 then
         begin
-          Close;
-          CommandText :=
-            'SELECT `ProjectID` FROM `hosting` WHERE `HostingID` = ' +
-            inttostr(CMS.HostingID);
-          Open;
-          ProjectID := FieldValues['ProjectID'];
+          with datasetHosting do
+          begin
+            Close;
+            CommandText :=
+              'SELECT `ProjectID` FROM `hosting` WHERE `HostingID` = ' +
+              inttostr(CMS.HostingID);
+            Open;
+            ProjectID := FieldValues['ProjectID'];
+          end;
         end;
         formmain.DeleteCMS(CMS.CMSID);
-        formmain.RefreshProject(ProjectID);
+        if CMS.HostingID <> 0 then
+          formmain.RefreshProject(ProjectID);
         self.Free;
       end;
     mrCancel:

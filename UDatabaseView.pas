@@ -29,8 +29,8 @@ type
     dbeditPassword: TDBEdit;
     dbcomboHosting: TDBLookupComboBox;
     dbcomboHostReg: TDBLookupComboBox;
-    Label1: TLabel;
-    Label2: TLabel;
+    lblHosting: TLabel;
+    lblHostReg: TLabel;
     datasetSingleDatabase: TADODataSet;
     datasourceSingleDatabase: TDataSource;
     datasetHosting: TADODataSet;
@@ -107,17 +107,21 @@ begin
       begin
         // get project id
         dbcomboHosting.ListSource := nil;
-        with datasetHosting do
+        if Database.HostingID <> 0 then
         begin
-          Close;
-          CommandText :=
-            'SELECT `ProjectID` FROM `hosting` WHERE `HostingID` = ' +
-            inttostr(Database.HostingID);
-          Open;
-          ProjectID := FieldValues['ProjectID'];
+          with datasetHosting do
+          begin
+            Close;
+            CommandText :=
+              'SELECT `ProjectID` FROM `hosting` WHERE `HostingID` = ' +
+              inttostr(Database.HostingID);
+            Open;
+            ProjectID := FieldValues['ProjectID'];
+          end;
         end;
         formmain.DeleteDatabase(Database.DatabaseID);
-        formmain.RefreshProject(ProjectID);
+        if Database.HostingID <> 0 then
+          formmain.RefreshProject(ProjectID);
         Self.Free;
       end;
     mrCancel:

@@ -12,6 +12,9 @@ object formMain: TformMain
   Font.Style = []
   OldCreateOrder = False
   OnCreate = FormCreate
+  DesignSize = (
+    326
+    715)
   PixelsPerInch = 96
   TextHeight = 13
   object coolbarMain: TCoolBar
@@ -65,6 +68,7 @@ object formMain: TformMain
         Left = 112
         Top = 0
         Caption = 'tbView'
+        DropdownMenu = popupView
         ImageIndex = 4
       end
       object tbTools: TToolButton
@@ -80,6 +84,7 @@ object formMain: TformMain
     Top = 25
     Width = 326
     Height = 633
+    Anchors = [akLeft, akTop, akRight, akBottom]
     AutoExpand = True
     Images = imglistTree
     Indent = 19
@@ -733,6 +738,7 @@ object formMain: TformMain
     Top = 664
     Width = 326
     Height = 49
+    Anchors = [akLeft, akRight, akBottom]
     BevelInner = bvLowered
     BevelOuter = bvSpace
     BorderStyle = bsNone
@@ -745,7 +751,7 @@ object formMain: TformMain
   object imglistToolbar: TImageList
     Left = 224
     Bitmap = {
-      494C010106000800A40010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106000800A80010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1020,7 +1026,7 @@ object formMain: TformMain
     Masked = False
     Left = 288
     Bitmap = {
-      494C010105000800A00010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010105000800A40010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000EAEAEA00C2C2C200ABABAB00A09F9F009D9D9D00AAAAA900C4C4C400ECEC
@@ -1306,11 +1312,19 @@ object formMain: TformMain
       Caption = 'New Hosting'
       OnClick = newHostingClick
     end
+    object newCms: TMenuItem
+      Caption = 'New CMS'
+      OnClick = newCmsClick
+    end
+    object newDatabase: TMenuItem
+      Caption = 'New Database'
+      OnClick = newDatabaseClick
+    end
   end
   object imglistButtonGrp: TImageList
     Left = 147
     Bitmap = {
-      494C010103000800480010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101030008004C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000002E4F0000122C00002848000094
       CD000090C90010845100C7DEC000000000000000000000000000000000000000

@@ -13,7 +13,7 @@ uses
   UDatabaseView in 'UDatabaseView.pas' {formDatabaseView},
   USearch in 'USearch.pas' {formSearch},
   USearchData in 'USearchData.pas' {datamoduleSearch: TDataModule},
-  UClient in 'UClient.pas' {formClientView};
+  UClientView in 'UClientView.pas' {formClientView};
 
 {$R *.res}
 
