@@ -187,7 +187,6 @@ object formDatabaseView: TformDatabaseView
     end
   end
   object datasetSingleDatabase: TADODataSet
-    Active = True
     Connection = datamoduleMain.ADONextnorth
     CursorType = ctStatic
     CommandText = 'SELECT * FROM `dbase` WHERE `DatabaseID` = :dbid;'
@@ -210,7 +209,6 @@ object formDatabaseView: TformDatabaseView
     Top = 8
   end
   object datasetHosting: TADODataSet
-    Active = True
     Connection = datamoduleMain.ADONextnorth
     CursorType = ctStatic
     CommandText = 'SELECT * FROM hosting'
@@ -219,7 +217,6 @@ object formDatabaseView: TformDatabaseView
     Top = 207
   end
   object datasetHostReg: TADODataSet
-    Active = True
     Connection = datamoduleMain.ADONextnorth
     CursorType = ctStatic
     CommandText = 'SELECT * FROM hostregistrar;'

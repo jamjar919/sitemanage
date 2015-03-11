@@ -6,11 +6,52 @@ uses Generics.Collections;
 { This unit contains all the class definitions that are used across multiple units }
 
 type
-  TDataTypes = (dtProject, dtDomain, dtHosting, dtCMS, dtDatabase, dtClient, dtTask);
+  TDataTypes = (dtProject, dtDomain, dtHosting, dtCMS, dtDatabase,
+    dtClient, dtTask);
 
   TSingleDataType = class(TObject)
-    DataType: tDatatypes;
-    constructor Create(Datatype:Tdatatypes);
+    DataType: TDataTypes;
+    constructor Create(DataType: TDataTypes);
+  end;
+
+  TClient = class(TObject)
+  private
+    CID, HFound: integer;
+    FName, LName, CName, Tel, Addr, PCode, EmailAddr, Twitter, Facebook,
+      Comments: string;
+  public
+    property ClientID: integer read CID;
+    property FirstName: string read FName;
+    property LastName: string read LName;
+    property CompanyName: string read CName;
+    property Telephone: string read Tel;
+    property Address: string read Addr;
+    property Postcode: string read PCode;
+    property Email: string read EmailAddr;
+    property TwitterPage: string read Twitter;
+    property FacebookPage: string read Facebook;
+    property Notes: string read Comments;
+    property HowFound: integer read HFound;
+    constructor Create(CID: integer; FName, LName, CName, Tel, Addr, PCode,
+      EmailAddr: string; HFound: integer; Twitter, Facebook, Comments: string);
+  end;
+
+  TTask = class(TObject)
+  private
+    TID, PID, MWork: integer;
+    TaskDesc: string;
+    RPHour: real;
+    Done: boolean;
+    DComp: TDate;
+  public
+    property TaskID: integer read TID;
+    property ProjectID: integer read PID;
+    property MinutesWorked: integer read MWork;
+    property TaskDescription: string read TaskDesc;
+    property RatePerHour: real read RPHour;
+    property Completed: boolean read Done;
+    constructor Create(TID, PID: integer; TaskDesc: string; MWork: integer;
+      RPHour: real; Done: boolean; DComp: TDate);
   end;
 
   TDomain = class(TObject)
@@ -111,6 +152,36 @@ var
 
 implementation
 
+constructor TTask.Create(TID: integer; PID: integer; TaskDesc: string;
+  MWork: integer; RPHour: real; Done: boolean; DComp: TDate);
+begin
+  Self.TID := Tid;
+  Self.PID := Pid;
+  Self.TaskDesc := TaskDesc;
+  Self.MWork := MWork;
+  Self.RPHour := RPHour;
+  Self.Done := Done;
+  Self.DComp := DComp;
+end;
+
+constructor TClient.Create(CID: integer; FName: string; LName: string;
+  CName: string; Tel: string; Addr: string; PCode: string; EmailAddr: string;
+  HFound: integer; Twitter: string; Facebook: string; Comments: string);
+begin
+  Self.CID := CID;
+  Self.FName := FName;
+  Self.LName := LName;
+  Self.CName := CName;
+  Self.Tel := Tel;
+  Self.Addr := Addr;
+  Self.PCode := PCode;
+  Self.EmailAddr := EmailAddr;
+  Self.HFound := HFound;
+  Self.Twitter := Twitter;
+  Self.Facebook := Facebook;
+  Self.Comments := Comments;
+end;
+
 constructor TDatabase.Create(DBID: integer; HRID: integer; HID: integer;
   DBName: string; DBUser: string; DBPassword: string; hName: string);
 begin
@@ -179,9 +250,9 @@ begin
   DatabaseList := TObjectList<TDatabase>.Create;
 end;
 
-constructor TSingleDatatype.Create(Datatype: TDataTypes);
+constructor TSingleDataType.Create(DataType: TDataTypes);
 begin
-  Self.DataType := Datatype;
+  Self.DataType := DataType;
 end;
 
 end.

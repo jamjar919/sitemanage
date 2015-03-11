@@ -10,7 +10,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ComCtrls, Vcl.ToolWin,
   Vcl.ImgList, Vcl.Imaging.pngimage, Vcl.ExtCtrls, Vcl.StdCtrls,
   UClass, UData, UDomainView, UHostingView, UProjectView, Vcl.ButtonGroup,
-  UCMSView, UDatabaseView, USearch;
+  UCMSView, UDatabaseView, USearch, UClient;
 
 type
   TformMain = class(TForm)
@@ -21,7 +21,6 @@ type
     tbLoad: TToolButton;
     tbTools: TToolButton;
     tbReport: TToolButton;
-    tpSecurity: TToolButton;
     treeMain: TTreeView;
     panelWelcome: TPanel;
     labelWelcomeTitle: TLabel;
@@ -37,6 +36,11 @@ type
     newHosting: TMenuItem;
     butgrMain: TButtonGroup;
     imglistButtonGrp: TImageList;
+    tbSearch: TToolButton;
+    ToolButton1: TToolButton;
+    popupView: TPopupMenu;
+    viewClients: TMenuItem;
+    viewRegistrars: TMenuItem;
     // events
     procedure imageButtonCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -49,6 +53,7 @@ type
     procedure newHostingClick(Sender: TObject);
     procedure newDomainClick(Sender: TObject);
     procedure buttonWelcomeSearchDataClick(Sender: TObject);
+    procedure tbSearchClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -776,6 +781,11 @@ end;
 procedure TformMain.tbLoadClick(Sender: TObject);
 begin
   OpenProject;
+end;
+
+procedure TformMain.tbSearchClick(Sender: TObject);
+begin
+  OpenSearch;
 end;
 
 procedure TformMain.treeMainChange(Sender: TObject; Node: TTreeNode);

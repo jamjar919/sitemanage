@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.StdCtrls, Vcl.ExtCtrls,
-  Vcl.Mask, Vcl.DBCtrls, Vcl.ComCtrls, Data.DB, Data.Win.ADODB, UData;
+  Vcl.Mask, Vcl.DBCtrls, Vcl.ComCtrls, Data.DB, Data.Win.ADODB, UData, UClass;
 
 type
   TformClientView = class(TForm)
@@ -45,7 +45,7 @@ type
   private
     { Private declarations }
   public
-    { Public declarations }
+    Client: TClient;
   end;
 
 var
