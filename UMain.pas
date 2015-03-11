@@ -10,7 +10,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ComCtrls, Vcl.ToolWin,
   Vcl.ImgList, Vcl.Imaging.pngimage, Vcl.ExtCtrls, Vcl.StdCtrls,
   UClass, UData, UDomainView, UHostingView, UProjectView, Vcl.ButtonGroup,
-  UCMSView, UDatabaseView, USearch, UClientView;
+  UCMSView, UDatabaseView, USearch, UClientView, UReport;
 
 type
   TformMain = class(TForm)
@@ -58,6 +58,8 @@ type
     procedure tbSearchClick(Sender: TObject);
     procedure newCmsClick(Sender: TObject);
     procedure newDatabaseClick(Sender: TObject);
+    procedure buttonWelcomeGenerateReportClick(Sender: TObject);
+    procedure tbReportClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -94,6 +96,7 @@ type
     // misc
     procedure closeWelcomeForm;
     procedure openSearch;
+    procedure openReportGenerator;
   end;
 
 var
@@ -792,11 +795,25 @@ begin
   searchForm.Show;
 end;
 
+{****REPORTS****}
+procedure TformMain.openReportGenerator;
+var
+  reportForm: TformReportGenerator;
+begin
+  reportForm := TformReportGenerator.Create(formMain);
+  reportForm.Show;
+end;
+
 { ****EVENTS**** }
 
 procedure TformMain.tbLoadClick(Sender: TObject);
 begin
   OpenProject;
+end;
+
+procedure TformMain.tbReportClick(Sender: TObject);
+begin
+  OpenReportGenerator;
 end;
 
 procedure TformMain.tbSearchClick(Sender: TObject);
@@ -848,6 +865,11 @@ begin
     else if UnknownObject is TDatabase then
       OpenDatabase(UnknownObject as TDatabase);
   end;
+end;
+
+procedure TformMain.buttonWelcomeGenerateReportClick(Sender: TObject);
+begin
+  OpenReportGenerator;
 end;
 
 procedure TformMain.buttonWelcomeOpenProjectClick(Sender: TObject);

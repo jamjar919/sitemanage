@@ -133,6 +133,10 @@
             <Form>formClientView</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="UReport.pas">
+            <Form>formReportGenerator</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="ModelSupport_PSiteManager\default.txaPackage"/>
         <None Include="ModelSupport_PSiteManager\default.txvpck"/>
         <None Include="ModelSupport_PSiteManager\UClass\default.txvpck"/>

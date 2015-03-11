@@ -13,7 +13,8 @@ uses
   UDatabaseView in 'UDatabaseView.pas' {formDatabaseView},
   USearch in 'USearch.pas' {formSearch},
   USearchData in 'USearchData.pas' {datamoduleSearch: TDataModule},
-  UClientView in 'UClientView.pas' {formClientView};
+  UClientView in 'UClientView.pas' {formClientView},
+  UReport in 'UReport.pas' {formReportGenerator};
 
 {$R *.res}
 
@@ -23,7 +24,8 @@ begin
   Application.CreateForm(TformMain, formMain);
   Application.CreateForm(TdatamoduleMain, datamoduleMain);
   Application.CreateForm(TdatamoduleSearch, datamoduleSearch);
-  // Application.CreateForm(TformClientView, formClientView);
+  //Application.CreateForm(TformReportGenerator, formReportGenerator);
+  //Application.CreateForm(TformClientView, formClientView);
   // Application.CreateForm(TformSearch, formSearch);
   // Application.CreateForm(TformDatabaseView, formDatabaseView);
   // Application.CreateForm(TformDomainView, formDomainView);
