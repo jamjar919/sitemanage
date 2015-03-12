@@ -11,6 +11,7 @@ object formReportGenerator: TformReportGenerator
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object gboxProjectReportGen: TGroupBox
@@ -25,6 +26,9 @@ object formReportGenerator: TformReportGenerator
       Top = 24
       Width = 209
       Height = 21
+      KeyField = 'ProjectID'
+      ListField = 'ProjectName'
+      ListSource = datasourceProject
       TabOrder = 0
     end
     object buttonGenerateProjectReport: TButton
@@ -34,6 +38,20 @@ object formReportGenerator: TformReportGenerator
       Height = 25
       Caption = 'Generate'
       TabOrder = 1
+      OnClick = buttonGenerateProjectReportClick
     end
+  end
+  object datasetProject: TADODataSet
+    Connection = datamoduleMain.ADONextnorth
+    CursorType = ctStatic
+    CommandText = 'SELECT * FROM project'
+    Parameters = <>
+    Left = 56
+    Top = 56
+  end
+  object datasourceProject: TDataSource
+    DataSet = datasetProject
+    Left = 144
+    Top = 56
   end
 end
