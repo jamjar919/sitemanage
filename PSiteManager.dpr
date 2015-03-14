@@ -14,7 +14,10 @@ uses
   USearch in 'USearch.pas' {formSearch},
   USearchData in 'USearchData.pas' {datamoduleSearch: TDataModule},
   UClientView in 'UClientView.pas' {formClientView},
-  UReport in 'UReport.pas' {formReportGenerator};
+  UReport in 'UReport.pas' {formReportGenerator},
+  ULoadClient in 'ULoadClient.pas' {formLoadClient},
+  URegistrarView in 'URegistrarView.pas' {formRegistrarView},
+  UTaskViewer in 'UTaskViewer.pas' {formTaskViewer};
 
 {$R *.res}
 
@@ -24,9 +27,12 @@ begin
   Application.CreateForm(TformMain, formMain);
   Application.CreateForm(TdatamoduleMain, datamoduleMain);
   Application.CreateForm(TdatamoduleSearch, datamoduleSearch);
+  Application.CreateForm(TformTaskViewer, formTaskViewer);
+  //Application.CreateForm(TformLoadClient, formLoadClient);
   //Application.CreateForm(TformReportGenerator, formReportGenerator);
+  //Application.CreateForm(TformRegistrarView, formRegistrarView);
   //Application.CreateForm(TformClientView, formClientView);
-  // Application.CreateForm(TformSearch, formSearch);
+  //Application.CreateForm(TformSearch, formSearch);
   // Application.CreateForm(TformDatabaseView, formDatabaseView);
   // Application.CreateForm(TformDomainView, formDomainView);
   Application.CreateForm(TformLoadProject, formLoadProject);

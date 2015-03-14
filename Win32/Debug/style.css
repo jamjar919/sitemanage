@@ -1,0 +1,27 @@
+body {
+	background-color: #1C6EAD;
+	margin: 0;
+}
+
+#wrap {
+	background-color: #FFF;
+	padding: 20px;
+	width: 75%;
+	margin: 0 auto;
+	font-family: 'Helvetica', Sans-Serif;
+	border-left: 2px solid #000;
+	border-right: 2px solid #000;
+}
+
+#head {
+	padding: 10px;
+	border-bottom: 2px solid #000;
+}
+
+table th {
+	border-bottom: 2px solid #000;
+}
+
+table td {
+	padding: 5px 9px;
+}

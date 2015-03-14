@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.DBCtrls, UClass,
-  Data.DB, Data.Win.ADODB, UData, DateUtils, SHellApi;
+  Data.DB, Data.Win.ADODB, UData, DateUtils, ShellApi,UITYpes;
 
 type
   TformReportGenerator = class(TForm)
@@ -64,6 +64,7 @@ var
   Project: TProject;
   OutputFile: textfile;
 begin
+  dbcomboProject.ListSource := nil;
   Project := FormLoadProject.LoadProject(ProjectID);
   AssignFile(OutputFile, Directory);
   Rewrite(OutputFile);
@@ -81,7 +82,6 @@ begin
   if SavePath <> '' then
   begin
     MakeProjectReport(dbcomboProject.KeyValue, SavePath);
-    dbcomboProject.ListSource := nil;
     Choice := MessageDlg('Open report?', mtCustom, [mbYes, mbNo], 0);
     if Choice = mrYes then
       ShellExecute(Handle, pchar('open'), pchar(SavePath), nil, nil,
@@ -113,43 +113,82 @@ begin
   CurrentDate := Date;
   result := '<!doctype html><html><head>';
   al(result, '<title>Project Report - ' + Project.Name + '</title>');
-  al(result, '<link href="style.css" rel="stylesheet" type="text/css">');
+  al(result,
+    '<style>body {	background-color: #1C6EAD;	margin: 0;}#wrap {	background-color: #FFF;	padding: 20px;	width: 75%;	margin: 0 auto;	font-family: ''Helvetica'', Sans-Serif;	border-left: 2px solid #000;	border-right: 2px solid #000;}');
+  al(result,
+    '#head {	padding: 10px;	border-bottom: 2px solid #000;}table th {	border-bottom: 2px solid #000;}table td { 	padding: 5px 9px; }</style>');
   al(result, '</head><body>');
-  al(result, '<h1>' + Project.Name + '</h1>');
+  al(result, '<div id="wrap"><div id="head"><h1>' + Project.Name + '</h1>');
   al(result, 'Domains: ' + inttostr(Project.DomainList.Count) + ', Hosting: ' +
     inttostr(Project.HostingList.Count) + ', CMS:' +
     inttostr(Project.CMSList.Count) + ', Databases:' +
     inttostr(Project.DatabaseList.Count) + '.<br>');
-  al(result, '<hr><h2>All Linked Components</h2> <h3>Domains</h3> <table>');
-  al(result,
-    '<tr><td>Domain Name</td><td>Registrar</td><td>Renewal Date</td><td>Renewal Cost</td></tr>');
-  for Domain in Project.DomainList do
-    al(result, '<tr><td>' + Domain.DomainName + '.' + Domain.DomainExtension +
-      '</td><td>Registrar</td><td>' + datetostr(Domain.RenewalDate) +
-      '</td><td>£' + floattostr((round(Domain.RenewalCost * 100) / 100)) +
-      '</td></tr>');
-  al(result,
-    '</table><h3>Hosting</h3><table><tr><td>FTP Server</td><td>FTP Username</td>');
-  al(result,
-    '<td>FTP Password</td><td>Registrar</td><td>Renewal Date</td><td>Renewal Cost</td></tr>');
-  for Host in Project.HostingList do
-    al(result, '<tr><td>' + Host.FtpServer + '</td><td>' + Host.FTPUsername +
-      '</td><td>' + Host.FTPPassword + '</td><td>Registrar</td><td>' +
-      datetostr(Host.RenewalDate) + '</td><td>£' +
-      floattostr((round(Host.RenewalCost * 100) / 100)) + '</td></tr>');
-  al(result,
-    '</table><h3>CMS</h3><table><tr><td>Directory</td><td>Table Prefix</td><td>Theme Name</td><td>Admin Username</td><td>Admin Password</td><td>Client Username</td><td>Client Password</td></tr>');
-  for CMS in Project.CMSList do
-    al(result, '<tr><td>' + CMS.Directory + '</td><td>' + CMS.TablePrefix +
-      '</td><td>' + CMS.ThemeName + '</td><td>' + CMS.AdminUsername +
-      '</td><td>' + CMS.AdminPassword + '</td><td>' + CMS.ClientUsername +
-      '</td><td>' + CMS.ClientPassword + '</td></tr>');
-  al(result,
-    '</table><h3>Databases</h3><table><tr><td>Name</td><td>Username</td><td>Password</td><td>Hostname</td></tr>');
-  for Database in Project.DatabaseList do
-    al(result, '<tr><td>' + Database.Name + '</td><td>' + Database.Username +
-      '</td><td>' + Database.Password + '</td><td>' + Database.Hostname +
-      '</td></tr>');
+  // get client name
+  with datasetProject do
+  begin
+    Close;
+    CommandText :=
+      'SELECT FirstName,LastName,CompanyName FROM client WHERE ClientID = ' +
+      inttostr(Project.ClientID);
+    Open;
+    al(result, 'This project is assigned to ' + FieldValues['FirstName'] + ' ' +
+      FieldValues['LastName'] + ' from ' + FieldValues['CompanyName']);
+  end;
+  al(result, '</div><h2>All Linked Components</h2> <h3>Domains</h3> ');
+  if Project.DomainList.Count <> 0 then
+  begin
+    al(result,
+      '<table><tr><th>Domain Name</th><th>Registrar</th><th>Renewal Date</th><th>Renewal Cost</th></tr>');
+    for Domain in Project.DomainList do
+      al(result, '<tr><td>' + Domain.DomainName + '.' + Domain.DomainExtension +
+        '</td><td>Registrar</td><td>' + datetostr(Domain.RenewalDate) +
+        '</td><td>£' + floattostr((round(Domain.RenewalCost * 100) / 100)) +
+        '</td></tr>');
+    al(result, '</table>');
+  end
+  else
+    al(result, 'Nothing to display');
+  al(result, '<h3>Hosting</h3>');
+  if Project.HostingList.Count <> 0 then
+  begin
+    al(result,
+      '<table><tr><th>FTP Server</th><th>FTP Username</th><th>FTP Password</th><th>Registrar</th><th>Renewal Date</th><th>Renewal Cost</th></tr>');
+    for Host in Project.HostingList do
+      al(result, '<tr><td>' + Host.FtpServer + '</td><td>' + Host.FTPUsername +
+        '</td><td>' + Host.FTPPassword + '</td><td>Registrar</td><td>' +
+        datetostr(Host.RenewalDate) + '</td><td>£' +
+        floattostr((round(Host.RenewalCost * 100) / 100)) + '</td></tr>');
+    al(result, '</table>');
+  end
+  else
+    al(result, 'Nothing to display');
+  al(result, '<h3>CMS</h3>');
+  if Project.CMSList.Count <> 0 then
+  begin
+    al(result,
+      '<table><tr><th>Directory</th><th>Table Prefix</th><th>Theme Name</th><th>Admin Username</th><th>Admin Password</th><th>Client Username</th><th>Client Password</th></tr>');
+    for CMS in Project.CMSList do
+      al(result, '<tr><td>' + CMS.Directory + '</td><td>' + CMS.TablePrefix +
+        '</td><td>' + CMS.ThemeName + '</td><td>' + CMS.AdminUsername +
+        '</td><td>' + CMS.AdminPassword + '</td><td>' + CMS.ClientUsername +
+        '</td><td>' + CMS.ClientPassword + '</td></tr>');
+    al(result, '</table>');
+  end
+  else
+    al(result, 'Nothing to display');
+  al(result, '<h3>Databases</h3>');
+  if Project.DatabaseList.Count <> 0 then
+  begin
+    al(result,
+      '<table><tr><th>Name</th><th>Username</th><th>Password</th><th>Hostname</th></tr>');
+    for Database in Project.DatabaseList do
+      al(result, '<tr><td>' + Database.Name + '</td><td>' + Database.Username +
+        '</td><td>' + Database.Password + '</td><td>' + Database.Hostname +
+        '</td></tr>');
+    al(result, '</table>');
+  end
+  else
+    al(result, 'Nothing to display');
   al(result, '</table><h2>Accounts due for renewal</h2><h3>Domains</h3>');
   i := 0;
   MonthCost := 0;
@@ -185,8 +224,8 @@ begin
     end; // endif
     AllCost := AllCost + Domain.RenewalCost;
   end; // endfor domain
-  al(result, 'There were ' + inttostr(i) +
-    ' domains not due for renewal in the next month');
+  al(result, '<p>There were ' + inttostr(i) +
+    ' domains not due for renewal in the next month</p>');
   al(result, '<h3>Hosting</h3>');
   i := 0;
   for Host in Project.HostingList do
@@ -219,38 +258,68 @@ begin
     end; // endif
     AllCost := AllCost + Host.RenewalCost;
   end; // endfor host
-  al(result, 'There were ' + inttostr(i) +
-    ' hosting accounts not due for renewal in the next month.<br>');
-  al(result, 'Renewing all accounts for the next month will cost £' +
+  al(result, '<p>There were ' + inttostr(i) +
+    ' hosting accounts not due for renewal in the next month.</p>');
+  al(result, '<h4>Cost Summary</h4>');
+  al(result, '<p>Renewing all accounts for the next month will cost £' +
     floattostr(round(MonthCost * 100) / 100) +
     ' and renewing all accounts associated with this project now would cost £' +
-    floattostr(round(AllCost * 100) / 100));
-  AllCost := 0;
-  al(result, '<h2>Tasks</h2>');
-  al(result,
-    '<table><tr><td>Task Description</td><td>Time Worked</td><td>Cost</td><td>Completed?</td><td>Date Completed</td></tr>');
+    floattostr(round(AllCost * 100) / 100) + '</p>');
+  al(result, '<h2>Unfinished Tasks</h2>');
   // get task description from dataset
   with datasetProject do
   begin
     Close;
     CommandText := 'SELECT * FROM task WHERE ProjectID = ' +
-      inttostr(Project.ProjectID);
+      inttostr(Project.ProjectID) + ' AND `Completed` = 0';
     Open;
+    First;
+    if datasetProject.RecordCount = 0 then
+    begin
+      Next;
+      al(result, 'Nothing to display');
+    end
+    else
+      al(result,
+        '<table><tr><th>Task Description</th><th>Time Worked</th><th>Cost</th></tr>');
     while not EOF do
     begin
       al(result, '<tr><td>' + FieldValues['TaskDescription'] + '</td><td>' +
         inttostr(FieldValues['MinutesWorked'] div 60) + ' Hrs, ' +
-        (FieldValues['MinutesWorked'] mod 60) + 'Mins</td><td>' +
+        inttostr(FieldValues['MinutesWorked'] mod 60) + 'Mins</td><td>£' +
         floattostr(round(FieldValues['RatePerHour'] *
         (FieldValues['MinutesWorked'] / 60) * 100) / 100) + '</td>');
-      if FieldValues['Completed'] then
-        al(result, '<td>Completed</td><td>'+datetostr(FieldValues['DateCompleted'])+'</td>')
-      else
-        al(result, '<td>Not Completed</td><td>-</td>');
       al(result, '</tr>');
+      Next;
     end;
+    Close;
+    CommandText := 'SELECT * FROM task WHERE ProjectID = ' +
+      inttostr(Project.ProjectID) + ' AND `Completed` = 1';
+    Open;
+    First;
+    al(result, '</table><h2>Completed Tasks</h2>');
+    if datasetProject.RecordCount = 0 then
+    begin
+      Next;
+      al(result, 'Nothing to display');
+    end
+    else
+      al(result,
+        '<table><tr><th>Task Description</th><th>Time Worked</th><th>Cost</th><th>Date Completed</th></tr>');
+    while not EOF do
+    begin
+      al(result, '<tr><td>' + FieldValues['TaskDescription'] + '</td><td>' +
+        inttostr(FieldValues['MinutesWorked'] div 60) + ' Hrs, ' +
+        inttostr(FieldValues['MinutesWorked'] mod 60) + 'Mins</td><td>£' +
+        floattostr(round((FieldValues['RatePerHour'] *
+        (FieldValues['MinutesWorked'] / 60)) * 100) / 100) + '</td>');
+      al(result, '<td>' + datetostr(FieldValues['DateCompleted']) + '</td>');
+      al(result, '</tr>');
+      Next;
+    end;
+    al(result, '</table>');
   end;
-  al(result, '</body></html>');
+  al(result, '</div></body></html>');
 end;
 
 end.

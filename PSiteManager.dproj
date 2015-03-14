@@ -71,7 +71,6 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <DCC_UseMSBuildExternally>true</DCC_UseMSBuildExternally>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <Icon_MainIcon>PSiteManager_Icon.ico</Icon_MainIcon>
@@ -136,6 +135,18 @@
         </DCCReference>
         <DCCReference Include="UReport.pas">
             <Form>formReportGenerator</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="ULoadClient.pas">
+            <Form>formLoadClient</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="URegistrarView.pas">
+            <Form>formRegistrarView</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="UTaskViewer.pas">
+            <Form>formTaskViewer</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <None Include="ModelSupport_PSiteManager\default.txaPackage"/>

@@ -16,7 +16,7 @@ type
 
   TClient = class(TObject)
   private
-    CID, HFound: integer;
+    CID: integer;
     FName, LName, CName, Tel, Addr, PCode, EmailAddr, Twitter, Facebook,
       Comments: string;
   public
@@ -31,9 +31,8 @@ type
     property TwitterPage: string read Twitter;
     property FacebookPage: string read Facebook;
     property Notes: string read Comments;
-    property HowFound: integer read HFound;
     constructor Create(CID: integer; FName, LName, CName, Tel, Addr, PCode,
-      EmailAddr: string; HFound: integer; Twitter, Facebook, Comments: string);
+      EmailAddr: string; Twitter, Facebook, Comments: string);
   end;
 
   TTask = class(TObject)
@@ -166,7 +165,7 @@ end;
 
 constructor TClient.Create(CID: integer; FName: string; LName: string;
   CName: string; Tel: string; Addr: string; PCode: string; EmailAddr: string;
-  HFound: integer; Twitter: string; Facebook: string; Comments: string);
+  Twitter: string; Facebook: string; Comments: string);
 begin
   Self.CID := CID;
   Self.FName := FName;
@@ -176,7 +175,6 @@ begin
   Self.Addr := Addr;
   Self.PCode := PCode;
   Self.EmailAddr := EmailAddr;
-  Self.HFound := HFound;
   Self.Twitter := Twitter;
   Self.Facebook := Facebook;
   Self.Comments := Comments;

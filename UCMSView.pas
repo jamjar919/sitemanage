@@ -198,6 +198,11 @@ end;
 
 procedure TformCMSView.FormCreate(Sender: TObject);
 begin
+  //make all active
+  datasetSingleCMS.Active := True;
+  datasetCMSType.Active := True;
+  datasetHosting.Active := True;
+  datasetDatabase.Active := True;
   hostingChanged := false;
 end;
 

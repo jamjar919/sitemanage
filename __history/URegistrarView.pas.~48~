@@ -1,0 +1,70 @@
+unit URegistrarView;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.DBCtrls,
+  UData, Data.DB, Data.Win.ADODB, Vcl.Grids, Vcl.DBGrids;
+
+type
+  TformRegistrarView = class(TForm)
+    pagecontrolRegistrar: TPageControl;
+    tsheetDomainRegistrars: TTabSheet;
+    tsheetHostingRegistrars: TTabSheet;
+    datasetDomain: TADODataSet;
+    datasetHosting: TADODataSet;
+    datasourceDomain: TDataSource;
+    datasourceHosting: TDataSource;
+    datasetHostingName: TStringField;
+    dbgridDomain: TDBGrid;
+    dbgridHosting: TDBGrid;
+    datasetHostingRegistrarID: TAutoIncField;
+    datasetDomainRegistrarID: TAutoIncField;
+    datasetDomainName: TStringField;
+    datasetDomainURL: TStringField;
+    datasetDomainUsername: TStringField;
+    datasetDomainPassword: TStringField;
+    datasetHostingURL: TStringField;
+    datasetHostingUsername: TStringField;
+    datasetHostingPassword: TStringField;
+    dbtextRegistrarName: TDBText;
+    dbtextURL: TDBText;
+    dbtextUsername: TDBText;
+    dbtextPassword: TDBText;
+    lblRegName: TLabel;
+    lblURL: TLabel;
+    lblUsername: TLabel;
+    lblPassword: TLabel;
+    procedure pagecontrolRegistrarChange(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  formRegistrarView: TformRegistrarView;
+
+implementation
+
+{$R *.dfm}
+
+procedure TformRegistrarView.pagecontrolRegistrarChange(Sender: TObject);
+begin
+  // change dataset
+  case pagecontrolRegistrar.ActivePageIndex of
+    0:
+      begin
+        dbtextRegistrarName.Datasource := datasourceDomain;
+        dbtextURL.DataSource := datasourceDomain;
+      end;
+    1:
+      begin
+        registrarDatasource.DataSet := datasetHosting;
+      end;
+  end;
+end;
+
+end.

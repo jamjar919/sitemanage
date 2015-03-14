@@ -113,18 +113,10 @@ begin
       end;
     dtClient:
       begin
-        setCommandText(datasetLookupRecord,
-          'SELECT * FROM client WHERE ClientID = ' + inttostr(ID));
-        with datasetLookupRecord do
-          formMain.OpenClient(TClient.Create(ID, fieldValues['FirstName'],
-            fieldValues['LastName'], fieldValues['CompanyName'],
-            fieldValues['Telephone'], fieldValues['Address'],
-            fieldValues['Postcode'], fieldValues['Email'],
-            fieldValues['HowFound'], fieldValues['TwitterPage'],
-            fieldValues['FacebookPage'], fieldValues['Notes']));
+        formMain.OpenClient(ID);
       end;
     dtTask:
-      ;
+      formMain.OpenSingleTask(ID);
   end;
 end;
 

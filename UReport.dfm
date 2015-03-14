@@ -2,7 +2,7 @@ object formReportGenerator: TformReportGenerator
   Left = 0
   Top = 0
   Caption = 'Report Generator'
-  ClientHeight = 234
+  ClientHeight = 108
   ClientWidth = 252
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET

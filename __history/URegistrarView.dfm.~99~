@@ -1,0 +1,214 @@
+object formRegistrarView: TformRegistrarView
+  Left = 0
+  Top = 0
+  Caption = 'Registrars'
+  ClientHeight = 300
+  ClientWidth = 469
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  DesignSize = (
+    469
+    300)
+  PixelsPerInch = 96
+  TextHeight = 13
+  object dbtextRegistrarName: TDBText
+    Left = 327
+    Top = 8
+    Width = 130
+    Height = 17
+    DataField = 'Name'
+    DataSource = datasourceDomain
+  end
+  object dbtextURL: TDBText
+    Left = 327
+    Top = 31
+    Width = 130
+    Height = 17
+    DataField = 'URL'
+    DataSource = datasourceDomain
+  end
+  object dbtextUsername: TDBText
+    Left = 327
+    Top = 54
+    Width = 130
+    Height = 17
+    DataField = 'Username'
+    DataSource = datasourceDomain
+  end
+  object dbtextPassword: TDBText
+    Left = 327
+    Top = 77
+    Width = 130
+    Height = 17
+    DataField = 'Password'
+    DataSource = datasourceDomain
+  end
+  object lblRegName: TLabel
+    Left = 243
+    Top = 8
+    Width = 78
+    Height = 13
+    Caption = 'Registrar Name:'
+  end
+  object lblURL: TLabel
+    Left = 243
+    Top = 31
+    Width = 23
+    Height = 13
+    Caption = 'URL:'
+  end
+  object lblUsername: TLabel
+    Left = 243
+    Top = 54
+    Width = 52
+    Height = 13
+    Caption = 'Username:'
+  end
+  object lblPassword: TLabel
+    Left = 243
+    Top = 77
+    Width = 50
+    Height = 13
+    Caption = 'Password:'
+  end
+  object pagecontrolRegistrar: TPageControl
+    Left = 0
+    Top = 0
+    Width = 237
+    Height = 305
+    ActivePage = tsheetDomainRegistrars
+    Anchors = [akLeft, akTop, akBottom]
+    TabOrder = 0
+    object tsheetDomainRegistrars: TTabSheet
+      Caption = 'Domain Registrars'
+      ExplicitWidth = 225
+      DesignSize = (
+        229
+        277)
+      object dbgridDomain: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 418
+        Height = 274
+        Anchors = [akLeft, akTop, akRight, akBottom]
+        DataSource = datasourceDomain
+        Options = [dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Style = []
+      end
+    end
+    object tsheetHostingRegistrars: TTabSheet
+      Caption = 'Hosting Registrars'
+      ImageIndex = 1
+      DesignSize = (
+        229
+        277)
+      object dbgridHosting: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 229
+        Height = 271
+        Anchors = [akLeft, akTop, akRight, akBottom]
+        DataSource = datasourceHosting
+        Options = [dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Style = []
+      end
+    end
+  end
+  object datasetDomain: TADODataSet
+    Active = True
+    Connection = datamoduleMain.ADONextnorth
+    CursorType = ctStatic
+    CommandText = 'SELECT * FROM domainregistrar'
+    Parameters = <>
+    Left = 44
+    Top = 40
+    object datasetDomainRegistrarID: TAutoIncField
+      FieldName = 'RegistrarID'
+      ReadOnly = True
+      Visible = False
+    end
+    object datasetDomainName: TStringField
+      FieldName = 'Name'
+      Size = 64
+    end
+    object datasetDomainURL: TStringField
+      FieldName = 'URL'
+      Visible = False
+      Size = 128
+    end
+    object datasetDomainUsername: TStringField
+      FieldName = 'Username'
+      Visible = False
+      Size = 128
+    end
+    object datasetDomainPassword: TStringField
+      FieldName = 'Password'
+      Visible = False
+      Size = 128
+    end
+  end
+  object datasetHosting: TADODataSet
+    Active = True
+    Connection = datamoduleMain.ADONextnorth
+    CursorType = ctStatic
+    CommandText = 'SELECT * FROM hostregistrar'
+    Parameters = <>
+    Left = 124
+    Top = 40
+    object datasetHostingRegistrarID: TAutoIncField
+      FieldName = 'RegistrarID'
+      ReadOnly = True
+      Visible = False
+    end
+    object datasetHostingName: TStringField
+      DisplayWidth = 33
+      FieldName = 'Name'
+      Size = 64
+    end
+    object datasetHostingURL: TStringField
+      FieldName = 'URL'
+      Visible = False
+      Size = 128
+    end
+    object datasetHostingUsername: TStringField
+      FieldName = 'Username'
+      Visible = False
+      Size = 128
+    end
+    object datasetHostingPassword: TStringField
+      FieldName = 'Password'
+      Visible = False
+      Size = 128
+    end
+  end
+  object datasourceDomain: TDataSource
+    DataSet = datasetDomain
+    Left = 44
+    Top = 96
+  end
+  object datasourceHosting: TDataSource
+    DataSet = datasetHosting
+    Left = 124
+    Top = 96
+  end
+  object registrarDatasource: TDataSource
+    DataSet = datasetDomain
+    Left = 284
+    Top = 160
+  end
+end

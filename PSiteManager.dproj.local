@@ -24,17 +24,17 @@
     <Transaction>2015/02/19 21:21:21.000.098,J:\Git\sitemanager\sitemanage\UProjectView.dfm=J:\Git\sitemanager\sitemanage\Unit1.dfm</Transaction>
     <Transaction>2015/02/19 21:21:21.000.098,J:\Git\sitemanager\sitemanage\UProjectView.pas=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
     <Transaction>2015/02/20 19:08:55.000.930,=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
-    <Transaction>2015/02/20 19:09:06.000.115,J:\Git\sitemanager\sitemanage\UCMSView.pas=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
     <Transaction>2015/02/20 19:09:06.000.115,J:\Git\sitemanager\sitemanage\UCMSView.dfm=J:\Git\sitemanager\sitemanage\Unit1.dfm</Transaction>
+    <Transaction>2015/02/20 19:09:06.000.115,J:\Git\sitemanager\sitemanage\UCMSView.pas=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
     <Transaction>2015/02/22 14:02:56.000.458,=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
-    <Transaction>2015/02/22 14:03:07.000.374,J:\Git\sitemanager\sitemanage\UDatabaseView.dfm=J:\Git\sitemanager\sitemanage\Unit1.dfm</Transaction>
     <Transaction>2015/02/22 14:03:07.000.374,J:\Git\sitemanager\sitemanage\UDatabaseView.pas=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
+    <Transaction>2015/02/22 14:03:07.000.374,J:\Git\sitemanager\sitemanage\UDatabaseView.dfm=J:\Git\sitemanager\sitemanage\Unit1.dfm</Transaction>
     <Transaction>2015/02/24 09:40:17.000.018,=U:\My Documents\Embarcadero\Studio\Projects\sitemanage-master\sitemanage-master\Unit1.pas</Transaction>
-    <Transaction>2015/02/24 09:41:27.000.940,U:\My Documents\Embarcadero\Studio\Projects\sitemanage-master\sitemanage-master\USearch.dfm=U:\My Documents\Embarcadero\Studio\Projects\sitemanage-master\sitemanage-master\Unit1.dfm</Transaction>
     <Transaction>2015/02/24 09:41:27.000.939,U:\My Documents\Embarcadero\Studio\Projects\sitemanage-master\sitemanage-master\USearch.pas=U:\My Documents\Embarcadero\Studio\Projects\sitemanage-master\sitemanage-master\Unit1.pas</Transaction>
+    <Transaction>2015/02/24 09:41:27.000.940,U:\My Documents\Embarcadero\Studio\Projects\sitemanage-master\sitemanage-master\USearch.dfm=U:\My Documents\Embarcadero\Studio\Projects\sitemanage-master\sitemanage-master\Unit1.dfm</Transaction>
     <Transaction>2015/02/24 09:57:40.000.645,=U:\My Documents\Embarcadero\Studio\Projects\sitemanage-master\sitemanage-master\Unit1.pas</Transaction>
-    <Transaction>2015/02/24 09:57:59.000.184,U:\My Documents\Embarcadero\Studio\Projects\sitemanage-master\sitemanage-master\USearchData.pas=U:\My Documents\Embarcadero\Studio\Projects\sitemanage-master\sitemanage-master\Unit1.pas</Transaction>
     <Transaction>2015/02/24 09:57:59.000.184,U:\My Documents\Embarcadero\Studio\Projects\sitemanage-master\sitemanage-master\USearchData.dfm=U:\My Documents\Embarcadero\Studio\Projects\sitemanage-master\sitemanage-master\Unit1.dfm</Transaction>
+    <Transaction>2015/02/24 09:57:59.000.184,U:\My Documents\Embarcadero\Studio\Projects\sitemanage-master\sitemanage-master\USearchData.pas=U:\My Documents\Embarcadero\Studio\Projects\sitemanage-master\sitemanage-master\Unit1.pas</Transaction>
     <Transaction>2015/02/25 10:26:34.000.901,=U:\My Documents\Embarcadero\Studio\Projects\sitemanage-master\sitemanage-master\ModelSupport_PSiteManager\default.txaPackage</Transaction>
     <Transaction>2015/02/25 10:26:39.000.649,=U:\My Documents\Embarcadero\Studio\Projects\sitemanage-master\sitemanage-master\ModelSupport_PSiteManager\default.txvpck</Transaction>
     <Transaction>2015/02/25 10:26:43.000.851,=U:\My Documents\Embarcadero\Studio\Projects\sitemanage-master\sitemanage-master\ModelSupport_PSiteManager\PSiteManager\default.txvpck</Transaction>
@@ -44,10 +44,19 @@
     <Transaction>2015/03/11 18:29:25.000.874,=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
     <Transaction>2015/03/11 18:30:00.000.330,J:\Git\sitemanager\sitemanage\UClient.pas=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
     <Transaction>2015/03/11 18:30:00.000.330,J:\Git\sitemanager\sitemanage\UClient.dfm=J:\Git\sitemanager\sitemanage\Unit1.dfm</Transaction>
-    <Transaction>2015/03/11 20:50:51.000.290,J:\Git\sitemanager\sitemanage\UClientView.dfm=J:\Git\sitemanager\sitemanage\UClient.dfm</Transaction>
     <Transaction>2015/03/11 20:50:51.000.290,J:\Git\sitemanager\sitemanage\UClientView.pas=J:\Git\sitemanager\sitemanage\UClient.pas</Transaction>
+    <Transaction>2015/03/11 20:50:51.000.290,J:\Git\sitemanager\sitemanage\UClientView.dfm=J:\Git\sitemanager\sitemanage\UClient.dfm</Transaction>
     <Transaction>2015/03/11 22:36:09.000.028,=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
     <Transaction>2015/03/11 22:36:35.000.773,J:\Git\sitemanager\sitemanage\Unit1.pas=J:\Git\sitemanager\sitemanage\UReport.pas</Transaction>
     <Transaction>2015/03/11 22:36:35.000.773,J:\Git\sitemanager\sitemanage\Unit1.dfm=J:\Git\sitemanager\sitemanage\UReport.dfm</Transaction>
+    <Transaction>2015/03/14 00:10:06.000.369,=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
+    <Transaction>2015/03/14 00:10:16.000.366,J:\Git\sitemanager\sitemanage\Unit1.dfm=J:\Git\sitemanager\sitemanage\ULoadClient.dfm</Transaction>
+    <Transaction>2015/03/14 00:10:16.000.366,J:\Git\sitemanager\sitemanage\Unit1.pas=J:\Git\sitemanager\sitemanage\ULoadClient.pas</Transaction>
+    <Transaction>2015/03/14 00:31:54.000.031,=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
+    <Transaction>2015/03/14 00:32:42.000.306,J:\Git\sitemanager\sitemanage\Unit1.dfm=J:\Git\sitemanager\sitemanage\URegistrarView.dfm</Transaction>
+    <Transaction>2015/03/14 00:32:42.000.306,J:\Git\sitemanager\sitemanage\Unit1.pas=J:\Git\sitemanager\sitemanage\URegistrarView.pas</Transaction>
+    <Transaction>2015/03/14 00:55:17.000.861,=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
+    <Transaction>2015/03/14 00:55:55.000.123,J:\Git\sitemanager\sitemanage\UTaskViewer.dfm=J:\Git\sitemanager\sitemanage\Unit1.dfm</Transaction>
+    <Transaction>2015/03/14 00:55:55.000.123,J:\Git\sitemanager\sitemanage\UTaskViewer.pas=J:\Git\sitemanager\sitemanage\Unit1.pas</Transaction>
   </Transactions>
 </BorlandProject>

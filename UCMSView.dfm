@@ -270,7 +270,6 @@ object formCMSView: TformCMSView
     end
   end
   object datasetSingleCMS: TADODataSet
-    Active = True
     Connection = datamoduleMain.ADONextnorth
     CursorType = ctStatic
     CommandText = 'SELECT * FROM cms WHERE CMSID = :cmid;'
@@ -284,7 +283,6 @@ object formCMSView: TformCMSView
     Top = 8
   end
   object datasetCMSType: TADODataSet
-    Active = True
     Connection = datamoduleMain.ADONextnorth
     CursorType = ctStatic
     CommandText = 'SELECT * FROM cmstype;'
@@ -293,7 +291,6 @@ object formCMSView: TformCMSView
     Top = 48
   end
   object datasetHosting: TADODataSet
-    Active = True
     Connection = datamoduleMain.ADONextnorth
     CursorType = ctStatic
     CommandText = 'SELECT * FROM hosting;'
@@ -302,7 +299,6 @@ object formCMSView: TformCMSView
     Top = 368
   end
   object datasetDatabase: TADODataSet
-    Active = True
     Connection = datamoduleMain.ADONextnorth
     CursorType = ctStatic
     CommandText = 'SELECT * FROM dbase WHERE HostingID = :hid;'

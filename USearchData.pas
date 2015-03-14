@@ -57,7 +57,7 @@ type
     datasetSearchTaskTaskDescription: TStringField;
     datasetSearchTaskMinutesWorked: TIntegerField;
     datasetSearchTaskRatePerHour: TFloatField;
-    datasetSearchTaskCompleted: TBooleanField;
+    datasetSearchTaskCompleted: TIntegerField;
   private
     { Private declarations }
   public

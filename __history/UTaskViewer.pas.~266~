@@ -1,0 +1,234 @@
+unit UTaskViewer;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.DBCtrls,
+  Vcl.Mask, Data.DB, Data.Win.ADODB, UClass, UData;
+
+type
+  TformTaskViewer = class(TForm)
+    dbricheditTaskDescription: TDBRichEdit;
+    dbeditMinutesWorked: TDBEdit;
+    dbeditRatePerHour: TDBEdit;
+    lblMinWorked: TLabel;
+    lblRatePerHour: TLabel;
+    buttonNextTask: TButton;
+    buttonPreviousTask: TButton;
+    lblTitle: TLabel;
+    buttonSwitchFin: TButton;
+    buttonComplete: TButton;
+    datasetTask: TADODataSet;
+    datasourceTask: TDataSource;
+    buttonUpdateDetails: TButton;
+    datasetTaskTaskID: TAutoIncField;
+    datasetTaskProjectID: TIntegerField;
+    datasetTaskMinutesWorked: TIntegerField;
+    datasetTaskRatePerHour: TFloatField;
+    datasetTaskCompleted: TIntegerField;
+    datasetTaskDateCompleted: TDateField;
+    buttonDelete: TButton;
+    datasetLookupProject: TADODataSet;
+    datasetLookupProjectProjectID: TIntegerField;
+    datasetLookupProjectCompleted: TIntegerField;
+    datasetTaskTaskDescription: TStringField;
+    procedure buttonNextTaskClick(Sender: TObject);
+    procedure buttonPreviousTaskClick(Sender: TObject);
+    procedure buttonSwitchFinClick(Sender: TObject);
+    procedure buttonCompleteClick(Sender: TObject);
+    procedure buttonDeleteClick(Sender: TObject);
+    procedure buttonUpdateDetailsClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    procedure OpenTasks(ProjectID, Completed: Integer);
+    procedure OpenSingleTask(TaskID: Integer);
+    procedure NextPrevButtons;
+  end;
+
+var
+  formTaskViewer: TformTaskViewer;
+
+implementation
+
+{$R *.dfm}
+
+procedure TformTaskViewer.NextPrevButtons;
+begin
+  // check if there is a record to move to
+  if datasetTask.Active then
+  begin
+    if datasetTask.Eof then
+      buttonNextTask.Enabled := false
+    else
+      buttonNextTask.Enabled := True;
+    if datasetTask.Bof then
+      buttonPreviousTask.Enabled := false
+    else
+      buttonPreviousTask.Enabled := True;
+  end;
+end;
+
+procedure TformTaskViewer.buttonCompleteClick(Sender: TObject);
+begin
+  // set current taks to be complete
+  if (datasetTask.Active) and not datasetTask.IsEmpty then
+  begin
+    datasetTask.Edit;
+    datasetTask.FieldValues['Completed'] := 1;
+    datasetTask.Post;
+  end;
+end;
+
+procedure TformTaskViewer.buttonDeleteClick(Sender: TObject);
+begin
+  if datasetTask.Active and not datasetTask.IsEmpty then
+  begin
+    // delete task
+    datamoduleMain.commandDelete.CommandText :=
+      'DELETE FROM task WHERE TaskID = ' +
+      inttostr(datasetTask.FieldValues['TaskID']);
+    datasetTask.Next;
+    datamoduleMain.commandDelete.Execute;
+  end;
+end;
+
+procedure TformTaskViewer.buttonNextTaskClick(Sender: TObject);
+begin
+  if datasetTask.Active and not datasetTask.IsEmpty then
+    datasetTask.Next;
+  NextPrevButtons;
+end;
+
+procedure TformTaskViewer.buttonPreviousTaskClick(Sender: TObject);
+begin
+  if datasetTask.Active and not datasetTask.IsEmpty then
+    datasetTask.Prior;
+  NextPrevButtons;
+end;
+
+procedure TformTaskViewer.buttonSwitchFinClick(Sender: TObject);
+var
+  CompVal: Integer;
+begin
+  if not datasetTask.IsEmpty then
+  begin
+    with datasetTask do
+    begin
+      case FieldValues['Completed'] of
+        1:
+          begin
+            CompVal := 0;
+            buttonSwitchFin.Caption := 'Complete Tasks';
+            lblTitle.Caption := 'Unfinished Tasks';
+            buttonComplete.Enabled := True;
+          end;
+        0:
+          begin
+            CompVal := 1;
+            buttonSwitchFin.Caption := 'Incomplete Tasks';
+            lblTitle.Caption := 'Finished Tasks';
+            buttonComplete.Enabled := false;
+          end
+      else
+        begin
+          ShowMessage('Error: Can''t determine if task is completed');
+          CompVal := 0;
+          buttonSwitchFin.Caption := 'Complete Tasks';
+          lblTitle.Caption := 'Unfinished Tasks';
+        end;
+      end;
+      Close;
+      Parameters.ParamByName('comp').Value := CompVal;
+      Open;
+      First;
+      if datasetTask.IsEmpty then
+      begin
+        datasetTask.Close;
+        ShowMessage('Nothing to display');
+      end;
+    end;
+    NextPrevButtons;
+  end;
+end;
+
+procedure TformTaskViewer.buttonUpdateDetailsClick(Sender: TObject);
+begin
+  if datasetTask.Active then
+  begin
+    with datasetTask do
+    begin
+      Edit;
+      FieldValues['TaskDescription'] := dbricheditTaskDescription.Text;
+      FieldValues['MinutesWorked'] := dbeditMinutesWorked.Text;
+      FieldValues['RatePerHour'] := dbeditRatePerHour.Field.AsFloat;
+      Post;
+    end;
+    ShowMessage('Edit successful.');
+  end;
+end;
+
+procedure TformTaskViewer.OpenSingleTask(TaskID: Integer);
+begin
+  // get project id
+  with datasetLookupProject do
+  begin
+    Close;
+    Parameters.ParamByName('tid').Value := TaskID;
+    Open;
+    OpenTasks(FieldValues['ProjectID'], FieldValues['Completed']);
+    datasetTask.Locate('TaskID', TaskID, []);
+    Close;
+  end;
+end;
+
+procedure TformTaskViewer.OpenTasks(ProjectID, Completed: Integer);
+begin
+  with datasetTask do
+  begin
+    Close;
+    Parameters.ParamByName('pid').Value := ProjectID;
+    Parameters.ParamByName('comp').Value := Completed;
+    Open;
+    Active := True;
+    First;
+    if datasetTask.IsEmpty then
+    begin
+      Close;
+      Parameters.ParamByName('comp').Value := not Completed;
+      Completed := not Completed;
+      Open;
+      if datasetTask.IsEmpty then
+      begin
+        ShowMessage('Nothing to display');
+        Close;
+        buttonSwitchFin.Enabled := False;
+        buttonComplete.Enabled := False;
+        buttonNextTask.Enabled := False;
+        buttonPreviousTask.Enabled := False;
+        buttonDelete.Enabled := False;
+        dbrichEditTaskDescription.Enabled := False;
+        dbeditMinutesWorked.Enabled := False;
+      end;
+    end; // end isempty
+    case Completed of
+      1:
+        begin
+          buttonSwitchFin.Caption := 'Incomplete Tasks';
+          lblTitle.Caption := 'Finished Tasks';
+          buttonComplete.Enabled := false;
+        end;
+      0:
+        begin
+          buttonSwitchFin.Caption := 'Complete Tasks';
+          lblTitle.Caption := 'Unfinished Tasks';
+          buttonComplete.Enabled := True;
+        end
+    end; // endcase
+  end; // endwith
+  NextPrevButtons;
+end;
+
+end.

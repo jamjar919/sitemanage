@@ -1,0 +1,1023 @@
+unit UMain;
+
+interface
+
+// icons http://www.fatcow.com/free-icons
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, System.UITypes,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ComCtrls, Vcl.ToolWin,
+  Vcl.ImgList, Vcl.Imaging.pngimage, Vcl.ExtCtrls, Vcl.StdCtrls,
+  UClass, UData, UDomainView, UHostingView, UProjectView, Vcl.ButtonGroup,
+  UCMSView, UDatabaseView, USearch, UClientView, UReport;
+
+type
+  TformMain = class(TForm)
+    coolbarMain: TCoolBar;
+    toolbarMain: TToolBar;
+    imglistToolbar: TImageList;
+    tbNew: TToolButton;
+    tbLoad: TToolButton;
+    tbTools: TToolButton;
+    tbReport: TToolButton;
+    treeMain: TTreeView;
+    panelWelcome: TPanel;
+    labelWelcomeTitle: TLabel;
+    imageLogo: TImage;
+    buttonWelcomeOpenProject: TButton;
+    buttonWelcomeGenerateReport: TButton;
+    buttonWelcomeSearchData: TButton;
+    imageButtonClose: TImage;
+    imglistTree: TImageList;
+    popupNew: TPopupMenu;
+    newProject: TMenuItem;
+    newDomain: TMenuItem;
+    newHosting: TMenuItem;
+    butgrMain: TButtonGroup;
+    imglistButtonGrp: TImageList;
+    tbSearch: TToolButton;
+    tbView: TToolButton;
+    popupView: TPopupMenu;
+    viewClients: TMenuItem;
+    viewRegistrars: TMenuItem;
+    newCms: TMenuItem;
+    newDatabase: TMenuItem;
+    newClient: TMenuItem;
+    // events
+    procedure imageButtonCloseClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure buttonWelcomeOpenProjectClick(Sender: TObject);
+    procedure treeMainDblClick(Sender: TObject);
+    procedure tbLoadClick(Sender: TObject);
+    procedure newProjectClick(Sender: TObject);
+    procedure butgrMainButtonClicked(Sender: TObject; Index: Integer);
+    procedure treeMainChange(Sender: TObject; Node: TTreeNode);
+    procedure newHostingClick(Sender: TObject);
+    procedure newDomainClick(Sender: TObject);
+    procedure buttonWelcomeSearchDataClick(Sender: TObject);
+    procedure tbSearchClick(Sender: TObject);
+    procedure newCmsClick(Sender: TObject);
+    procedure newDatabaseClick(Sender: TObject);
+    procedure buttonWelcomeGenerateReportClick(Sender: TObject);
+    procedure tbReportClick(Sender: TObject);
+    procedure newClientClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    // project
+    procedure OpenProject; // on treeview
+    procedure ViewProject(Project: TProject);
+    procedure DeleteProject(ProjectID: Integer);
+    procedure RefreshProject(ProjectID: Integer);
+    procedure showLoadProjectForm;
+    procedure displayProjectOnTree(Project: TProject);
+    procedure RemoveProjectFromTree(ProjectID: Integer);
+    // hosting
+    procedure OpenHosting(Host: THosting);
+    procedure DeleteHosting(HostingID: Integer);
+    procedure AddHosting(Host: THosting);
+    // domain
+    procedure OpenDomain(Domain: TDomain);
+    procedure DeleteDomain(DomainID: Integer);
+    procedure AddDomain(Domain: TDomain);
+    // cms
+    procedure OpenCMS(CMS: TCMS);
+    procedure DeleteCMS(CMSID: Integer);
+    procedure AddCMS(CMS: TCMS);
+    // database
+    procedure OpenDatabase(Database: TDatabase);
+    procedure DeleteDatabase(DBID: Integer);
+    procedure AddDatabase(Database: TDatabase);
+    // client
+    procedure OpenClient(ClientID: Integer);
+    procedure AddClient(Client: TClient);
+    procedure DeleteClient(ClientID: TClient);
+    // button group
+    procedure ClearButtonGroup(ButtonGroup: TButtonGroup);
+    procedure ChangeButtonGroup(DataType: TDataTypes;
+      ButtonGroup: TButtonGroup);
+    // misc
+    procedure closeWelcomeForm;
+    procedure openSearch;
+    procedure openReportGenerator;
+  end;
+
+var
+  formMain: TformMain;
+
+implementation
+
+{$R *.dfm}
+
+uses ULoadProject;
+
+{ ****OPENING**** }
+
+procedure TformMain.OpenClient(ClientID: Integer);
+var
+  OpenClientForm: TformClientView;
+begin
+  OpenClientForm := TformClientView.Create(formMain);
+  OpenClientForm.DoOpen(ClientID);
+  OpenClientForm.Show;
+end;
+
+procedure TformMain.OpenDatabase(Database: TDatabase);
+var
+  OpenDBForm: TformDatabaseView;
+begin
+  OpenDBForm := TformDatabaseView.Create(formMain);
+  OpenDBForm.Database := Database;
+  OpenDBForm.DoOpen(Database);
+  OpenDBForm.Show;
+end;
+
+procedure TformMain.OpenCMS(CMS: TCMS);
+var
+  openCMSForm: TFormCMSView;
+begin
+  openCMSForm := TFormCMSView.Create(formMain);
+  openCMSForm.CMS := CMS;
+  openCMSForm.DoOpen(CMS);
+  openCMSForm.Show;
+end;
+
+procedure TformMain.OpenProject;
+begin
+  closeWelcomeForm;
+  CurrentProject := TProject.Create(0, 0, 'Project 1');
+  showLoadProjectForm;
+end;
+
+procedure TformMain.OpenHosting(Host: THosting);
+var
+  openHostingForm: TFormHostingView;
+begin
+  openHostingForm := TFormHostingView.Create(formMain);
+  openHostingForm.Hosting := Host;
+  openHostingForm.DoOpen(Host);
+  openHostingForm.Show;
+end;
+
+procedure TformMain.OpenDomain(Domain: TDomain);
+var
+  openDomainForm: TFormDomainView;
+begin
+  openDomainForm := TFormDomainView.Create(formMain);
+  openDomainForm.Domain := Domain;
+  openDomainForm.DoOpen(Domain);
+  openDomainForm.Show;
+end;
+
+procedure TformMain.ViewProject(Project: TProject);
+var
+  openProjectForm: TFormProjectView;
+begin
+  openProjectForm := TFormProjectView.Create(formMain);
+  openProjectForm.Project := Project;
+  openProjectForm.DoOpen(Project);
+  openProjectForm.Show;
+end;
+
+{ ****DELETION**** }
+
+procedure TformMain.DeleteClient(ClientID: TClient);
+begin
+  // delete from client table
+  datamoduleMain.commandDelete.CommandText :=
+    'DELETE FROM client WHERE ClientID = ' + inttostr(ClientID);
+  datamoduleMain.commandDelete.Execute;
+  // resolve dependencies
+  datamoduleMain.datasetDelete.Close;
+  datamoduleMain.datasetDelete.CommandText :=
+    'SELECT * FROM project WHERE ClientID = ' + inttostr(ClientID);
+  datamoduleMain.datasetDelete.Open;
+  while not datamoduleMain.datasetDelete.EOF do
+  begin
+    datamoduleMain.datasetDelete.Edit;
+    datamoduleMain.datasetDelete.FieldValues['ClientID'] := 0;
+    datamoduleMain.datasetDelete.Post;
+    datamoduleMain.datasetDelete.Next;
+  end;
+  datamoduleMain.datasetDelete.Close;
+  datamoduleMain.datasetDelete.CommandText := '';
+end;
+
+procedure TformMain.DeleteProject(ProjectID: Integer);
+begin
+  // delete project from project table
+  datamoduleMain.commandDelete.CommandText :=
+    'DELETE FROM project WHERE ProjectID = ' + inttostr(ProjectID);
+  datamoduleMain.commandDelete.Execute;
+  // resolve dependencies
+  // hosting
+  datamoduleMain.datasetDelete.Close;
+  datamoduleMain.datasetDelete.CommandText :=
+    'SELECT * FROM hosting WHERE ProjectID = ' + inttostr(ProjectID);
+  datamoduleMain.datasetDelete.Open;
+  datamoduleMain.datasetDelete.First;
+  while not datamoduleMain.datasetDelete.EOF do
+  begin
+    datamoduleMain.datasetDelete.Edit;
+    datamoduleMain.datasetDelete.FieldValues['ProjectID'] := 0;
+    datamoduleMain.datasetDelete.Post;
+    datamoduleMain.datasetDelete.Next;
+  end; // END EOF
+  datamoduleMain.datasetDelete.Close;
+  // domain
+  datamoduleMain.datasetDelete.CommandText :=
+    'SELECT * FROM domain WHERE ProjectID = ' + inttostr(ProjectID);
+  datamoduleMain.datasetDelete.Open;
+  datamoduleMain.datasetDelete.First;
+  while not datamoduleMain.datasetDelete.EOF do
+  begin
+    datamoduleMain.datasetDelete.Edit;
+    datamoduleMain.datasetDelete.FieldValues['ProjectID'] := 0;
+    datamoduleMain.datasetDelete.Post;
+    datamoduleMain.datasetDelete.Next;
+  end; // END EOF
+  datamoduleMain.datasetDelete.Close;
+  datamoduleMain.datasetDelete.CommandText := '';
+end;
+
+procedure TformMain.DeleteDatabase(DBID: Integer);
+begin
+  // delete the database from the database table
+  datamoduleMain.commandDelete.CommandText :=
+    'DELETE FROM dbase WHERE DatabaseID = ' + inttostr(DBID);
+  datamoduleMain.commandDelete.Execute;
+end;
+
+procedure TformMain.DeleteCMS(CMSID: Integer);
+begin
+  // only need to delete form one table
+  datamoduleMain.commandDelete.CommandText := 'DELETE FROM cms WHERE CMSID = ' +
+    inttostr(CMSID);
+  datamoduleMain.commandDelete.Execute;
+end;
+
+procedure TformMain.DeleteHosting(HostingID: Integer);
+begin
+  // delete the host from host table
+  datamoduleMain.commandDelete.CommandText :=
+    'DELETE FROM hosting WHERE HostingID = ' + inttostr(HostingID);
+  datamoduleMain.commandDelete.Execute;
+  // resolve dependencies in other tables
+  // cms
+  datamoduleMain.datasetDelete.Close;
+  datamoduleMain.datasetDelete.CommandText :=
+    'SELECT * FROM cms WHERE HostingID = ' + inttostr(HostingID);
+  datamoduleMain.datasetDelete.Open;
+  datamoduleMain.datasetDelete.First;
+  while not datamoduleMain.datasetDelete.EOF do
+  begin
+    datamoduleMain.datasetDelete.Edit;
+    datamoduleMain.datasetDelete.FieldValues['HostingID'] := 0;
+    datamoduleMain.datasetDelete.Post;
+    datamoduleMain.datasetDelete.Next;
+  end; // END EOF
+  // database
+  datamoduleMain.datasetDelete.Close;
+  datamoduleMain.datasetDelete.CommandText :=
+    'SELECT * FROM dbase WHERE HostingID = ' + inttostr(HostingID);
+  datamoduleMain.datasetDelete.Open;
+  datamoduleMain.datasetDelete.First;
+  while not datamoduleMain.datasetDelete.EOF do
+  begin
+    datamoduleMain.datasetDelete.Edit;
+    datamoduleMain.datasetDelete.FieldValues['HostingID'] := 0;
+    datamoduleMain.datasetDelete.Post;
+    datamoduleMain.datasetDelete.Next;
+  end; // END EOF
+end;
+
+procedure TformMain.DeleteDomain(DomainID: Integer);
+begin
+  // delete the domain from the domains table
+  // we can't use a dataset as the query won't return a result so we use a tadocommand
+  datamoduleMain.commandDelete.CommandText :=
+    'DELETE FROM domain WHERE DomainID = ' + inttostr(DomainID);
+  datamoduleMain.commandDelete.Execute;
+  // resolve dependencies in other tables with dataset
+  datamoduleMain.datasetDelete.Close;
+  datamoduleMain.datasetDelete.CommandText :=
+    'SELECT * FROM hosting WHERE DomainID = ' + inttostr(DomainID);
+  datamoduleMain.datasetDelete.Open;
+  datamoduleMain.datasetDelete.First;
+  while not datamoduleMain.datasetDelete.EOF do
+  begin
+    datamoduleMain.datasetDelete.Edit;
+    datamoduleMain.datasetDelete.FieldValues['DomainID'] := 0;
+    datamoduleMain.datasetDelete.Post;
+    datamoduleMain.datasetDelete.Next;
+  end; // END EOF
+  datamoduleMain.datasetDelete.Close;
+  datamoduleMain.datasetDelete.CommandText := '';
+end;
+
+{ ****ADDING**** }
+
+procedure TformMain.AddClient(Client: TClient);
+var
+  ClientID: Integer;
+begin
+  // create record
+  datamoduleMain.commandCreate.CommandText :=
+    'INSERT INTO `client` (`ClientID`, `FirstName`, `LastName`, `CompanyName`, `Telephone`, `Address`, `Postcode`, `Email`, `TwitterPage`, `FacebookPage`, `Notes`) VALUES (NULL, '''
+    + Client.FirstName + ''', ''' + Client.LastName + ''', ''' +
+    Client.CompanyName + ''', ''' + Client.Telephone + ''', ''' + Client.Address
+    + ''', ''' + Client.Postcode + ''', ''' + Client.Email + ''', ''' +
+    Client.TwitterPage + ''', ''' + Client.FacebookPage + ''', ''' +
+    Client.Notes + ''');';
+  datamoduleMain.commandCreate.Execute;
+  // now open it
+  with datamoduleMain.datasetCreate do
+  begin
+    Close;
+    CommandText := 'SELECT * FROM client ORDER BY ClientID DESC LIMIT 1';
+    Open;
+    ClientID := FieldValues['ClientID'];
+    Close;
+  end;
+  OpenClient(ClientID);
+end;
+
+procedure TformMain.AddDomain(Domain: TDomain);
+begin
+  // create record
+  datamoduleMain.commandCreate.CommandText :=
+    'INSERT INTO domain (`DomainID`, `DomainName`, `DomainExtension`, `ProjectID`, `DomainRegistrarID`, `RenewalDate`, `RenewalCost`) VALUES (NULL, '''
+    + Domain.DomainName + ''', ''' + Domain.DomainExtension + ''', ''' +
+    inttostr(Domain.ProjectID) + ''', ''' + inttostr(Domain.DomainRegistrarID) +
+    ''', ''2015-01-01'', ''' + floattostr(Domain.RenewalCost) + ''');';
+  datamoduleMain.commandCreate.Execute;
+  Domain.Free;
+  // now open it
+  with datamoduleMain.datasetCreate do
+  begin
+    Close;
+    CommandText := 'SELECT * FROM domain ORDER BY DomainID DESC LIMIT 1';
+    Open;
+    Domain := TDomain.Create(FieldValues['DomainID'], FieldValues['ProjectID'],
+      FieldValues['DomainRegistrarID'], FieldValues['DomainName'],
+      FieldValues['DomainExtension'], FieldValues['RenewalDate'],
+      FieldValues['RenewalCost']);
+    Close;
+  end;
+  OpenDomain(Domain);
+  RefreshProject(Domain.ProjectID);
+end;
+
+procedure TformMain.AddHosting(Host: THosting);
+begin
+  // we use the global commandtext to create a record
+  datamoduleMain.commandCreate.CommandText :=
+    'INSERT INTO hosting (`HostingID`, `ProjectID`, `DomainID`, `RenewalDate`, `RenewalCost`, `HostRegistrarID`, `FTPServer`, `FTPUsername`, `FTPPassword`, `FTPPort`) VALUES (NULL, '''
+    + inttostr(Host.ProjectID) + ''', ''' + inttostr(Host.DomainID) +
+    ''', ''2015-01-01'', ''' + floattostr(Host.RenewalCost) + ''', ''' +
+    inttostr(Host.HostRegistrarID) + ''', ''' + Host.FTPServer + ''', ''' +
+    Host.FTPUsername + ''', ''' + Host.FTPPassword + ''', ''' +
+    inttostr(Host.FTPPort) + ''');';
+  datamoduleMain.commandCreate.Execute;
+  // now get the record and open it in a new window, it will be the one with the highest id
+  with datamoduleMain.datasetCreate do
+  begin
+    Close;
+    CommandText := 'SELECT * FROM `hosting` ORDER BY `HostingID` DESC LIMIT 1';
+    Open;
+    Host := THosting.Create(FieldValues['HostingID'], FieldValues['ProjectID'],
+      FieldValues['DomainID'], FieldValues['HostRegistrarID'],
+      FieldValues['RenewalDate'], FieldValues['RenewalCost'],
+      FieldValues['FTPServer'], FieldValues['FTPUsername'],
+      FieldValues['FTPPassword'], FieldValues['FTPPort']);
+  end;
+  OpenHosting(Host);
+  RefreshProject(Host.ProjectID)
+end;
+
+procedure TformMain.AddCMS(CMS: TCMS);
+var
+  ProjectID: Integer;
+begin
+  // add cms
+  datamoduleMain.commandCreate.CommandText :=
+    'INSERT INTO cms (`CMSID`, `CMSTypeID`, `HostingID`, `DatabaseID`, `Directory`, `TablePrefix`, `ThemeName`, `AdminUsername`, `AdminPassword`, `ClientUsername`, `ClientPassword`) VALUES (NULL, '''
+    + inttostr(CMS.CMSTypeID) + ''', ''' + inttostr(CMS.HostingID) + ''', ''' +
+    inttostr(CMS.DatabaseID) + ''', ''' + CMS.Directory + ''', ''' +
+    CMS.TablePrefix + ''', ''' + CMS.ThemeName + ''', ''' + CMS.AdminUsername +
+    ''', ''' + CMS.AdminPassword + ''', ''' + CMS.ClientUsername + ''', ''' +
+    CMS.ClientPassword + ''');';
+  datamoduleMain.commandCreate.Execute;
+  with datamoduleMain.datasetCreate do
+  begin
+    Close;
+    CommandText := 'SELECT * FROM `cms` ORDER BY `CMSID` DESC LIMIT 1';
+    Open;
+    CMS := TCMS.Create(FieldValues['CMSID'], FieldValues['CMSTypeID'],
+      FieldValues['HostingID'], FieldValues['DatabaseID'],
+      FieldValues['Directory'], FieldValues['TablePrefix'],
+      FieldValues['ThemeName'], FieldValues['AdminUsername'],
+      FieldValues['AdminPassword'], FieldValues['ClientUsername'],
+      FieldValues['ClientPassword']);
+  end;
+  OpenCMS(CMS);
+  // find project id
+  if CMS.HostingID <> 0 then
+  begin
+    with datamoduleMain.datasetCreate do
+    begin
+      Close;
+      CommandText := 'SELECT * FROM `hosting` WHERE HostingID = ' +
+        inttostr(CMS.HostingID);
+      Open;
+      ProjectID := FieldValues['ProjectID'];
+    end;
+    RefreshProject(ProjectID);
+  end;
+end;
+
+procedure TformMain.AddDatabase(Database: TDatabase);
+var
+  ProjectID: Integer;
+  hostRegID: string;
+begin
+  if Database.HostRegistrarID = 0 then
+    hostRegID := '0'
+  else
+    hostRegID := inttostr(Database.HostRegistrarID);
+  // add database
+  datamoduleMain.commandCreate.CommandText :=
+    'INSERT INTO dbase (`DatabaseID`, `HostRegistrarID`, `HostingID`, `Name`, `Username`, `Password`, `Hostname`) VALUES (NULL, '''
+    + hostRegID + ''', ''' + inttostr(Database.HostingID) + ''', ''' +
+    Database.Name + ''', ''' + Database.Username + ''', ''' + Database.Password
+    + ''', ''' + Database.Hostname + '''); ';
+  datamoduleMain.commandCreate.Execute;
+  Database.Free;
+  with datamoduleMain.datasetCreate do
+  begin
+    Close;
+    CommandText := 'SELECT * FROM `dbase` ORDER BY `DatabaseID` DESC LIMIT 1';
+    Open;
+    Database := TDatabase.Create(FieldValues['DatabaseID'],
+      FieldValues['HostRegistrarID'], FieldValues['HostingID'],
+      FieldValues['Name'], FieldValues['Username'], FieldValues['Password'],
+      FieldValues['Hostname']);
+  end;
+  OpenDatabase(Database);
+  // find project id
+  if Database.HostingID <> 0 then
+  begin
+    with datamoduleMain.datasetCreate do
+    begin
+      Close;
+      CommandText := 'SELECT * FROM `hosting` WHERE HostingID = ' +
+        inttostr(Database.HostingID);
+      Open;
+      ProjectID := FieldValues['ProjectID'];
+    end;
+    RefreshProject(ProjectID);
+  end;
+end;
+
+{ ****TREEVIEW HANDLING**** }
+
+procedure TformMain.RefreshProject(ProjectID: Integer);
+var
+  CurrentNode: TTreeNode;
+  CurrentObject: TObject;
+  CurrentProject: TProject;
+begin
+  // find the project
+  if ProjectID <> 0 then
+  begin
+    CurrentNode := treeMain.TopItem;
+    while Assigned(CurrentNode) do
+    begin
+      CurrentObject := CurrentNode.Data;
+      if CurrentObject is TProject then
+      begin
+        CurrentProject := CurrentObject as TProject;
+        if CurrentProject.ProjectID = ProjectID then
+          CurrentNode.Delete;
+      end;
+      CurrentNode := CurrentNode.getNextSibling;
+    end;
+    // and reopen it again
+    displayProjectOnTree(formLoadProject.LoadProject(ProjectID));
+  end;
+end;
+
+procedure TformMain.RemoveProjectFromTree(ProjectID: Integer);
+var
+  CurrentNode: TTreeNode;
+  CurrentObject: TObject;
+  CurrentProject: TProject;
+begin
+  // find the project
+  CurrentNode := treeMain.TopItem;
+  while Assigned(CurrentNode) do
+  begin
+    CurrentObject := CurrentNode.Data;
+    if CurrentObject is TProject then
+    begin
+      CurrentProject := CurrentObject as TProject;
+      if CurrentProject.ProjectID = ProjectID then
+        CurrentNode.Delete;
+    end;
+    CurrentNode := CurrentNode.getNextSibling;
+  end;
+end;
+
+procedure TformMain.displayProjectOnTree(Project: TProject);
+var
+  ProjectNode, CurrentNode, HostNode, DomainNode, URegNode: TTreeNode;
+  Host: THosting;
+  Domain: TDomain;
+  CMS: TCMS;
+  Database: TDatabase;
+begin
+  // display the project on the tree
+  ProjectNode := treeMain.Items.AddObject(nil, Project.Name, Project);
+  ProjectNode.ImageIndex := 0;
+  ProjectNode.SelectedIndex := ProjectNode.ImageIndex;
+  URegNode := treeMain.Items.AddChild(ProjectNode, 'Unassigned');
+  for Domain in Project.DomainList do
+  begin
+    DomainNode := treeMain.Items.AddChildObject(ProjectNode,
+      Domain.DomainName + '.' + Domain.DomainExtension, Domain);
+    DomainNode.ImageIndex := 1;
+    DomainNode.SelectedIndex := DomainNode.ImageIndex;
+    for Host in Project.HostingList do
+    begin
+      if Domain.DomainID = Host.DomainID then
+      begin
+        HostNode := treeMain.Items.AddChildObject(DomainNode,
+          Host.FTPServer, Host);
+        HostNode.ImageIndex := 2;
+        HostNode.SelectedIndex := HostNode.ImageIndex;
+        for CMS in Project.CMSList do
+          if CMS.HostingID = Host.HostingID then
+          begin
+            CurrentNode := treeMain.Items.AddChildObject(HostNode,
+              '/' + CMS.Directory, CMS);
+            CurrentNode.ImageIndex := 3;
+            CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
+          end; // ENDIFCMS
+        for Database in Project.DatabaseList do
+          if Database.HostingID = Host.HostingID then
+          begin
+            CurrentNode := treeMain.Items.AddChildObject(HostNode,
+              Database.Name, Database);
+            CurrentNode.ImageIndex := 4;
+            CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
+          end; // ENDIFDB
+      end; // ENDIFDOMAIN
+    end; // ENDFORHOST
+  end; // ENDFORDOMAIN
+  for Host in Project.HostingList do
+    if Host.DomainID = 0 then
+    begin
+      CurrentNode := treeMain.Items.AddChildObject(URegNode,
+        Host.FTPServer, Host);
+      CurrentNode.ImageIndex := 2;
+      CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
+    end;
+  for CMS in Project.CMSList do
+    if CMS.HostingID = 0 then
+    begin
+      CurrentNode := treeMain.Items.AddChildObject(URegNode,
+        CMS.Directory, CMS);
+      CurrentNode.ImageIndex := 3;
+      CurrentNode.SelectedIndex := CurrentNode.ImageIndex;
+    end;
+  treeMain.FullExpand;
+end;
+
+{ ****WELCOME FORM**** }
+procedure TformMain.closeWelcomeForm;
+begin
+  // unfreeze toolbar
+  toolbarMain.Enabled := true;
+  // free components
+  imageLogo.Free;
+  buttonWelcomeOpenProject.Free;
+  buttonWelcomeGenerateReport.Free;
+  buttonWelcomeSearchData.Free;
+  imageButtonClose.Free;
+  panelWelcome.Free;
+end;
+
+{ ****BUTTON GROUP**** }
+
+procedure TformMain.ClearButtonGroup(ButtonGroup: TButtonGroup);
+begin
+  ButtonGroup.Items.Clear;
+end;
+
+procedure TformMain.ChangeButtonGroup(DataType: TDataTypes;
+  ButtonGroup: TButtonGroup);
+var
+  CurrentButton: TGrpButtonItem;
+begin
+  // modify button group items based on currently selected items
+  ClearButtonGroup(ButtonGroup);
+  case DataType of
+    dtProject:
+      begin
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.ImageIndex := 0;
+        CurrentButton.Caption := 'Edit Project';
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Delete Project';
+        CurrentButton.ImageIndex := 1;
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Add New Domain';
+        CurrentButton.ImageIndex := 2;
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Close Project';
+        CurrentButton.ImageIndex := 1;
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Open Client';
+        CurrentButton.ImageIndex := 3;
+      end;
+    dtDomain:
+      begin
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.ImageIndex := 0;
+        CurrentButton.Caption := 'Edit Domain';
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Delete Domain';
+        CurrentButton.ImageIndex := 1;
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Add New Hosting';
+        CurrentButton.ImageIndex := 2;
+      end;
+    dtHosting:
+      begin
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.ImageIndex := 0;
+        CurrentButton.Caption := 'Edit Hosting';
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Delete Hosting';
+        CurrentButton.ImageIndex := 1;
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Add New CMS';
+        CurrentButton.ImageIndex := 2;
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Add New Database';
+        CurrentButton.ImageIndex := 2;
+      end;
+    dtCMS:
+      begin
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.ImageIndex := 0;
+        CurrentButton.Caption := 'Edit CMS';
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Delete CMS';
+        CurrentButton.ImageIndex := 1;
+      end;
+    dtDatabase:
+      begin
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.ImageIndex := 0;
+        CurrentButton.Caption := 'Edit Database';
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Delete Database';
+        CurrentButton.ImageIndex := 1;
+      end;
+  end;
+end;
+
+procedure TformMain.butgrMainButtonClicked(Sender: TObject; Index: Integer);
+var
+  Node: TTreeNode;
+  UnknownObject, UnknownParentObject: TObject;
+  Project: TProject;
+  Domain: TDomain;
+  Host: THosting;
+  CMS: TCMS;
+  Database: TDatabase;
+  buttonSelected: Integer;
+begin
+  // based on type of selected object we can determine what buttons do what from their item index
+  if Assigned(treeMain.Selected) then
+  begin
+    Node := treeMain.Selected;
+    UnknownObject := Node.Data;
+    if Assigned(Node.Parent) then
+      UnknownParentObject := Node.Parent.Data
+    else
+      UnknownParentObject := TObject.Create;
+    if UnknownObject is TProject then
+    begin
+      Project := UnknownObject as TProject;
+      case Index of
+        0:
+          ViewProject(Project); // edit
+        1:
+          begin
+            buttonSelected :=
+              MessageDlg
+              ('Are you sure you want to delete this project? This operation cannot be undone.',
+              mtConfirmation, mbOKCancel, 0);
+            if buttonSelected = mrOK then
+              DeleteProject(Project.ProjectID);
+            RemoveProjectFromTree(Project.ProjectID);
+          end; // delete
+        2:
+          begin
+            Domain := TDomain.Create(0, Project.ProjectID, 0, 'NewDomain',
+              'com', strtodate('01/01/2015'), 0);
+            AddDomain(Domain);
+          end; // add new domain
+        3:
+          Node.Delete; // close
+        4:
+          OpenClient(Project.ClientID)
+      end;
+    end
+    else if UnknownObject is TDomain then
+    begin
+      Domain := UnknownObject as TDomain;
+      case Index of
+        0:
+          OpenDomain(Domain); // edit
+        1:
+          begin
+            buttonSelected :=
+              MessageDlg
+              ('Are you sure you want to delete this domain? This operation cannot be undone.',
+              mtConfirmation, mbOKCancel, 0);
+            if buttonSelected = mrOK then
+              DeleteDomain(Domain.DomainID);
+            RefreshProject(Domain.ProjectID);
+          end; // delete
+        2:
+          begin
+            Host := THosting.Create(0, Domain.ProjectID, Domain.DomainID,
+              2015 - 01 - 01, 0, 0, 'New Hosting', '', '', 21);
+            AddHosting(Host);
+          end;
+        // add host
+      end; // END CASE
+    end // END IFDOMAIN
+    else if UnknownObject is THosting then
+    begin
+      Host := UnknownObject as THosting;
+      case index of
+        0:
+          OpenHosting(Host); // edit
+        1:
+          begin
+            buttonSelected :=
+              MessageDlg
+              ('Are you sure you want to delete this Hosting? This operation cannot be undone.',
+              mtConfirmation, mbOKCancel, 0);
+            if buttonSelected = mrOK then
+              DeleteHosting(Host.HostingID);
+            RefreshProject(Host.ProjectID);
+          end; // delete
+        2:
+          begin
+            Host := UnknownObject as THosting;
+            CMS := TCMS.Create(0, 0, Host.HostingID, 0, 'newcms', '', '', '',
+              '', '', '');
+            AddCMS(CMS);
+          end; // add cms
+        3:
+          begin
+            Host := UnknownObject as THosting;
+            Database := TDatabase.Create(0, 0, Host.HostingID, 'New Database',
+              '', '', '');
+            AddDatabase(Database);
+          end;
+        // add db
+      end;
+    end
+    else if UnknownObject is TCMS then
+    begin
+      CMS := UnknownObject as TCMS;
+      case index of
+        0:
+          OpenCMS(CMS); // edit
+        1:
+          begin
+            buttonSelected :=
+              MessageDlg
+              ('Are you sure you want to delete this CMS? This operation cannot be undone.',
+              mtConfirmation, mbOKCancel, 0);
+            if buttonSelected = mrOK then
+              DeleteCMS(CMS.CMSID);
+            if Assigned(Node.Parent) and (UnknownParentObject is THosting) then
+            begin
+              Host := UnknownParentObject as THosting;
+              RefreshProject(Host.ProjectID);
+            end;
+          end; // delete
+      end;
+    end
+    else if UnknownObject is TDatabase then
+    begin
+      Database := UnknownObject as TDatabase;
+      case index of
+        0:
+          OpenDatabase(Database); // edit
+        1:
+          begin
+            buttonSelected :=
+              MessageDlg
+              ('Are you sure you want to delete this Database? This operation cannot be undone.',
+              mtConfirmation, mbOKCancel, 0);
+            if buttonSelected = mrOK then
+              DeleteDatabase(Database.DatabaseID);
+            if Assigned(Node.Parent) and (UnknownParentObject is THosting) then
+            begin
+              Host := UnknownParentObject as THosting;
+              RefreshProject(Host.ProjectID);
+            end;
+          end; // delete
+      end;
+    end;
+  end;
+end;
+
+{ ****SEARCH**** }
+procedure TformMain.openSearch;
+var
+  searchForm: TformSearch;
+begin
+  // make new search form
+  searchForm := TformSearch.Create(formMain);
+  searchForm.Show;
+end;
+
+{ ****REPORTS**** }
+procedure TformMain.openReportGenerator;
+var
+  reportForm: TformReportGenerator;
+begin
+  reportForm := TformReportGenerator.Create(formMain);
+  reportForm.Show;
+end;
+
+{ ****EVENTS**** }
+
+procedure TformMain.tbLoadClick(Sender: TObject);
+begin
+  OpenProject;
+end;
+
+procedure TformMain.tbReportClick(Sender: TObject);
+begin
+  openReportGenerator;
+end;
+
+procedure TformMain.tbSearchClick(Sender: TObject);
+begin
+  openSearch;
+end;
+
+procedure TformMain.treeMainChange(Sender: TObject; Node: TTreeNode);
+var
+  UnknownObject: TObject;
+  ButtonGroup: TButtonGroup;
+begin
+  ButtonGroup := butgrMain;
+  if Assigned(treeMain.Selected) then
+  begin
+    Node := treeMain.Selected;
+    UnknownObject := Node.Data;
+    if UnknownObject is TDomain then
+      ChangeButtonGroup(dtDomain, ButtonGroup)
+    else if UnknownObject is THosting then
+      ChangeButtonGroup(dtHosting, ButtonGroup)
+    else if UnknownObject is TCMS then
+      ChangeButtonGroup(dtCMS, ButtonGroup)
+    else if UnknownObject is TDatabase then
+      ChangeButtonGroup(dtDatabase, ButtonGroup)
+    else if UnknownObject is TProject then
+      ChangeButtonGroup(dtProject, ButtonGroup)
+    else
+      ClearButtonGroup(ButtonGroup);
+  end;
+end;
+
+procedure TformMain.treeMainDblClick(Sender: TObject);
+var
+  Node: TTreeNode;
+  UnknownObject: TObject;
+begin
+  if Assigned(treeMain.Selected) then
+  begin
+    treeMain.Selected.Expanded := not treeMain.Selected.Expanded;
+    Node := treeMain.Selected;
+    UnknownObject := Node.Data;
+    if UnknownObject is TDomain then
+      OpenDomain(UnknownObject as TDomain)
+    else if UnknownObject is THosting then
+      OpenHosting(UnknownObject as THosting)
+    else if UnknownObject is TCMS then
+      OpenCMS(UnknownObject as TCMS)
+    else if UnknownObject is TDatabase then
+      OpenDatabase(UnknownObject as TDatabase);
+  end;
+end;
+
+procedure TformMain.buttonWelcomeGenerateReportClick(Sender: TObject);
+begin
+  openReportGenerator;
+end;
+
+procedure TformMain.buttonWelcomeOpenProjectClick(Sender: TObject);
+begin
+  OpenProject;
+end;
+
+procedure TformMain.buttonWelcomeSearchDataClick(Sender: TObject);
+begin
+  openSearch;
+  closeWelcomeForm;
+end;
+
+procedure TformMain.showLoadProjectForm;
+begin
+  formLoadProject.Show;
+end;
+
+procedure TformMain.FormCreate(Sender: TObject);
+begin
+  // disable toolbar
+  toolbarMain.Enabled := false;
+end;
+
+procedure TformMain.imageButtonCloseClick(Sender: TObject);
+begin
+  closeWelcomeForm;
+end;
+
+procedure TformMain.newClientClick(Sender: TObject);
+var
+
+begin
+  Client :=
+end;
+
+procedure TformMain.newCmsClick(Sender: TObject);
+var
+  CMS: TCMS;
+begin
+  CMS := TCMS.Create(0, 0, 0, 0, 'New CMS', '', '', '', '', '', '');
+  AddCMS(CMS);
+end;
+
+procedure TformMain.newDatabaseClick(Sender: TObject);
+var
+  Database: TDatabase;
+begin
+  Database := TDatabase.Create(0, 0, 0, 'New Database', '', '', '');
+  AddDatabase(Database);
+end;
+
+procedure TformMain.newDomainClick(Sender: TObject);
+var
+  Domain: TDomain;
+begin
+  Domain := TDomain.Create(0, 0, 0, 'NewDomain', 'com',
+    strtodate('01/01/2015'), 0);
+  AddDomain(Domain);
+end;
+
+procedure TformMain.newHostingClick(Sender: TObject);
+var
+  Host: THosting;
+begin
+  Host := THosting.Create(0, 0, 0, 0, strtodate('01/01/2015'), 0, 'New Hosting',
+    '', '', 21);
+  AddHosting(Host);
+end;
+
+procedure TformMain.newProjectClick(Sender: TObject);
+var
+  ProjectForm: TFormProjectView;
+  Project: TProject;
+begin
+  datamoduleMain.commandCreate.CommandText :=
+    'INSERT INTO `project` (`ProjectID`, `ClientID`, `ProjectName`) VALUES (''NULL'', ''0'', ''New Project'');';
+  datamoduleMain.commandCreate.Execute;
+  with datamoduleMain.datasetCreate do
+  begin
+    Close;
+    CommandText := 'SELECT * FROM `project` ORDER BY `ProjectID` DESC LIMIT 1';
+    Open;
+    Project := TProject.Create(FieldValues['ProjectID'],
+      FieldValues['ClientID'], FieldValues['ProjectName']);
+  end;
+  ProjectForm := TFormProjectView.Create(formMain);
+  ProjectForm.Project := Project;
+  ProjectForm.DoOpen(Project);
+  ProjectForm.Show;
+end;
+
+end.
+

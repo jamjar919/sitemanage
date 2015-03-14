@@ -36,8 +36,6 @@ type
     dbeditFacebook: TDBEdit;
     dbeditTwitter: TDBEdit;
     gboxMisc: TGroupBox;
-    comboboxHowFound: TComboBox;
-    lblHowFound: TLabel;
     lblNotes: TLabel;
     dbricheditNotes: TDBRichEdit;
     datasetSingleClient: TADODataSet;
@@ -47,12 +45,13 @@ type
     buttonDelete: TButton;
     procedure mmCloseClick(Sender: TObject);
     procedure buttonUpdateClick(Sender: TObject);
+    procedure buttonDeleteClick(Sender: TObject);
   private
     { Private declarations }
   public
     Client: TClient;
-    procedure doOpen(Client: TClient);
-    procedure doUpdate(CLID: Integer);
+    procedure doOpen(ClientID: integer);
+    procedure doUpdate(CLID: integer);
   end;
 
 var
@@ -62,9 +61,29 @@ implementation
 
 {$R *.dfm}
 
+uses UMain;
+
 procedure TformClientView.mmCloseClick(Sender: TObject);
 begin
   self.Free;
+end;
+
+procedure TformClientView.buttonDeleteClick(Sender: TObject);
+var
+  butselected: integer;
+begin
+  butselected := MessageDlg('Are you sure you want to delete ' +
+    Client.FirstName + ' ' + Client.LastName +
+    '? This operation cannot be undone.', mtConfirmation, mbOKCancel, 0);
+  case butselected of
+    mrOk:
+      begin
+        formMain.DeleteClient(Client.ClientID);
+        self.Free;
+      end;
+    mrCancel:
+      MessageDlg('Hosting not deleted', mtInformation, [mbOK], 0);
+  end;
 end;
 
 procedure TformClientView.buttonUpdateClick(Sender: TObject);
@@ -72,34 +91,38 @@ begin
   doUpdate(Client.ClientID);
 end;
 
-procedure TformClientView.doOpen(Client: TClient);
+procedure TformClientView.doOpen(ClientID: integer);
 begin
-  // title label
-  llabelTitle.Caption := Client.FirstName + ' ' + Client.LastName;
   // parameters
   with datasetSingleClient do
   begin
     Close;
-    Parameters.ParamByName('clid').Value := Client.ClientID;
+    Parameters.ParamByName('clid').Value := ClientID;
     Open;
-    Active := True;
+    self.Client := TClient.Create(FieldValues['ClientID'],
+      FieldValues['FirstName'], FieldValues['LastName'],
+      FieldValues['CompanyName'], FieldValues['Telephone'],
+      FieldValues['Address'], FieldValues['Postcode'], FieldValues['Email'],
+      FieldValues['TwitterPage'], FieldValues['FacebookPage'],
+      FieldValues['Notes']);
   end;
+  llabelTitle.Caption := Client.FirstName + ' ' + Client.LastName;
 end;
 
-procedure TformClientView.doUpdate(CLID: Integer);
+procedure TformClientView.doUpdate(CLID: integer);
 var
   NewClient: TClient;
 begin
   // make new client object
   NewClient := TClient.Create(CLID, dbeditFirstName.Text, dbeditLastName.Text,
     dbeditCompanyName.Text, dbeditTelephone.Text, dbricheditAddress.Text,
-    dbeditPostcode.Text, dbeditEmail.Text, comboboxHowFound.ItemIndex,
-    dbeditTwitter.Text, dbeditFacebook.Text, dbricheditNotes.Text);
+    dbeditPostcode.Text, dbeditEmail.Text, dbeditTwitter.Text,
+    dbeditFacebook.Text, dbricheditNotes.Text);
   // push to db
   with datasetSingleClient do
   begin
     Close;
-    Parameters.ParamByName('clid').Value := NewClient.ClientID;
+    Parameters.ParamByName('clid').Value := CLID;
     Open;
     Edit;
     FieldValues['FirstName'] := NewClient.FirstName;
@@ -109,14 +132,13 @@ begin
     FieldValues['Address'] := NewClient.Address;
     FieldValues['Postcode'] := NewClient.Postcode;
     FieldValues['Email'] := NewClient.Email;
-    FieldValues['HowFound'] := NewClient.HowFound;
     FieldValues['TwitterPage'] := NewClient.TwitterPage;
     FieldValues['FacebookPage'] := NewClient.FacebookPage;
     FieldValues['Notes'] := NewClient.Notes;
     Post;
   end;
   NewClient.Free;
-  Self.Free;
+  self.Free;
 end;
 
 end.

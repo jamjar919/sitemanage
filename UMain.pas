@@ -10,7 +10,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ComCtrls, Vcl.ToolWin,
   Vcl.ImgList, Vcl.Imaging.pngimage, Vcl.ExtCtrls, Vcl.StdCtrls,
   UClass, UData, UDomainView, UHostingView, UProjectView, Vcl.ButtonGroup,
-  UCMSView, UDatabaseView, USearch, UClientView, UReport;
+  UCMSView, UDatabaseView, USearch, UClientView, UReport, ULoadClient,
+  URegistrarView, UTaskViewer;
 
 type
   TformMain = class(TForm)
@@ -19,7 +20,6 @@ type
     imglistToolbar: TImageList;
     tbNew: TToolButton;
     tbLoad: TToolButton;
-    tbTools: TToolButton;
     tbReport: TToolButton;
     treeMain: TTreeView;
     panelWelcome: TPanel;
@@ -37,12 +37,13 @@ type
     butgrMain: TButtonGroup;
     imglistButtonGrp: TImageList;
     tbSearch: TToolButton;
-    ToolButton1: TToolButton;
+    tbView: TToolButton;
     popupView: TPopupMenu;
     viewClients: TMenuItem;
     viewRegistrars: TMenuItem;
     newCms: TMenuItem;
     newDatabase: TMenuItem;
+    newClient: TMenuItem;
     // events
     procedure imageButtonCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -60,6 +61,9 @@ type
     procedure newDatabaseClick(Sender: TObject);
     procedure buttonWelcomeGenerateReportClick(Sender: TObject);
     procedure tbReportClick(Sender: TObject);
+    procedure newClientClick(Sender: TObject);
+    procedure viewClientsClick(Sender: TObject);
+    procedure viewRegistrarsClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -88,7 +92,12 @@ type
     procedure DeleteDatabase(DBID: Integer);
     procedure AddDatabase(Database: TDatabase);
     // client
-    procedure OpenClient(Client: TClient);
+    procedure OpenClient(ClientID: Integer);
+    procedure AddClient(Client: TClient);
+    procedure DeleteClient(ClientID: Integer);
+    // tasks
+    procedure OpenTasks(ProjectID: Integer);
+    procedure OpenSingleTask(TaskID: Integer);
     // button group
     procedure ClearButtonGroup(ButtonGroup: TButtonGroup);
     procedure ChangeButtonGroup(DataType: TDataTypes;
@@ -110,13 +119,30 @@ uses ULoadProject;
 
 { ****OPENING**** }
 
-procedure TformMain.OpenClient(Client: TClient);
+procedure TformMain.OpenSingleTask(TaskID: Integer);
+var
+  OpenTaskForm: TformTaskViewer;
+begin
+  OpenTaskForm := TformTaskViewer.Create(formMain);
+  OpenTaskForm.OpenSingleTask(TaskID);
+  OpenTaskForm.Show;
+end;
+
+procedure TformMain.OpenTasks(ProjectID: Integer);
+var
+  OpenTaskForm: TformTaskViewer;
+begin
+  OpenTaskForm := TformTaskViewer.Create(formMain);
+  OpenTaskForm.OpenTasks(ProjectID, 0);
+  OpenTaskForm.Show;
+end;
+
+procedure TformMain.OpenClient(ClientID: Integer);
 var
   OpenClientForm: TformClientView;
 begin
   OpenClientForm := TformClientView.Create(formMain);
-  OpenClientForm.Client := Client;
-  OpenClientForm.DoOpen(Client);
+  OpenClientForm.DoOpen(ClientID);
   OpenClientForm.Show;
 end;
 
@@ -178,6 +204,28 @@ begin
 end;
 
 { ****DELETION**** }
+
+procedure TformMain.DeleteClient(ClientID: Integer);
+begin
+  // delete from client table
+  datamoduleMain.commandDelete.CommandText :=
+    'DELETE FROM client WHERE ClientID = ' + inttostr(ClientID);
+  datamoduleMain.commandDelete.Execute;
+  // resolve dependencies
+  datamoduleMain.datasetDelete.Close;
+  datamoduleMain.datasetDelete.CommandText :=
+    'SELECT * FROM project WHERE ClientID = ' + inttostr(ClientID);
+  datamoduleMain.datasetDelete.Open;
+  while not datamoduleMain.datasetDelete.EOF do
+  begin
+    datamoduleMain.datasetDelete.Edit;
+    datamoduleMain.datasetDelete.FieldValues['ClientID'] := 0;
+    datamoduleMain.datasetDelete.Post;
+    datamoduleMain.datasetDelete.Next;
+  end;
+  datamoduleMain.datasetDelete.Close;
+  datamoduleMain.datasetDelete.CommandText := '';
+end;
 
 procedure TformMain.DeleteProject(ProjectID: Integer);
 begin
@@ -292,6 +340,32 @@ begin
 end;
 
 { ****ADDING**** }
+
+procedure TformMain.AddClient(Client: TClient);
+var
+  ClientID: Integer;
+begin
+  // create record
+  datamoduleMain.commandCreate.CommandText :=
+    'INSERT INTO `client` (`ClientID`, `FirstName`, `LastName`, `CompanyName`, `Telephone`, `Address`, `Postcode`, `Email`, `TwitterPage`, `FacebookPage`, `Notes`) VALUES (NULL, '''
+    + Client.FirstName + ''', ''' + Client.LastName + ''', ''' +
+    Client.CompanyName + ''', ''' + Client.Telephone + ''', ''' + Client.Address
+    + ''', ''' + Client.Postcode + ''', ''' + Client.Email + ''', ''' +
+    Client.TwitterPage + ''', ''' + Client.FacebookPage + ''', ''' +
+    Client.Notes + ''');';
+  datamoduleMain.commandCreate.Execute;
+  // now open it
+  with datamoduleMain.datasetCreate do
+  begin
+    Close;
+    CommandText := 'SELECT * FROM client ORDER BY ClientID DESC LIMIT 1';
+    Open;
+    ClientID := FieldValues['ClientID'];
+    Close;
+  end;
+  OpenClient(ClientID);
+end;
+
 procedure TformMain.AddDomain(Domain: TDomain);
 begin
   // create record
@@ -312,6 +386,7 @@ begin
       FieldValues['DomainRegistrarID'], FieldValues['DomainName'],
       FieldValues['DomainExtension'], FieldValues['RenewalDate'],
       FieldValues['RenewalCost']);
+    Close;
   end;
   OpenDomain(Domain);
   RefreshProject(Domain.ProjectID);
@@ -585,6 +660,12 @@ begin
         CurrentButton := ButtonGroup.Items.Add;
         CurrentButton.Caption := 'Close Project';
         CurrentButton.ImageIndex := 1;
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Open Client';
+        CurrentButton.ImageIndex := 3;
+        CurrentButton := ButtonGroup.Items.Add;
+        CurrentButton.Caption := 'Open Tasks';
+        CurrentButton.ImageIndex := 3;
       end;
     dtDomain:
       begin
@@ -678,6 +759,10 @@ begin
           end; // add new domain
         3:
           Node.Delete; // close
+        4:
+          OpenClient(Project.ClientID);
+        5:
+          OpenTasks(Project.ProjectID);
       end;
     end
     else if UnknownObject is TDomain then
@@ -795,7 +880,7 @@ begin
   searchForm.Show;
 end;
 
-{****REPORTS****}
+{ ****REPORTS**** }
 procedure TformMain.openReportGenerator;
 var
   reportForm: TformReportGenerator;
@@ -813,7 +898,7 @@ end;
 
 procedure TformMain.tbReportClick(Sender: TObject);
 begin
-  OpenReportGenerator;
+  openReportGenerator;
 end;
 
 procedure TformMain.tbSearchClick(Sender: TObject);
@@ -867,9 +952,18 @@ begin
   end;
 end;
 
+procedure TformMain.viewClientsClick(Sender: TObject);
+var
+  LoadClientForm: Tformloadclient;
+begin
+  // make new client open dialog
+  LoadClientForm := Tformloadclient.Create(formMain);
+  LoadClientForm.Show;
+end;
+
 procedure TformMain.buttonWelcomeGenerateReportClick(Sender: TObject);
 begin
-  OpenReportGenerator;
+  openReportGenerator;
 end;
 
 procedure TformMain.buttonWelcomeOpenProjectClick(Sender: TObject);
@@ -899,11 +993,19 @@ begin
   closeWelcomeForm;
 end;
 
+procedure TformMain.newClientClick(Sender: TObject);
+var
+  Client: TClient;
+begin
+  Client := TClient.Create(0, '', '', 'New Client', '', '', '', '', '', '', '');
+  AddClient(Client);
+end;
+
 procedure TformMain.newCmsClick(Sender: TObject);
 var
   CMS: TCMS;
 begin
-  CMS := TCMS.Create(0,0,0,0,'New CMS','','','','','','');
+  CMS := TCMS.Create(0, 0, 0, 0, 'New CMS', '', '', '', '', '', '');
   AddCMS(CMS);
 end;
 
@@ -911,7 +1013,7 @@ procedure TformMain.newDatabaseClick(Sender: TObject);
 var
   Database: TDatabase;
 begin
-  Database := TDatabase.Create(0,0,0,'New Database','','','');
+  Database := TDatabase.Create(0, 0, 0, 'New Database', '', '', '');
   AddDatabase(Database);
 end;
 
@@ -953,6 +1055,15 @@ begin
   ProjectForm.Project := Project;
   ProjectForm.DoOpen(Project);
   ProjectForm.Show;
+end;
+
+procedure TformMain.viewRegistrarsClick(Sender: TObject);
+var
+  FormRegistrarView: TformRegistrarView;
+begin
+  // make new form
+  FormRegistrarView := TformRegistrarView.Create(formMain);
+  FormRegistrarView.Show;
 end;
 
 end.

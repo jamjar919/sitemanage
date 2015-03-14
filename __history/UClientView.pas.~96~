@@ -1,0 +1,122 @@
+unit UClientView;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.StdCtrls, Vcl.ExtCtrls,
+  Vcl.Mask, Vcl.DBCtrls, Vcl.ComCtrls, Data.DB, Data.Win.ADODB, UData, UClass;
+
+type
+  TformClientView = class(TForm)
+    mmClientView: TMainMenu;
+    mmClose: TMenuItem;
+    gboxClientDetails: TGroupBox;
+    llabelTitle: TLinkLabel;
+    gboxContactDetails: TGroupBox;
+    gboxSocialMedia: TGroupBox;
+    lblName: TLabel;
+    lblCompanyName: TLabel;
+    dbeditFirstName: TDBEdit;
+    dbeditCompanyName: TDBEdit;
+    lblTelephone: TLabel;
+    dbeditTelephone: TDBEdit;
+    dbricheditAddress: TDBRichEdit;
+    lblAddress: TLabel;
+    dbeditPostcode: TDBEdit;
+    lblPostcode: TLabel;
+    dbeditEmail: TDBEdit;
+    lblEmail: TLabel;
+    dbeditLastName: TDBEdit;
+    lblFacebook: TLabel;
+    lblTwitter: TLabel;
+    lblFacebookURL: TLabel;
+    lblAt: TLabel;
+    dbeditFacebook: TDBEdit;
+    dbeditTwitter: TDBEdit;
+    gboxMisc: TGroupBox;
+    lblNotes: TLabel;
+    dbricheditNotes: TDBRichEdit;
+    datasetSingleClient: TADODataSet;
+    datasourceClient: TDataSource;
+    gboxControls: TGroupBox;
+    buttonUpdate: TButton;
+    buttonDelete: TButton;
+    procedure mmCloseClick(Sender: TObject);
+    procedure buttonUpdateClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    Client: TClient;
+    procedure doOpen(ClientID: integer);
+    procedure doUpdate(CLID: integer);
+  end;
+
+var
+  formClientView: TformClientView;
+
+implementation
+
+{$R *.dfm}
+
+procedure TformClientView.mmCloseClick(Sender: TObject);
+begin
+  self.Free;
+end;
+
+procedure TformClientView.buttonUpdateClick(Sender: TObject);
+begin
+  doUpdate(Client.ClientID);
+end;
+
+procedure TformClientView.doOpen(ClientID: integer);
+begin
+  // parameters
+  with datasetSingleClient do
+  begin
+    Close;
+    Parameters.ParamByName('clid').Value := ClientID;
+    Open;
+    self.Client := TClient.Create(FieldValues['ClientID'], FieldValues['FirstName'],
+      FieldValues['LastName'], FieldValues['CompanyName'],
+      FieldValues['Telephone'], FieldValues['Address'], FieldValues['Postcode'],
+      FieldValues['Email'], FieldValues['TwitterPage'],
+      FieldValues['FacebookPage'], FieldValues['Notes']);
+  end;
+  llabelTitle.Caption := Client.FirstName + ' ' + Client.LastName;
+end;
+
+procedure TformClientView.doUpdate(CLID: integer);
+var
+  NewClient: TClient;
+begin
+  // make new client object
+  NewClient := TClient.Create(CLID, dbeditFirstName.Text, dbeditLastName.Text,
+    dbeditCompanyName.Text, dbeditTelephone.Text, dbricheditAddress.Text,
+    dbeditPostcode.Text, dbeditEmail.Text, dbeditTwitter.Text,
+    dbeditFacebook.Text, dbricheditNotes.Text);
+  // push to db
+  with datasetSingleClient do
+  begin
+    Close;
+    Parameters.ParamByName('clid').Value := CLID;
+    Open;
+    Edit;
+    FieldValues['FirstName'] := NewClient.FirstName;
+    FieldValues['LastName'] := NewClient.LastName;
+    FieldValues['CompanyName'] := NewClient.CompanyName;
+    FieldValues['Telephone'] := NewClient.Telephone;
+    FieldValues['Address'] := NewClient.Address;
+    FieldValues['Postcode'] := NewClient.Postcode;
+    FieldValues['Email'] := NewClient.Email;
+    FieldValues['TwitterPage'] := NewClient.TwitterPage;
+    FieldValues['FacebookPage'] := NewClient.FacebookPage;
+    FieldValues['Notes'] := NewClient.Notes;
+    Post;
+  end;
+  NewClient.Free;
+  self.Free;
+end;
+
+end.
